@@ -58,20 +58,20 @@
       <form class="formulario" id="form-generador" novalidate>
         <div class="campo">
           <label for="g-nombre">Nombre del invitado</label>
-          <input id="g-nombre" type="text" maxlength="60" autocomplete="off" required placeholder="Ej.: Familia Pérez">
+          <input id="g-nombre" type="text" maxlength="60" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" required placeholder="Ej.: Familia Pérez">
           <p class="campo__error" id="g-error" hidden>Escribe el nombre del invitado.</p>
         </div>
         <div class="campo">
           <label for="g-pases">Número de pases</label>
           <div class="contador">
             <button class="contador__boton" type="button" data-paso="-1" aria-label="Un pase menos"><svg aria-hidden="true"><use href="#i-menos"/></svg></button>
-            <input id="g-pases" type="number" inputmode="numeric" min="1" max="20" value="2">
+            <input id="g-pases" type="number" inputmode="numeric" enterkeyhint="next" min="1" max="20" value="2">
             <button class="contador__boton" type="button" data-paso="1" aria-label="Un pase más"><svg aria-hidden="true"><use href="#i-mas"/></svg></button>
           </div>
         </div>
         <div class="campo">
           <label for="g-telefono">WhatsApp del invitado <span class="campo__opcional">(opcional)</span></label>
-          <input id="g-telefono" type="tel" inputmode="tel" maxlength="20" autocomplete="off" placeholder="Ej.: 300 123 4567">
+          <input id="g-telefono" type="tel" inputmode="tel" enterkeyhint="go" maxlength="20" autocomplete="off" placeholder="Ej.: 300 123 4567">
         </div>
         <button class="boton boton--principal" type="submit">Crear enlace</button>
       </form>

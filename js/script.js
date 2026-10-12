@@ -149,6 +149,14 @@
       if (audio.paused) reproducir(); else pausar();
     });
 
+    // El botón refleja lo que de verdad pasa: si el celular pausa la música con la página
+    // a la vista (una llamada, otra app con sonido), vuelve a "Reproducir" y no se retoma sola.
+    audio.addEventListener('play', function () { actualizarBoton(true); });
+    audio.addEventListener('pause', function () {
+      if (!document.hidden) quiereSonar = false;
+      actualizarBoton(false);
+    });
+
     // Al salir de la página (otra app/pestaña) se pausa; al volver, retoma si estaba sonando.
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { if (!audio.paused) audio.pause(); }
@@ -375,6 +383,18 @@
       if (nombre.value.trim()) { errorNombre.hidden = true; nombre.removeAttribute('aria-invalid'); }
     });
 
+    // Tecla Enter / "Siguiente" del teclado del celular: pasa al siguiente paso en vez de
+    // enviar (antes abría WhatsApp antes de tiempo). Solo el botón "Confirmar" envía.
+    function alPulsarEnter(campo, siguiente) {
+      campo.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' || e.isComposing) return;
+        e.preventDefault();
+        siguiente();
+      });
+    }
+    alPulsarEnter(nombre, function () { form.querySelector('input[name="asiste"]:checked').focus(); });
+    alPulsarEnter(personas, function () { ajustarPersonas(personas.value); mensajito.focus(); });
+
     // Recordatorio amable si ya confirmó desde este mismo celular.
     if (leerLocal('xv-oriana-confirmacion')) {
       estado.textContent = 'Ya enviaste tu confirmación desde este celular. Si algo cambió, puedes enviarla de nuevo.';
@@ -424,11 +444,17 @@
   /* ===========================================================
      ARRANQUE
      =========================================================== */
+  // iPhone solo pinta los estilos :active (respuesta al tocar) si la página escucha toques.
+  document.addEventListener('touchstart', function () {}, { passive: true });
+
   var invitado = leerInvitado();
   personalizar(invitado);
   var musica = iniciarMusica();
   iniciarSobre(musica);
-  iniciarCuenta();
-  iniciarMapa();
-  iniciarConfirmacion(invitado);
+  window.__XV_SOBRE_LISTO__ = true;   // arranque.js lo revisa: si el sobre no quedó listo, lo quita
+
+  // Cada parte arranca por separado: si una falla en un celular raro, las demás siguen funcionando.
+  [iniciarCuenta, iniciarMapa, function () { iniciarConfirmacion(invitado); }].forEach(function (iniciar) {
+    try { iniciar(); } catch (e) { if (window.console) console.error(e); }
+  });
 })();

@@ -6,10 +6,77 @@ Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). S
 enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
 `https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (11/10/2026): versión completa entregada (ZIP + vista previa + tarjeta cuadrada en WebP) y publicada.
+Estado (11/10/2026, noche): versión 1.1 publicada (v1 + arreglos para celular). **Hay pedidos nuevos en curso:
+carrusel de fotos + visor a pantalla completa y música nueva** → ver la sección siguiente.
+
+## 🚦 ESTADO ACTUAL Y QUÉ SIGUE (leer primero en cada sesión)
+### Hecho el 11/10/2026
+1. La carpeta local quedó conectada al repo de GitHub (`main`) y Cloudflare Pages publica solo al subir a `main`.
+2. Dominio final en `canonical`, `og:url`, `og:image` y `twitter:image`. Era la causa de que WhatsApp no mostrara
+   la vista previa: apuntaban a `xv-oriana-sofia.pages.dev`, que **no existe**.
+3. Versión 1.1, arreglos para celular, probados con Playwright en WebKit (≈ Safari iPhone) y Chromium (≈ Android)
+   en 12 perfiles (detalle en el MAPA DEL CÓDIGO → 1.1):
+   - Confirmación: la tecla Enter/"Ir" del teclado **ya no envía ni abre WhatsApp antes de tiempo** (pasa al
+     siguiente campo); nombres con mayúscula inicial, sin autocorrector.
+   - Sobre de entrada: ya no se corta con el celular en horizontal ni en pantallas bajas (si no cabe, se desplaza).
+   - Sin zoom accidental por doble toque, sin recuadro gris/azul al tocar y con respuesta visual al presionar.
+   - Botón de música sincronizado si el celular pausa el audio (llamada, otra app).
+   - Red de seguridad: si `js/script.js` no carga o falla, el sobre se quita solo y la invitación se ve igual.
+   - Generador: Enter pasa nombre → pases → WhatsApp; "Copiar" funciona en navegadores internos y ya no deja
+     seleccionado el enlace de OTRO invitado cuando falla el portapapeles.
+
+### Pendiente (en este orden)
+1. **Carrusel de fotos en la portada + visor a pantalla completa** (pedido de JX/familia, 11/10/2026: "no una sola
+   foto"; que pasen solas y despacio; que se puedan ver en grande).
+   - Material: JX lo copia en `C:\Users\jampi\Documents\JX COMPANY\PAGINAS WEBS JX\Material_XV_Oriana` (FUERA del
+     proyecto: los JPG/MP4 originales nunca van al repo). Preguntar si ya está.
+   - Las 8 fotos (también las pegó en el chat): 1) selfie actual de la portada (original 900×1600); 2) niña
+     pequeña sentada con galletas: es una **captura de la galería de Samsung**, hay que recortar la interfaz y
+     **rotar 90°** (la foto está de lado); 3) graduación de preescolar con toga azul: **captura con barras negras**
+     arriba y abajo, hay que recortarlas; 4) adolescente con vestido gris de lentejuelas, cuerpo entero (1200×1600);
+     5) selfie en espejo con vestido beige (960×1280); 6) selfie muy cercana **de lado, hay que rotarla**;
+     7) bebé con sombrero blanco con flores, horizontal 1080×722, con fecha impresa 19/10/2012;
+     8) bebé de meses con vestido verde y balaca rosada (1080×1443).
+   - Diseño acordado (mismo diseño de la web): el carrusel va DENTRO del arco dorado actual (mismo marco, ramos y
+     proporción 3:4), cambia solo y despacio con fundido suave (~5 s por foto), puntos dorados debajo, se puede
+     deslizar con el dedo; con "reducir movimiento" no pasa solo. Al tocar una foto se abre un visor a pantalla
+     completa (`<dialog>`, fondo color tinta, botón cerrar dorado como el de la música, deslizar y flechas,
+     contador "3 / 8", Esc; el botón "atrás" de Android lo cierra usando `history.pushState`).
+     Orden propuesto a JX: primero la foto actual de Oriana y luego de bebé a hoy.
+   - Técnica: convertir a WebP en `img/` (regla), conservando resolución; `object-position` por foto para que el
+     arco (`object-fit: cover`) no corte caras; la primera foto con `fetchpriority="high"` y las demás cargando
+     después de abrir el sobre (datos móviles). `alt` descriptivo por foto. Actualizar README, decisiones y mapa.
+2. **Música nueva** (no les gustó el vals): viene dentro de un **video MP4** en la misma carpeta. Extraer el audio
+   con ffmpeg (no hay ffmpeg instalado en el PC; funciona `npm i ffmpeg-static` en una carpeta temporal), quitar
+   silencios, fundido de entrada y salida, normalizar volumen (`loudnorm`), MP3 de ~112–128 kbps, reemplazar
+   `musica/vals-xv-oriana-sofia.mp3` (o usar un nombre nuevo y actualizar el `src` del `<audio>`). No se puede
+   "escuchar": JX la valida en una vista previa (rama distinta de `main`) antes de pasarla a producción.
+   Si es una canción comercial, el uso corre por cuenta de la familia (ya lo dice el README). Actualizar los
+   textos que hablan del "vals original" (README, CLAUDE.md).
+3. **Volver privado el repo de GitHub**: está PÚBLICO y ya tiene la foto de una menor; pronto tendría fotos de
+   bebé. Se le propuso a JX el 11/10/2026 y **falta su OK**. Cloudflare sigue publicando con el repo privado.
+   Hacerlo ANTES de subir las fotos nuevas:
+   `GH_TOKEN="$(gh auth token --user jxenterprise)" gh repo edit jxenterprise/XV_oriana --visibility private --accept-visibility-change-consequences`
+4. **Vista previa de WhatsApp**: ya con el dominio correcto, el WhatsApp de JX guardó en caché la tarjeta vacía de
+   la dirección raíz. Probar pegando `https://mis-xv-de-oriana-sofia.pages.dev/?v=2` y esperar 5–10 s. Si aun así
+   no sale la imagen, hacer una excepción técnica documentada (como el favicon): `og:image` en JPG.
+5. Auditoría móvil a fondo (6 revisores, 11/10/2026): integrar lo que no se alcance en la sesión, como modo
+   oscuro forzado (Samsung Internet o navegadores internos: probar `color-scheme: only light`), enlace de
+   respaldo de WhatsApp en la misma pestaña, rendimiento en 3G y foco/lectores de pantalla.
+6. Pin exacto del punto de encuentro (ver {POR CONFIRMAR} 1).
+7. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
+   Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
+
+### Cómo probar "en celular" desde el PC
+Playwright (`npm i playwright` + `npx playwright install chromium webkit`) con perfiles de dispositivo: WebKit ≈ Safari
+de iPhone y Chromium ≈ Android. Perfiles usados: iPhone SE 320×568, SE (3.ª gen.) con barras 375×553, iPhone 15 393×659,
+15 Pro Max 430×739, iPhone horizontal 734×343, Galaxy S8 360×740, 360×640, navegador interno 360×600, S9+ 320×658,
+Pixel 7 412×839, Fold 280×653 y Android horizontal 740×360. Revisar: sobre sin cortes, desborde lateral 0, toques
+≥44 px, consola limpia, Enter no envía, `wa.me` correcto. El banco de pruebas vive **fuera** del repo: no subir
+archivos de prueba (punto 18 de la auditoría).
 
 ## Repositorio y publicación
-- GitHub: `https://github.com/jxenterprise/XV_oriana` (público), rama `main`. Commits como `JX Code <jxenterpriseshop@gmail.com>`.
+- GitHub: `https://github.com/jxenterprise/XV_oriana` (hoy **público**; ver pendiente 3), rama `main`. Commits como `JX Code <jxenterpriseshop@gmail.com>`.
 - Cloudflare Pages está **conectado al repo**: cada `push` a `main` publica en producción en 1–2 minutos
   (lo confirma el check "Cloudflare Pages" del commit en GitHub). Una rama distinta de `main` genera una
   vista previa en `https://<rama>.mis-xv-de-oriana-sofia.pages.dev` sin tocar producción.
@@ -26,9 +93,12 @@ Estado (11/10/2026): versión completa entregada (ZIP + vista previa + tarjeta c
 - Invitación personalizada: **nombre + número de pases** (parámetros `?para=` y `&pases=`), con generador.
 - Confirmaciones al WhatsApp **573157800663** (315 780 0663). **Sin fecha límite** para confirmar.
 - Música: **instrumental suave tipo vals** → vals original compuesto para el proyecto (sin derechos de terceros).
+  ⚠ **Cambio 11/10/2026**: no les gustó; mandan otra canción dentro de un MP4 (ver pendiente 2).
 - Fotos: **una foto en la portada** (la selfie de las 12:04; recortada 678×904, sin retoques).
   Mandaron 8 fotos (varias de bebé/niña): no se usaron porque escogió solo una; se puede ofrecer
   una sección "Así he crecido" si la quieren.
+  ⚠ **Cambio 11/10/2026**: ahora quieren TODAS las fotos en un carrusel lento dentro del arco y verlas en
+  pantalla completa (ver pendiente 1).
 - Secciones extra elegidas: **agregar al calendario** y **mensajito para Oriana**. No eligieron itinerario,
   padres/padrinos, hashtag ni "qué llevar" (el recordatorio del traje de baño se mantiene en el vestuario,
   porque venía en la invitación original).
@@ -161,6 +231,41 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 - **Fuentes**: alojadas en `fonts/` en vez de Google Fonts (sin peticiones a terceros, más privacidad y carga
   más rápida en datos móviles). Licencias OFL incluidas.
 
+### 11/10/2026 — versión 1.1 (ajustes para celular)
+- **js/arranque.js**: además de `no-js` → `js`, tiene una red de seguridad. En el evento `load`, si
+  `window.__XV_SOBRE_LISTO__` no es `true` (script.js no cargó o falló antes de preparar el sobre), vuelve a
+  `no-js`, quita `body.con-portal` y el `inert` de portada/main/cierre: la invitación se ve completa sin sobre.
+- **js/script.js**:
+  - Arranque: `document` escucha `touchstart` (pasivo); sin eso iPhone no pinta los `:active`. Después de
+    `iniciarSobre()` marca `window.__XV_SOBRE_LISTO__ = true`; cuenta, mapa y confirmación arrancan cada uno
+    con su propio `try/catch` (si uno falla, los demás siguen).
+  - `iniciarMusica()`: escucha `play`/`pause` del `<audio>`. Si el sistema pausa con la página visible
+    (llamada, otra app), `quiereSonar = false` y el botón pasa a "Reproducir"; con la página oculta no cambia,
+    para que al volver retome.
+  - `iniciarConfirmacion()`: `alPulsarEnter(campo, siguiente)`. Enter en `#nombre` enfoca la opción marcada
+    de "¿Asistirás?" y Enter en `#personas` ajusta el número y enfoca `#mensajito`. Solo el botón envía.
+    Antes, la tecla "Ir" del celular enviaba el formulario y abría WhatsApp a medio llenar.
+- **index.html**: `#nombre` con `autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next"`;
+  `#personas` con `enterkeyhint="next"`.
+- **css/styles.css**:
+  - `html { touch-action: manipulation }`: sin zoom por doble toque; el zoom con dos dedos sigue.
+  - `-webkit-tap-highlight-color: transparent` en `a, button, label, input, textarea`, compensado con `:active`
+    en `.boton*`, `.sello`, `.contador__boton`, `.opcion`, `.musica`, `.gen__mini` y `.desliza`. Usa los mismos
+    colores del `:hover`, más un `scale(.95–.98)`.
+  - Sobre: `.js .portal` con `overflow-y: auto` + `overscroll-behavior: contain` + `user-select: none` (sin
+    `place-items: center`), y `.portal__marco { margin: auto }`. Así centra si cabe y, si no, empieza arriba y
+    se desplaza, sin cortar el título.
+  - `.sobre`: ancho con respaldo en `vh` antes de la regla con `svh`; sin respaldo, en navegadores viejos el
+    sobre medía 0.
+  - `@media (max-height: 560px)` (horizontal o navegador interno bajo): columna de 620 px, nombre más pequeño,
+    sobre a `40svh × 1.45` y menos relleno. Probado sin cortes en 734×343 y 740×360.
+- **generador.html / js/generador.js**:
+  - Enter pasa nombre → pases → WhatsApp, y desde el WhatsApp crea el enlace (`enterkeyhint` next/next/go).
+    Antes se creaba con los pases sin revisar y quedaba repetido en la lista.
+  - `copiar(texto)`: primero el portapapeles moderno; si no, un `<textarea>` temporal + `execCommand('copy')`
+    (navegadores internos); si tampoco, selecciona el enlace de arriba solo si es el mismo texto y, si no,
+    usa `prompt()` con el enlace correcto.
+
 ## Auditoría de 24 puntos (versión invitación)
 1. ❌ Dominio propio — no aplica: JX eligió `pages.dev` gratis; canonical/og apuntan a `mis-xv-de-oriana-sofia.pages.dev` (confirmado).
 2. ✅ HTML real en el view-source (todo el contenido está en `index.html`).
@@ -180,7 +285,8 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 16. ✅ `lang="es"`, charset UTF-8 y viewport.
 17. ✅ `alt` en la foto; las acuarelas son decorativas (`alt=""` + `aria-hidden`).
 18. ✅ Sin sourcemaps, `.git`, `node_modules`, `.env` ni archivos de prueba.
-19. ✅ Cero errores y cero advertencias en consola (probado con Chromium en 360, 390 y 1440 px).
+19. ✅ Cero errores y cero advertencias en consola (v1: Chromium en 360, 390 y 1440 px; v1.1: Playwright con WebKit y
+    Chromium en 12 perfiles de celular, de 280 a 430 px y en horizontal).
 20. ✅ JS propio mínimo, CSS puro para animaciones, imágenes WebP, foto con `fetchpriority="high"`, resto `lazy`, scripts con `defer`, fuentes con `font-display: swap`.
 21. ➖ Páginas legales y banner de cookies — no aplica: versión invitación aprobada por JX (sin analítica ni formularios que guarden datos; el mapa solo carga si el invitado lo pide).
 22. ➖ GA4 — no se instala (decisión de la versión invitación).

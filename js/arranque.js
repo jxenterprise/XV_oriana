@@ -9,3 +9,18 @@
    muestra completa, sin sobre.
    =========================================================== */
 document.documentElement.classList.replace('no-js', 'js');
+
+/* Red de seguridad: si js/script.js no alcanzó a preparar el sobre (mala señal,
+   un navegador muy viejo o un error), al terminar de cargar la página se quita el
+   sobre para que la invitación se vea completa igual, sin animación. Sin esto el
+   sobre se quedaría tapando todo y no habría forma de abrirlo en el celular.
+   script.js marca window.__XV_SOBRE_LISTO__ = true cuando el sobre ya responde. */
+window.addEventListener('load', function () {
+  if (window.__XV_SOBRE_LISTO__) return;
+  document.documentElement.classList.replace('js', 'no-js');
+  document.body.classList.remove('con-portal');
+  ['.portada', 'main', '.cierre'].forEach(function (sel) {
+    var el = document.querySelector(sel);
+    if (el) { el.inert = false; el.removeAttribute('inert'); }
+  });
+});

@@ -79,13 +79,34 @@
     document.body.appendChild(a); a.click(); a.remove();
   }
 
-  /** Copia texto al portapapeles; si el navegador no deja, selecciona el texto. */
+  /**
+   * Copia texto al portapapeles.
+   * 1) Portapapeles moderno. 2) Si el navegador interno (WhatsApp, Instagram…) no lo permite,
+   * copia con un campo temporal + execCommand('copy'). 3) Si tampoco, deja copiarlo a mano.
+   * Ojo: copia SIEMPRE el texto recibido (en la lista es el enlace de ESE invitado, no el de arriba).
+   */
   function copiar(texto, cuandoListo) {
     function respaldo() {
-      var r = document.createRange();
-      r.selectNodeContents(enlaceTxt);
-      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
-      cuandoListo(false);
+      var campo = document.createElement('textarea');
+      campo.value = texto;
+      campo.setAttribute('readonly', '');
+      campo.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px;';   // 16px: sin zoom en iPhone
+      document.body.appendChild(campo);
+      campo.select();
+      campo.setSelectionRange(0, texto.length);   // iPhone necesita el rango explícito
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      campo.remove();
+      if (!ok) {
+        if (enlaceTxt.textContent === texto) {   // copia a mano: queda seleccionado el enlace correcto
+          var r = document.createRange();
+          r.selectNodeContents(enlaceTxt);
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        } else {
+          window.prompt('Copia este enlace:', texto);
+        }
+      }
+      cuandoListo(ok);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(texto).then(function () { cuandoListo(true); }, respaldo);
@@ -143,6 +164,20 @@
   });
   pases.addEventListener('change', function () { ajustarPases(pases.value); });
   nombre.addEventListener('input', function () { if (nombre.value.trim()) error.hidden = true; });
+
+  /* --- Enter / "Siguiente" del teclado: nombre → pases → WhatsApp; desde el WhatsApp crea el enlace.
+     Así no se crea un enlace con los pases sin revisar (quedaría repetido en la lista). --- */
+  [[nombre, pases], [pases, telefono]].forEach(function (par) {
+    par[0].addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' || e.isComposing) return;
+      e.preventDefault();
+      if (par[0] === pases) ajustarPases(pases.value);
+      par[1].focus();
+    });
+  });
+
+  // iPhone solo pinta los estilos :active (respuesta al tocar) si la página escucha toques.
+  document.addEventListener('touchstart', function () {}, { passive: true });
 
   /* --- crear invitación --- */
   form.addEventListener('submit', function (e) {

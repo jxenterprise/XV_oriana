@@ -480,7 +480,7 @@
         <form class="formulario" id="form-confirmar" novalidate>
           <div class="campo">
             <label for="nombre">Tu nombre</label>
-            <input id="nombre" name="nombre" type="text" autocomplete="name" maxlength="60" required placeholder="Ej.: Familia Pérez">
+            <input id="nombre" name="nombre" type="text" autocomplete="name" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" maxlength="60" required placeholder="Ej.: Familia Pérez">
             <p class="campo__error" id="error-nombre" hidden>Escribe tu nombre para que Oriana sepa quién confirma.</p>
           </div>
 
@@ -496,7 +496,7 @@
             <label for="personas">¿Cuántas personas asistirán?</label>
             <div class="contador">
               <button class="contador__boton" type="button" data-paso="-1" aria-label="Una persona menos"><svg aria-hidden="true"><use href="#i-menos"/></svg></button>
-              <input id="personas" name="personas" type="number" inputmode="numeric" min="1" max="10" value="1">
+              <input id="personas" name="personas" type="number" inputmode="numeric" enterkeyhint="next" min="1" max="10" value="1">
               <button class="contador__boton" type="button" data-paso="1" aria-label="Una persona más"><svg aria-hidden="true"><use href="#i-mas"/></svg></button>
             </div>
             <p class="campo__ayuda" id="ayuda-personas" hidden></p>
