@@ -6,9 +6,8 @@ Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). S
 enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
 `https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (12/10/2026): versión 1.2 publicada (v1.1 + **carrusel de fotos y visor a pantalla completa ya
-programados**). Por ahora el carrusel solo tiene la foto actual: **faltan las otras 7 fotos y la música nueva**,
-que JX aún no ha enviado → ver la sección siguiente.
+Estado (12/10/2026, noche): versión 1.3 publicada: **carrusel con las 8 fotos** (la del vestido gris primero) y
+**música nueva** (solo el audio del video que mandó la familia). Lo que queda está en "Pendiente", abajo.
 
 ## 🚦 ESTADO ACTUAL Y QUÉ SIGUE (leer primero en cada sesión)
 ### Hecho el 11/10/2026
@@ -38,55 +37,56 @@ que JX aún no ha enviado → ver la sección siguiente.
      en grande".
    - Sin regresiones en los 12 perfiles de celular.
 
+### Hecho el 12/10/2026 (noche) — versión 1.3: las fotos y la música
+5. JX mandó el material en un ZIP (`Fotos y musica.zip`: 8 JPG de WhatsApp + 1 MP4) a la sesión en la nube de
+   Claude Code. Los originales se trabajaron en una carpeta temporal y **no están en el repo** (regla).
+6. **Las 8 fotos en el carrusel**, en este orden (JX pidió el vestido gris de primera; después, de bebé a hoy):
+   | # | Archivo en `img/` | Tamaño | Arreglo |
+   |---|---|---|---|
+   | 1 | `oriana-sofia-vestido-gris.webp` | 1200×1600 | ninguno (es la imagen principal: `src` + `fetchpriority="high"`) |
+   | 2 | `oriana-sofia-bebe-vestido-verde.webp` | 1080×1443 | ninguno |
+   | 3 | `oriana-sofia-bebe-sombrero-2012.webp` | 1080×722 | ninguno (horizontal; la fecha impresa se ve en el visor) |
+   | 4 | `oriana-sofia-nina-galletas.webp` | 552×738 | captura de Samsung: recorte de la interfaz (y 524–1076) y giro 90° a la izquierda |
+   | 5 | `oriana-sofia-grado-preescolar.webp` | 738×984 | captura: recorte de las barras negras (y 308–1292) |
+   | 6 | `oriana-sofia-selfie-rizos.webp` | 1502×1073 | giro 90° a la izquierda (estaba de lado); `--enfoque: 10% 50%` |
+   | 7 | `oriana-sofia-vestido-beige.webp` | 960×1280 | ninguno |
+   | 8 | `oriana-sofia-selfie-xv.webp` | 900×1600 | original completo de la selfie de las 12:04; `--enfoque: 50% 5%` |
+   - Reemplaza a `oriana-sofia-portada-xv.webp` (el recorte 678×904 de la foto 8), que se borró.
+   - WebP calidad 86 con Pillow, resolución original, sin retoques. Pesan de 43 KB a 229 KB (la primera, 73 KB).
+     Los JPG de WhatsApp no traían orientación EXIF: los giros se decidieron mirando cada foto.
+   - Las capturas 4 y 5 son de baja resolución (vienen de pantallazos). Si la familia tiene los archivos
+     originales, se cambian por los mismos nombres.
+7. **Música nueva**: `musica/cancion-xv-oriana-sofia.mp3` reemplaza al vals (`vals-xv-oriana-sofia.mp3`, borrado).
+   - Solo la pista de audio del MP4 (sin imagen ni metadatos): 31,3 s, MP3 128 kbps estéreo 44,1 kHz, 490 KB
+     (el vals pesaba 1,6 MB). No tenía silencios: el video empieza y termina cortado en plena canción.
+   - `loudnorm` a −14 LUFS / pico −1,5 dBTP (el vals estaba en −13,6: suena igual de fuerte), entrada suave de
+     1,2 s y salida en fundido de 3 s, para que al repetirse (`loop`) no haya un corte seco.
+   - `<audio id="audio-musica">` (antes `audio-vals`), también en `iniciarMusica()`.
+   - JX dio permiso de publicar directo ("automáticamente todo"). Si al escucharla quieren otro corte, más
+     duración o más volumen, se rehace desde el MP4 con el mismo comando (ver MAPA DEL CÓDIGO → 1.3).
+8. Probado con Playwright en Chromium (≈ Android) en los 12 perfiles: 8 puntos, pasa sola a la 2.ª a los 5,5 s, el
+   visor recorre las 8 (todas caben en pantalla), X y "atrás" cierran sin salir, desborde 0, consola limpia,
+   la música carga y suena (31,3 s) y antes de abrir el sobre solo se descarga la foto 1. Encuadre del arco
+   revisado foto por foto. **WebKit (≈ iPhone) no se pudo probar**: la sesión en la nube solo trae Chromium; el
+   JS y el CSS del carrusel no cambiaron desde la v1.2, que sí se probó en WebKit.
+
 ### Pendiente (en este orden)
-1. **Agregar las fotos al carrusel**. El código ya está (v1.2); solo falta el material. Fue un pedido de JX y la
-   familia el 11/10/2026: "no una sola foto", que pasen solas y despacio y que se puedan ver en grande.
-   - Material: JX lo copia en `C:\Users\jampi\Documents\JX COMPANY\PAGINAS WEBS JX\Material_XV_Oriana` (FUERA del
-     proyecto: los JPG/MP4 originales nunca van al repo). Preguntar si ya está. Al 12/10/2026 aún no existe.
-   - **Cómo agregarlas** (no hay que tocar el JS):
-     1. Convertir cada foto a WebP en `img/` con nombre descriptivo (p. ej. `oriana-sofia-bebe-2011.webp`),
-        corrigiendo rotación y recortes.
-     2. Agregar en `index.html`, dentro de `#carrusel` y después de la primera foto, una línea por foto en el orden
-        en que deben pasar:
-        `<img class="carrusel__foto" data-src="img/NOMBRE.webp" width="ANCHO" height="ALTO" alt="DESCRIPCIÓN" decoding="async">`
-        Solo la primera lleva `src`, `fetchpriority="high"` y la clase `es-actual`.
-     3. Si el arco corta la cara, agregar `style="--enfoque: 50% 15%"` (x% y%; por defecto 50% 30%).
-     4. Revisar en celular con el banco de pruebas: arco, visor y que la foto quede entera en el visor.
-     Opcional: reemplazar la primera foto (hoy un recorte de 678×904) por la original completa, porque en el visor
-     se ve entera.
-   - Las 8 fotos (también las pegó en el chat): 1) selfie actual de la portada (original 900×1600); 2) niña
-     pequeña sentada con galletas: es una **captura de la galería de Samsung**, hay que recortar la interfaz y
-     **rotar 90°** (la foto está de lado); 3) graduación de preescolar con toga azul: **captura con barras negras**
-     arriba y abajo, hay que recortarlas; 4) adolescente con vestido gris de lentejuelas, cuerpo entero (1200×1600);
-     5) selfie en espejo con vestido beige (960×1280); 6) selfie muy cercana **de lado, hay que rotarla**;
-     7) bebé con sombrero blanco con flores, horizontal 1080×722, con fecha impresa 19/10/2012;
-     8) bebé de meses con vestido verde y balaca rosada (1080×1443).
-   - Diseño (ya implementado en v1.2, mismo diseño de la web): carrusel dentro del arco dorado, puntos dorados y
-     ayuda debajo de las flores, visor `<dialog>` con fondo color tinta y botones redondos como el de la música.
-     Orden propuesto a JX: primero la foto actual de Oriana y luego de bebé a hoy.
-   - Técnica: convertir a WebP en `img/` (regla), conservando la resolución original (para el visor). Usar
-     `ImageOps.exif_transpose` de Pillow para corregir la rotación y calidad ~86. `alt` descriptivo por foto, y
-     actualizar README y el decision log.
-2. **Música nueva** (no les gustó el vals): viene dentro de un **video MP4** en la misma carpeta. Extraer el audio
-   con ffmpeg (no hay ffmpeg instalado en el PC; funciona `npm i ffmpeg-static` en una carpeta temporal), quitar
-   silencios, fundido de entrada y salida, normalizar volumen (`loudnorm`), MP3 de ~112–128 kbps, reemplazar
-   `musica/vals-xv-oriana-sofia.mp3` (o usar un nombre nuevo y actualizar el `src` del `<audio>`). No se puede
-   "escuchar": JX la valida en una vista previa (rama distinta de `main`) antes de pasarla a producción.
-   Si es una canción comercial, el uso corre por cuenta de la familia (ya lo dice el README). Actualizar los
-   textos que hablan del "vals original" (README, CLAUDE.md).
-3. **Volver privado el repo de GitHub**: está PÚBLICO y ya tiene la foto de una menor; pronto tendría fotos de
-   bebé. Se le propuso a JX el 11/10/2026 y **falta su OK**. Cloudflare sigue publicando con el repo privado.
-   Hacerlo ANTES de subir las fotos nuevas:
+1. **Volver privado el repo de GitHub** (URGENTE): está PÚBLICO y desde la v1.3 tiene 8 fotos de una menor, varias
+   de bebé. JX dio permiso general el 12/10/2026, pero desde la sesión en la nube no hay forma de cambiarlo.
+   Lo hace JX en GitHub → `jxenterprise/XV_oriana` → Settings → General → Danger Zone → Change visibility →
+   Make private. Cloudflare sigue publicando con el repo privado. Desde el PC también sirve:
    `GH_TOKEN="$(gh auth token --user jxenterprise)" gh repo edit jxenterprise/XV_oriana --visibility private --accept-visibility-change-consequences`
-4. **Vista previa de WhatsApp**: ya con el dominio correcto, el WhatsApp de JX guardó en caché la tarjeta vacía de
+2. **Que JX escuche la música** en el celular y confirme (corte, volumen y cómo se repite cada 31 s).
+3. **Vista previa de WhatsApp**: ya con el dominio correcto, el WhatsApp de JX guardó en caché la tarjeta vacía de
    la dirección raíz. Probar pegando `https://mis-xv-de-oriana-sofia.pages.dev/?v=2` y esperar 5–10 s. Si aun así
    no sale la imagen, hacer una excepción técnica documentada (como el favicon): `og:image` en JPG.
-5. Auditoría móvil a fondo: el workflow de 6 revisores del 11/10/2026 **se cortó por el límite de sesión** antes de
+   `img/og-xv-oriana-sofia.webp` sigue con la selfie: preguntar si la quieren con la foto del vestido gris.
+4. Auditoría móvil a fondo: el workflow de 6 revisores del 11/10/2026 **se cortó por el límite de sesión** antes de
    entregar resultados. Lo urgente ya se había corregido en v1.1. Quedan por revisar: modo oscuro forzado (Samsung
    Internet o navegadores internos: probar `color-scheme: only light`), enlace de respaldo de WhatsApp en la misma
-   pestaña (navegadores internos), rendimiento en 3G y foco/lectores de pantalla.
-6. Pin exacto del punto de encuentro (ver {POR CONFIRMAR} 1).
-7. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
+   pestaña (navegadores internos), rendimiento en 3G, foco/lectores de pantalla y el carrusel con 8 fotos en WebKit.
+5. Pin exacto del punto de encuentro (ver {POR CONFIRMAR} 1).
+6. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
    Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
 
 ### Cómo probar "en celular" desde el PC
@@ -96,9 +96,16 @@ de iPhone y Chromium ≈ Android. Perfiles usados: iPhone SE 320×568, SE (3.ª 
 Pixel 7 412×839, Fold 280×653 y Android horizontal 740×360. Revisar: sobre sin cortes, desborde lateral 0, toques
 ≥44 px, consola limpia, Enter no envía, `wa.me` correcto. El banco de pruebas vive **fuera** del repo: no subir
 archivos de prueba (punto 18 de la auditoría).
+- Ojo con `page.tap('#carrusel-ver')` (o cualquier `tap`/`click` por selector en la portada): si el elemento se está
+  moviendo por la animación de scroll, Playwright reintenta con un `scrollIntoView` forzado que desplaza
+  `header.portada` (tiene `overflow-x: hidden` por los ramos) y la portada queda corrida ~50 px. **No es un error
+  de la página**: un dedo no puede desplazar ese contenedor. Usar `page.touchscreen.tap(x, y)` o `el.click()`.
+- En la sesión en la nube de Claude Code hay Chromium en `/opt/pw-browsers` y Playwright global en
+  `/opt/node-tools/node_modules` (`NODE_PATH=...`); no trae WebKit y no se debe correr `playwright install`.
+  ffmpeg sí está instalado.
 
 ## Repositorio y publicación
-- GitHub: `https://github.com/jxenterprise/XV_oriana` (hoy **público**; ver pendiente 3), rama `main`. Commits como `JX Code <jxenterpriseshop@gmail.com>`.
+- GitHub: `https://github.com/jxenterprise/XV_oriana` (hoy **público**; ver pendiente 1), rama `main`. Commits como `JX Code <jxenterpriseshop@gmail.com>`.
 - Cloudflare Pages está **conectado al repo**: cada `push` a `main` publica en producción en 1–2 minutos
   (lo confirma el check "Cloudflare Pages" del commit en GitHub). Una rama distinta de `main` genera una
   vista previa en `https://<rama>.mis-xv-de-oriana-sofia.pages.dev` sin tocar producción.
@@ -115,12 +122,16 @@ archivos de prueba (punto 18 de la auditoría).
 - Invitación personalizada: **nombre + número de pases** (parámetros `?para=` y `&pases=`), con generador.
 - Confirmaciones al WhatsApp **573157800663** (315 780 0663). **Sin fecha límite** para confirmar.
 - Música: **instrumental suave tipo vals** → vals original compuesto para el proyecto (sin derechos de terceros).
-  ⚠ **Cambio 11/10/2026**: no les gustó; mandan otra canción dentro de un MP4 (ver pendiente 2).
+  ⚠ **Cambio 11/10/2026**: no les gustó; mandaron otra canción dentro de un MP4.
+  ✅ **12/10/2026 (v1.3)**: suena solo el audio de ese video ("solo el audio, más nada", pidió JX). Si es una
+  canción comercial, el derecho de uso corre por cuenta de la familia (lo dice el README).
 - Fotos: **una foto en la portada** (la selfie de las 12:04; recortada 678×904, sin retoques).
   Mandaron 8 fotos (varias de bebé/niña): no se usaron porque escogió solo una; se puede ofrecer
   una sección "Así he crecido" si la quieren.
   ⚠ **Cambio 11/10/2026**: ahora quieren TODAS las fotos en un carrusel lento dentro del arco y verlas en
-  pantalla completa (ver pendiente 1).
+  pantalla completa.
+  ✅ **12/10/2026 (v1.3)**: las 8 fotos en el carrusel; JX pidió la del vestido gris de primera y luego van de
+  bebé a hoy (orden en "ESTADO ACTUAL" → 6). La selfie de las 12:04 quedó de última, completa (900×1600).
 - Secciones extra elegidas: **agregar al calendario** y **mensajito para Oriana**. No eligieron itinerario,
   padres/padrinos, hashtag ni "qué llevar" (el recordatorio del traje de baño se mantiene en el vestuario,
   porque venía en la invitación original).
@@ -152,7 +163,7 @@ archivos de prueba (punto 18 de la auditoría).
 8. Confirmación por WhatsApp (`#confirmar`).
 9. Cierre + crédito JX Company (`footer.cierre`).
 10. Visor de fotos a pantalla completa (`<dialog id="visor">`), cerrado hasta que tocan una foto.
-11. Botón flotante de música (`#boton-musica`) y `<audio id="audio-vals">`.
+11. Botón flotante de música (`#boton-musica`) y `<audio id="audio-musica">`.
 
 ## Dónde editar cada cosa
 - Textos del mensaje → `index.html`, zona TEXTOS.
@@ -164,8 +175,8 @@ archivos de prueba (punto 18 de la auditoría).
 - Colores, tipografías, tamaños → `css/styles.css`, bloque `:root`.
 - Fotos del carrusel (y del visor) → `index.html`, comentario "CARRUSEL DE FOTOS" en la portada: una
   `<img class="carrusel__foto">` por foto, en orden. El JS no se toca.
-- Foto, acuarelas, imagen de vista previa → `img/` (siempre WebP).
-- Música → `musica/vals-xv-oriana-sofia.mp3`.
+- Fotos, acuarelas, imagen de vista previa → `img/` (siempre WebP).
+- Música → `musica/cancion-xv-oriana-sofia.mp3` (`src` del `<audio id="audio-musica">` al final de `index.html`).
 
 ## 🖼️ REGLA DE IMÁGENES — SIEMPRE WebP
 Todas las imágenes de este proyecto van en **WebP**, sin excepción. Cualquier foto nueva que JX entregue (JPG, PNG, HEIC, capturas, lo que sea) se **convierte a WebP de inmediato** antes de meterla al proyecto, conservando resolución y calidad originales, y se guarda en `img/`. Nunca dejar JPG/PNG en el proyecto ni entregar copias de respaldo en otros formatos.
@@ -251,7 +262,7 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
   foto de portada, `og-xv-oriana-sofia.webp` (1200×630) para la vista previa de WhatsApp, `favicon.svg` y
   `apple-touch-icon.png` (excepción técnica).
 - **musica/vals-xv-oriana-sofia.mp3**: vals original en Sol mayor, 3/4, 104 bpm, timbre de cajita musical,
-  ~116 s en bucle, 112 kbps (~1,6 MB).
+  ~116 s en bucle, 112 kbps (~1,6 MB). *Reemplazado en la v1.3 por la canción de la familia.*
 - **evento-xv-oriana-sofia.ics**: evento de día completo el 1/11/2026 con recordatorio a las 8:00 p. m. del día
   anterior; `_headers` lo sirve como `text/calendar`.
 - **Fuentes**: alojadas en `fonts/` en vez de Google Fonts (sin peticiones a terceros, más privacidad y carga
@@ -328,6 +339,20 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
   - Sección "VISOR DE FOTOS": botones de 54 px como `.musica` y `.visor--una`, que oculta flechas y contador con
     una sola foto. `nth-child(7)` tiene retraso en la animación de entrada de la portada (el pie es un hijo nuevo).
 
+### 12/10/2026 — versión 1.3 (las 8 fotos + música nueva)
+- **index.html**: 8 `img.carrusel__foto` en `#carrusel` (tabla en "ESTADO ACTUAL" → 6); `--enfoque` solo en la
+  selfie de rizos (`10% 50%`, es horizontal y la cara está a la izquierda) y en la selfie de las 12:04 (`50% 5%`,
+  es 9:16 y si no se cortaba el pelo). Las otras son 3:4 como el arco o centradas. Comentarios del encabezado y
+  de MÚSICA sin "vals". `<audio id="audio-musica" src="musica/cancion-xv-oriana-sofia.mp3" loop preload="none">`.
+- **js/script.js**: solo el selector `#audio-musica` en `iniciarMusica()` (antes `#audio-vals`).
+- **img/**: 8 WebP nuevos (`oriana-sofia-*.webp`), se borró `oriana-sofia-portada-xv.webp`.
+- **musica/**: `cancion-xv-oriana-sofia.mp3` nuevo, se borró `vals-xv-oriana-sofia.mp3`. Se hizo así (ffmpeg):
+  1. Medir: `ffmpeg -i VIDEO.mp4 -vn -af loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json -f null -`
+  2. Exportar solo el audio con esos valores (`measured_I`, `measured_TP`, `measured_LRA`, `measured_thresh`,
+     `offset`, `linear=true`), `afade=t=in:st=0:d=1.2`, `afade=t=out:st=(duración − 3):d=3`, `-map 0:a:0 -vn
+     -map_metadata -1 -ar 44100 -ac 2 -c:a libmp3lame -b:a 128k`.
+- **CSS**: sin cambios.
+
 ## Auditoría de 24 puntos (versión invitación)
 1. ❌ Dominio propio — no aplica: JX eligió `pages.dev` gratis; canonical/og apuntan a `mis-xv-de-oriana-sofia.pages.dev` (confirmado).
 2. ✅ HTML real en el view-source (todo el contenido está en `index.html`).
@@ -345,10 +370,11 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 14. ✅ `favicon.svg` + `apple-touch-icon.png` + `theme-color`.
 15. ➖ `sitemap.xml` — no aplica: no debe indexarse.
 16. ✅ `lang="es"`, charset UTF-8 y viewport.
-17. ✅ `alt` en la foto; las acuarelas son decorativas (`alt=""` + `aria-hidden`).
+17. ✅ `alt` descriptivo en cada una de las 8 fotos; las acuarelas son decorativas (`alt=""` + `aria-hidden`).
 18. ✅ Sin sourcemaps, `.git`, `node_modules`, `.env` ni archivos de prueba.
 19. ✅ Cero errores y cero advertencias en consola (v1: Chromium en 360, 390 y 1440 px; v1.1 y v1.2: Playwright con
-    WebKit y Chromium en 12 perfiles de celular, de 280 a 430 px y en horizontal, más pruebas del carrusel y el visor).
+    WebKit y Chromium en 12 perfiles de celular, de 280 a 430 px y en horizontal, más pruebas del carrusel y el visor;
+    v1.3: Chromium en los mismos 12 perfiles con las 8 fotos y la música nueva).
 20. ✅ JS propio mínimo, CSS puro para animaciones, imágenes WebP, foto con `fetchpriority="high"`, resto `lazy`, scripts con `defer`, fuentes con `font-display: swap`.
 21. ➖ Páginas legales y banner de cookies — no aplica: versión invitación aprobada por JX (sin analítica ni formularios que guarden datos; el mapa solo carga si el invitado lo pide).
 22. ➖ GA4 — no se instala (decisión de la versión invitación).

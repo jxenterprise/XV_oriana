@@ -6,9 +6,9 @@
        · css/styles.css  → todo el diseño (colores, tipografías, animaciones)
        · js/script.js    → sobre animado, música, nombre del invitado,
                            cuenta regresiva, mapa y confirmación por WhatsApp
-       · img/            → foto de portada y acuarelas (todo en WebP)
+       · img/            → fotos de Oriana (carrusel) y acuarelas (todo en WebP)
        · fonts/          → tipografías propias (Pinyon Script y Cormorant Garamond)
-       · musica/         → vals instrumental original
+       · musica/         → canción que eligió la familia (solo el audio de su video)
      Versión "invitación privada": no se indexa en Google (noindex),
      sin páginas legales ni banner de cookies (aprobado por JX, 10/10/2026).
      Diseño y desarrollo: JX Company.
@@ -240,8 +240,22 @@
            completa usa estas mismas fotos: no hay que repetirlas en otro lado. -->
       <figure class="arco">
         <div class="arco__foto carrusel" id="carrusel" role="group" aria-roledescription="carrusel" aria-label="Fotos de Oriana Sofía">
-          <img class="carrusel__foto es-actual" src="img/oriana-sofia-portada-xv.webp" width="678" height="904" fetchpriority="high"
-               alt="Oriana Sofía, la quinceañera, sonriendo con su cabello rizado suelto">
+          <img class="carrusel__foto es-actual" src="img/oriana-sofia-vestido-gris.webp" width="1200" height="1600" fetchpriority="high"
+               alt="Oriana Sofía de cuerpo entero con vestido gris de lentejuelas, sandalias plateadas y bolso de mano">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-bebe-vestido-verde.webp" width="1080" height="1443" decoding="async"
+               alt="Oriana Sofía de bebé, de pocos meses, con vestido verde y balaca rosada">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-bebe-sombrero-2012.webp" width="1080" height="722" decoding="async"
+               alt="Oriana Sofía de bebé con sombrero blanco con flores, sonriendo, en octubre de 2012">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-nina-galletas.webp" width="552" height="738" decoding="async"
+               alt="Oriana Sofía de niña pequeña, sentada en el piso con un paquete de galletas">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-grado-preescolar.webp" width="738" height="984" decoding="async"
+               alt="Oriana Sofía en su grado de preescolar, con toga y birrete azules">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-selfie-rizos.webp" width="1502" height="1073" decoding="async"
+               style="--enfoque: 10% 50%" alt="Oriana Sofía en una selfie muy cercana, sonriendo, con su cabello rizado">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-vestido-beige.webp" width="960" height="1280" decoding="async"
+               alt="Oriana Sofía con vestido beige en una selfie frente al espejo">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-selfie-xv.webp" width="900" height="1600" decoding="async"
+               style="--enfoque: 50% 5%" alt="Oriana Sofía, la quinceañera, sonriendo con su cabello rizado suelto">
           <button class="carrusel__ver" id="carrusel-ver" type="button" aria-label="Ver las fotos en pantalla completa"></button>
         </div>
         <svg class="arco__marco" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
@@ -575,7 +589,7 @@
 
   <!-- ===========================================================
        MÚSICA
-       Qué es: botón flotante para pausar/reanudar el vals y el audio.
+       Qué es: botón flotante para pausar/reanudar la música y el audio.
        Función: la música arranca al abrir el sobre; el invitado decide si la pausa.
        Depende de: iniciarMusica() en script.js; .musica en styles.css.
        El MP3 se empieza a descargar cuando la página termina de cargar.
@@ -584,7 +598,7 @@
     <svg class="musica__icono musica__icono--nota" aria-hidden="true"><use href="#i-nota"/></svg>
     <svg class="musica__icono musica__icono--silencio" aria-hidden="true"><use href="#i-silencio"/></svg>
   </button>
-  <audio id="audio-vals" src="musica/vals-xv-oriana-sofia.mp3" loop preload="none"></audio>
+  <audio id="audio-musica" src="musica/cancion-xv-oriana-sofia.mp3" loop preload="none"></audio>
 
 </body>
 </html>

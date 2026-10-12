@@ -1,7 +1,7 @@
 # Invitación web · Mis XV años de Oriana Sofía
 
 Invitación digital para los XV años de **Oriana Sofía** (domingo 1 de noviembre de 2026, Cartagena).
-Se envía por WhatsApp como un enlace: el invitado abre un sobre lila con sello de cera, suena un vals,
+Se envía por WhatsApp como un enlace: el invitado abre un sobre lila con sello de cera, suena la canción que eligió la familia,
 ve la información del día, el punto de encuentro con mapa y confirma su asistencia por WhatsApp.
 
 Encargo de Moisés Escalante. Diseño y desarrollo: **JX Company**.
@@ -40,7 +40,8 @@ Cómo llegar a una zona:
 - **Código de vestuario**: semiformal, morado y lila reservados para la quinceañera y recordatorio del traje de baño.
 - **Lluvia de sobres** explicada con cariño.
 - **Confirmación por WhatsApp**: nombre, si asiste, cuántas personas y un mensajito para Oriana; abre WhatsApp con el mensaje listo.
-- **Música**: vals instrumental original (composición propia del proyecto, sin derechos de terceros) con botón para pausar.
+- **Música**: la canción que eligió la familia (el audio del video que enviaron, unos 31 s que se repiten con
+  entrada y salida suaves) con botón para pausar.
 - **Privada**: no aparece en Google ni en buscadores (noindex + robots.txt), pero al pegar el enlace en WhatsApp sí sale la vista previa con imagen.
 - Hecha primero para celular; probada de 360 px a pantallas grandes.
 
@@ -62,9 +63,9 @@ invitacion-xv-oriana-sofia/
 ├── js/arranque.js              ← activa el sobre antes de pintar (evita parpadeos)
 ├── js/script.js                ← sobre, música, invitado, cuenta regresiva, mapa y confirmación
 ├── js/generador.js             ← lógica del generador de enlaces
-├── img/                        ← foto, acuarelas, textura e imagen de vista previa (WebP) + íconos
+├── img/                        ← 8 fotos del carrusel, acuarelas, textura e imagen de vista previa (WebP) + íconos
 ├── fonts/                      ← Pinyon Script y Cormorant Garamond (licencia OFL incluida)
-└── musica/vals-xv-oriana-sofia.mp3
+└── musica/cancion-xv-oriana-sofia.mp3
 ```
 
 ---
@@ -123,7 +124,7 @@ Para ver el sobre personalizado: `http://localhost:8000/?para=Familia%20P%C3%A9r
   `<img class="carrusel__foto">` por foto, en el orden en que pasan. Para agregar una: guardarla en `img/` en WebP
   (JX la convierte) y copiar una línea con `data-src="img/NOMBRE.webp"`, su ancho, alto y una descripción en `alt`.
   Solo la primera lleva `src`. Si el arco corta la cara, se ajusta con `style="--enfoque: 50% 15%"`.
-- **Música**: reemplaza `musica/vals-xv-oriana-sofia.mp3` por otro MP3 con el mismo nombre (que la familia tenga derecho a usarlo).
+- **Música**: reemplaza `musica/cancion-xv-oriana-sofia.mp3` por otro MP3 con el mismo nombre (que la familia tenga derecho a usarlo).
 - **Textos**: zona `TEXTOS` en `index.html`.
 - **Fecha, hora, dirección o WhatsApp**: zonas `HORARIOS` y `CONTACTO` + los lugares que indica `⚠ SE REPITE EN`.
 - **Colores**: variables al inicio de `css/styles.css` (`:root`).
@@ -135,7 +136,7 @@ revísalo en el *Sharing Debugger* de Facebook.
 
 ## Privacidad
 
-La invitación lleva la foto, el nombre de Oriana y la dirección del punto de encuentro, por eso:
+La invitación lleva fotos de Oriana (también de bebé), su nombre y la dirección del punto de encuentro, por eso:
 - No se indexa en Google ni en buscadores de IA (`noindex`, `X-Robots-Tag` y `robots.txt`).
 - Solo la ve quien tenga el enlace.
 - El mapa de Google solo se carga si el invitado toca "Ver mapa aquí".
@@ -145,8 +146,10 @@ La invitación lleva la foto, el nombre de Oriana y la dirección del punto de e
 
 ## Créditos y licencias
 
-- Diseño, ilustraciones en acuarela, corona, sello y música: creados para este proyecto por JX Company.
+- Diseño, ilustraciones en acuarela, corona y sello: creados para este proyecto por JX Company.
 - Fotos de Oriana: enviadas por la familia.
+- Música: canción elegida por la familia (tomada del audio de un video que enviaron). El derecho de uso corre por
+  cuenta de la familia.
 - Tipografías: Pinyon Script y Cormorant Garamond, licencia SIL Open Font License (archivos en `fonts/`).
 
 ---

@@ -106,10 +106,10 @@
   /**
    * Prepara el audio y el botón flotante.
    * Devuelve: { reproducir(), mostrarBoton() }.
-   * Depende de: #audio-vals y #boton-musica en el HTML.
+   * Depende de: #audio-musica y #boton-musica en el HTML.
    */
   function iniciarMusica() {
-    var audio = $('#audio-vals');
+    var audio = $('#audio-musica');
     var boton = $('#boton-musica');
     var quiereSonar = false;   // lo que eligió el invitado (para retomar al volver a la pestaña)
     var fundido = null;
