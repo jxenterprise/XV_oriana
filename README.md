@@ -19,7 +19,7 @@ Encargo de Moisés Escalante. Diseño y desarrollo: **JX Company**.
 Cómo llegar a una zona:
 1. Abre `index.html` y busca `ZONA EDITABLE` con Ctrl+F.
 2. Cambia solo lo que dice el comentario de esa zona (el texto entre `>` y `<`, o el valor entre comillas que indica).
-3. Guarda y vuelve a subir la carpeta a Cloudflare Pages.
+3. Guarda y sube el cambio a GitHub (rama `main`): Cloudflare Pages lo publica solo en 1–2 minutos.
 
 > Fecha, hora, dirección y WhatsApp los cambia JX: viven en varios lugares a la vez (lo dice el aviso `⚠ SE REPITE EN`).
 
@@ -66,30 +66,38 @@ invitacion-xv-oriana-sofia/
 
 ---
 
-## Cómo publicarla en Cloudflare Pages (gratis)
+## Dónde está publicada y cómo actualizarla
 
-1. Entra a Cloudflare → **Workers & Pages** → **Create** → **Pages** → **Upload assets**.
-2. Nombre del proyecto: `xv-oriana-sofia` (así queda en `https://xv-oriana-sofia.pages.dev`).
-3. Sube el ZIP (o la carpeta) tal cual: `index.html` debe quedar en la raíz.
-4. **Deploy**. En 1–2 minutos queda en línea.
+- **Dirección**: `https://mis-xv-de-oriana-sofia.pages.dev/` (Cloudflare Pages gratis, proyecto `mis-xv-de-oriana-sofia`).
+- **Código**: `https://github.com/jxenterprise/XV_oriana` (rama `main`).
+- Cloudflare Pages está conectado al repositorio: **cada cambio que se sube a `main` se publica solo** en 1–2 minutos.
+  No hay que subir ZIP ni carpetas a Cloudflare.
+- Para probar algo sin tocar la invitación real: súbelo a otra rama (por ejemplo `pruebas`) y Cloudflare
+  crea una copia de prueba en `https://pruebas.mis-xv-de-oriana-sofia.pages.dev`.
 
-**Si Cloudflare asigna otra dirección** (por ejemplo si el nombre ya está tomado), cambia
-`https://xv-oriana-sofia.pages.dev/` por la dirección real en estas 4 etiquetas del `<head>` de `index.html`:
+Desde la terminal, dentro de la carpeta del proyecto:
+
+```
+git add -A
+git commit -m "Qué cambió"
+git push
+```
+
+**Si algún día cambia la dirección** (dominio propio u otro proyecto), cambia
+`https://mis-xv-de-oriana-sofia.pages.dev/` por la nueva en estas 4 etiquetas del `<head>` de `index.html`:
 `canonical`, `og:url`, `og:image` y `twitter:image`. Sin eso, la vista previa de WhatsApp no muestra la imagen.
-
-Para actualizarla después: Cloudflare → el proyecto → **Create new deployment** → subir de nuevo.
 
 ---
 
 ## Cómo crear y enviar las invitaciones
 
-1. Abre `https://xv-oriana-sofia.pages.dev/generador.html` (esta página es privada: no se la mandes a los invitados).
+1. Abre `https://mis-xv-de-oriana-sofia.pages.dev/generador` (esta página es privada: no se la mandes a los invitados).
 2. Escribe el nombre del invitado ("Familia Pérez", "Tía Luz y Carlos"…) y cuántos pases tiene.
 3. Opcional: su número de WhatsApp para abrirle el chat directo.
 4. Toca **Crear enlace** → **Enviar por WhatsApp** (el mensaje se puede editar antes) o **Copiar enlace**.
 5. La lista de abajo lleva la cuenta de invitaciones y pases creados en ese celular.
 
-El enlace general (sin nombre) también sirve: `https://xv-oriana-sofia.pages.dev/`.
+El enlace general (sin nombre) también sirve: `https://mis-xv-de-oriana-sofia.pages.dev/`.
 
 Las confirmaciones llegan al WhatsApp **315 780 0663**.
 
@@ -142,7 +150,8 @@ La invitación lleva la foto, el nombre de Oriana y la dirección del punto de e
 - El código fuente y el contenido son de la familia de Oriana Sofía; se entregan completos y sin minificar.
 - Hosting: cliente básico → el sitio queda en la **cuenta de Cloudflare de JX**. Si la familia quiere tenerlo en su
   propia cuenta, JX crea el proyecto allá y sube la misma carpeta (no hay base de datos ni configuración extra).
-- Respaldo: guarda una copia de esta carpeta (o del ZIP). Con eso se puede volver a publicar en cualquier momento.
+- Respaldo: el repositorio de GitHub (`jxenterprise/XV_oriana`) guarda todo el historial de cambios; una copia
+  de esta carpeta (o del ZIP) también sirve para volver a publicar en cualquier momento.
 
 ---
 

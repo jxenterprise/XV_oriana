@@ -3,10 +3,21 @@
 ## Qué es
 Invitación digital (una sola página) para los XV años de **Oriana Sofía**, domingo 1 de noviembre de 2026,
 Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). Se comparte por WhatsApp con
-enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección prevista
-`https://xv-oriana-sofia.pages.dev`.
+enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
+`https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (11/10/2026): versión completa entregada (ZIP + vista previa + tarjeta cuadrada en WebP).
+Estado (11/10/2026): versión completa entregada (ZIP + vista previa + tarjeta cuadrada en WebP) y publicada.
+
+## Repositorio y publicación
+- GitHub: `https://github.com/jxenterprise/XV_oriana` (público), rama `main`. Commits como `JX Code <jxenterpriseshop@gmail.com>`.
+- Cloudflare Pages está **conectado al repo**: cada `push` a `main` publica en producción en 1–2 minutos
+  (lo confirma el check "Cloudflare Pages" del commit en GitHub). Una rama distinta de `main` genera una
+  vista previa en `https://<rama>.mis-xv-de-oriana-sofia.pages.dev` sin tocar producción.
+- Sin paso de compilación: Cloudflare sirve la raíz del repo tal cual.
+- Push desde este PC: si la cuenta activa de `gh` no es `jxenterprise` (solo tiene lectura), subir con
+  `GH_TOKEN="$(gh auth token --user jxenterprise)" git push`.
+- `evento-xv-oriana-sofia.ics` va con saltos de línea CRLF (estándar de calendarios) y el repo local usa
+  `core.autocrlf=input`: no convertirlo a LF.
 
 ## Decisiones tomadas (respuestas de Oriana, vía JX, 10/10/2026)
 - Estilo: **Princesa lila y dorado** (corona, flores en acuarela, filetes dorados). Modo de diseño 2 (libre),
@@ -33,8 +44,9 @@ Estado (11/10/2026): versión completa entregada (ZIP + vista previa + tarjeta c
 1. **Pin exacto del punto de encuentro**: el mapa busca "Transversal 44 #26D-12, España, Cartagena".
    Verificar que Google Maps/Waze caigan en la casa correcta; si no, pedir a la familia el enlace de
    Google Maps y ponerlo en `data-direccion-mapa` (zona CONTACTO).
-2. **Dirección final del sitio**: si Cloudflare no asigna `xv-oriana-sofia.pages.dev`, actualizar
-   `canonical`, `og:url`, `og:image` y `twitter:image` en el `<head>` de `index.html`.
+2. ~~Dirección final del sitio~~ ✅ resuelto el 11/10/2026: `https://mis-xv-de-oriana-sofia.pages.dev/`, ya puesta en
+   `canonical`, `og:url`, `og:image` y `twitter:image` del `<head>` de `index.html`. El `UID` del `.ics` conserva
+   el dominio viejo a propósito: es solo un identificador y cambiarlo duplicaría el evento a quien ya lo guardó.
 
 ## Estructura de secciones (index.html)
 1. Portal / sobre animado (`#portal`) — sello de cera, nombre y pases del invitado.
@@ -150,7 +162,7 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
   más rápida en datos móviles). Licencias OFL incluidas.
 
 ## Auditoría de 24 puntos (versión invitación)
-1. ❌ Dominio propio — no aplica: JX eligió `pages.dev` gratis; canonical/og apuntan a `xv-oriana-sofia.pages.dev` `{POR CONFIRMAR}`.
+1. ❌ Dominio propio — no aplica: JX eligió `pages.dev` gratis; canonical/og apuntan a `mis-xv-de-oriana-sofia.pages.dev` (confirmado).
 2. ✅ HTML real en el view-source (todo el contenido está en `index.html`).
 3. ✅ `404.html` con el diseño de la invitación y botón de regreso.
 4. ✅ `<title>` real: "Mis XV años · Oriana Sofía".
@@ -160,7 +172,7 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 8. ➖ JSON-LD — no aplica a propósito: es una invitación privada (no se publican datos estructurados de una menor).
 9. ✅ Un solo `<h1>` (nombre de la quinceañera).
 10. ✅ El `<h1>` existe y describe la página ("Mis XV años · Oriana Sofía").
-11. ✅ `<link rel="canonical">` absoluto (pendiente confirmar dominio).
+11. ✅ `<link rel="canonical">` absoluto a `https://mis-xv-de-oriana-sofia.pages.dev/`.
 12. ➖ `llms.txt` — no aplica: invitación privada, aprobado por JX.
 13. ➖ `robots.txt` bloquea buscadores y bots de IA a propósito (privacidad); permite WhatsApp/Facebook/Telegram para la vista previa.
 14. ✅ `favicon.svg` + `apple-touch-icon.png` + `theme-color`.
