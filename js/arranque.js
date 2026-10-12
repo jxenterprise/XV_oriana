@@ -1,0 +1,11 @@
+/* ===========================================================
+   PROYECTO: Invitación web · Mis XV años de Oriana Sofía
+   Archivo: js/arranque.js — se carga en el <head> SIN defer, a propósito.
+   Qué hace: cambia la clase "no-js" por "js" en <html> antes de que el
+   navegador pinte la página. Así el sobre animado (.js .portal en
+   styles.css) aparece desde el primer instante y nunca se ve un
+   "parpadeo" de la invitación antes del sobre.
+   Si JavaScript está apagado, esta línea no corre y la invitación se
+   muestra completa, sin sobre.
+   =========================================================== */
+document.documentElement.classList.replace('no-js', 'js');

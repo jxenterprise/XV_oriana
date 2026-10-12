@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- ===========================================================
+     PROYECTO: Invitación web · Mis XV años de Oriana Sofía
+     Archivo: 404.html — se muestra si alguien abre una dirección que
+     no existe (Cloudflare Pages la sirve sola). Mismo diseño que la
+     invitación y botón para volver a ella.
+     Diseño y desarrollo: JX Company.
+     =========================================================== -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Página no encontrada · XV de Oriana Sofía</title>
+  <meta name="description" content="Esta página no existe. Vuelve a la invitación de los XV años de Oriana Sofía.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#EFE5F8">
+  <meta name="color-scheme" content="light">
+  <!-- Rutas absolutas (/css, /img): la 404 se puede servir desde cualquier subcarpeta -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g-oro" x1="0" y1="0" x2="0.35" y2="1">
+        <stop offset="0" stop-color="#F7E7B4"/><stop offset=".38" stop-color="#D8B460"/>
+        <stop offset=".7" stop-color="#B28734"/><stop offset="1" stop-color="#E6C77D"/>
+      </linearGradient>
+    </defs>
+    <symbol id="corona-simple" viewBox="0 0 64 40"><path d="M9 33 L5.5 9 L19 20 L32 3 L45 20 L58.5 9 L55 33 Z" fill="url(#g-oro)" stroke="#8A6A27" stroke-width="1" stroke-linejoin="round"/><rect x="9" y="33" width="46" height="5" rx="1.5" fill="url(#g-oro)" stroke="#8A6A27" stroke-width="1"/><circle cx="32" cy="3.5" r="2.6" fill="#FFF8EC"/><circle cx="5.5" cy="8.5" r="2.1" fill="#FFF8EC"/><circle cx="58.5" cy="8.5" r="2.1" fill="#FFF8EC"/><circle cx="32" cy="25" r="2.8" fill="#C9AEF0" stroke="#5F3F93" stroke-width=".6"/></symbol>
+  </svg>
+
+  <!-- ===========================================================
+       MENSAJE DE ERROR + BOTÓN DE REGRESO
+       =========================================================== -->
+  <main class="error404">
+    <svg class="error404__corona" aria-hidden="true"><use href="#corona-simple"/></svg>
+    <h1 class="error404__titulo">Esta página no existe</h1>
+    <p class="error404__texto">Pero la invitación a los XV años de Oriana Sofía sí, y te está esperando.</p>
+    <a class="boton boton--principal" href="/">Ver la invitación</a>
+    <p class="footer-dev">
+      <span class="footer-dev-txt">Diseño y desarrollo:</span>
+      <span class="footer-dev-jx">JX</span>
+      <span class="footer-dev-co">Company</span>
+    </p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# ===========================================================
+# Invitación privada · Mis XV años de Oriana Sofía
+# No se indexa en buscadores ni en IA (lleva datos de una menor
+# y la dirección del punto de encuentro). Decisión aprobada por JX.
+# Sí se permite a los lectores de vista previa de enlaces, para que
+# al compartir el link por WhatsApp salga la imagen y el título.
+# ===========================================================
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: *
+Disallow: /

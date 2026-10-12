@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!-- ===========================================================
+     PROYECTO: Invitación web · Mis XV años de Oriana Sofía
+     Archivo: index.html — la invitación completa (una sola página).
+     Relación con los demás archivos:
+       · css/styles.css  → todo el diseño (colores, tipografías, animaciones)
+       · js/script.js    → sobre animado, música, nombre del invitado,
+                           cuenta regresiva, mapa y confirmación por WhatsApp
+       · img/            → foto de portada y acuarelas (todo en WebP)
+       · fonts/          → tipografías propias (Pinyon Script y Cormorant Garamond)
+       · musica/         → vals instrumental original
+     Versión "invitación privada": no se indexa en Google (noindex),
+     sin páginas legales ni banner de cookies (aprobado por JX, 10/10/2026).
+     Diseño y desarrollo: JX Company.
+     =========================================================== -->
+<html lang="es" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mis XV años · Oriana Sofía</title>
+  <meta name="description" content="Oriana Sofía te invita a celebrar sus XV años el domingo 1 de noviembre de 2026. Abre tu invitación, confirma tu asistencia y guarda la fecha.">
+
+  <!-- Invitación privada: fuera de buscadores (también en _headers y robots.txt) -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://xv-oriana-sofia.pages.dev/">
+
+  <!-- Vista previa al compartir el enlace (WhatsApp, Facebook, Telegram…) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mis XV años · Oriana Sofía">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:title" content="Mis XV años · Oriana Sofía">
+  <meta property="og:description" content="Domingo 1 de noviembre de 2026 · Toca para abrir tu invitación.">
+  <meta property="og:url" content="https://xv-oriana-sofia.pages.dev/">
+  <meta property="og:image" content="https://xv-oriana-sofia.pages.dev/img/og-xv-oriana-sofia.webp">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Invitación a los XV años de Oriana Sofía, domingo 1 de noviembre de 2026">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mis XV años · Oriana Sofía">
+  <meta name="twitter:description" content="Domingo 1 de noviembre de 2026 · Toca para abrir tu invitación.">
+  <meta name="twitter:image" content="https://xv-oriana-sofia.pages.dev/img/og-xv-oriana-sofia.webp">
+
+  <!-- Íconos y color de la barra del navegador -->
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#EFE5F8">
+  <meta name="color-scheme" content="light">
+
+  <!-- Tipografías propias: se precarga solo la de títulos (la que más se ve al abrir) -->
+  <link rel="preload" href="fonts/pinyon-script-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/cormorant-garamond-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- arranque.js (diminuto, sin defer): marca que hay JavaScript para mostrar el sobre
+       ANTES de pintar la página; sin JS la invitación se ve completa, sin sobre. -->
+  <script src="js/arranque.js"></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+
+  <!-- Enlace de accesibilidad: abre la invitación sin animación y salta al contenido -->
+  <a class="saltar" href="#contenido" id="saltar">Saltar al contenido</a>
+
+  <!-- ===========================================================
+       SPRITE DE SVG (no se ve): degradados dorados y figuras que
+       se reutilizan con <use> (corona, sello de cera, filete, íconos).
+       Ojo: NO ponerle display:none; algunos navegadores dejarían de
+       pintar los degradados. Se oculta con .sprite en styles.css.
+       =========================================================== -->
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g-oro" x1="0" y1="0" x2="0.35" y2="1">
+        <stop offset="0" stop-color="#F7E7B4"/>
+        <stop offset=".38" stop-color="#D8B460"/>
+        <stop offset=".7" stop-color="#B28734"/>
+        <stop offset="1" stop-color="#E6C77D"/>
+      </linearGradient>
+      <radialGradient id="g-gema" cx=".38" cy=".3" r=".8">
+        <stop offset="0" stop-color="#F6EEFF"/>
+        <stop offset=".35" stop-color="#C3A5EC"/>
+        <stop offset="1" stop-color="#6E49A8"/>
+      </radialGradient>
+      <radialGradient id="g-perla" cx=".35" cy=".3" r=".75">
+        <stop offset="0" stop-color="#FFFFFF"/>
+        <stop offset=".6" stop-color="#F4EEF6"/>
+        <stop offset="1" stop-color="#CDBFD8"/>
+      </radialGradient>
+      <radialGradient id="g-cera" cx=".36" cy=".32" r=".78">
+        <stop offset="0" stop-color="#B597E3"/>
+        <stop offset=".55" stop-color="#8462BD"/>
+        <stop offset="1" stop-color="#5A3B90"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Corona/tiara dorada con gemas lila y perlas -->
+    <symbol id="corona" viewBox="0 0 220 120">
+      <g fill="none" stroke="url(#g-oro)" stroke-width="2.2" stroke-linecap="round">
+        <path d="M42 88 Q56 66 70 86"/>
+        <path d="M74 86 Q92 54 106 86"/>
+        <path d="M114 86 Q128 54 146 86"/>
+        <path d="M150 86 Q164 66 178 88"/>
+        <path d="M84 88 Q92 74 100 88"/>
+        <path d="M120 88 Q128 74 136 88"/>
+      </g>
+      <g fill="url(#g-oro)" stroke="#8A6A27" stroke-width=".7">
+        <path d="M 110 14 C 112.4 39.2 122 52.6 122 72.8 C 122 86.2 117.2 98 113.8 98 L 106.2 98 C 102.8 98 98 86.2 98 72.8 C 98 52.6 107.6 39.2 110 14 Z"/>
+        <path d="M 72 36 C 73.8 54 81 63.6 81 78 C 81 87.6 77.4 96 74.9 96 L 69.1 96 C 66.6 96 63 87.6 63 78 C 63 63.6 70.2 54 72 36 Z"/>
+        <path d="M 148 36 C 149.8 54 157 63.6 157 78 C 157 87.6 153.4 96 150.9 96 L 145.1 96 C 142.6 96 139 87.6 139 78 C 139 63.6 146.2 54 148 36 Z"/>
+        <path d="M 40 56 C 41.3 66.8 46.5 72.6 46.5 81.2 C 46.5 87 43.9 92 42.1 92 L 37.9 92 C 36.1 92 33.5 87 33.5 81.2 C 33.5 72.6 38.7 66.8 40 56 Z"/>
+        <path d="M 180 56 C 181.3 66.8 186.5 72.6 186.5 81.2 C 186.5 87 183.9 92 182.1 92 L 177.9 92 C 176.1 92 173.5 87 173.5 81.2 C 173.5 72.6 178.7 66.8 180 56 Z"/>
+        <path d="M24 88 Q110 106 196 88 L192 97.5 Q110 116 28 97.5 Z"/>
+      </g>
+      <g fill="url(#g-gema)" stroke="#5A3B90" stroke-width=".5">
+        <path d="M 110 47.6 C 111.1 59.2 115.5 65.4 115.5 74.6 C 115.5 80.8 113.3 86.2 111.8 86.2 L 108.2 86.2 C 106.7 86.2 104.5 80.8 104.5 74.6 C 104.5 65.4 108.9 59.2 110 47.6 Z"/>
+        <path d="M 72 60 C 72.8 68.3 76.1 72.7 76.1 79.3 C 76.1 83.7 74.5 87.6 73.3 87.6 L 70.7 87.6 C 69.5 87.6 67.9 83.7 67.9 79.3 C 67.9 72.7 71.2 68.3 72 60 Z"/>
+        <path d="M 148 60 C 148.8 68.3 152.1 72.7 152.1 79.3 C 152.1 83.7 150.5 87.6 149.3 87.6 L 146.7 87.6 C 145.5 87.6 143.9 83.7 143.9 79.3 C 143.9 72.7 147.2 68.3 148 60 Z"/>
+        <circle cx="73" cy="100.1" r="3.1"/><circle cx="110" cy="101.8" r="3.4"/><circle cx="147" cy="100.1" r="3.1"/>
+      </g>
+      <g fill="url(#g-perla)" stroke="#B6A6C4" stroke-width=".4">
+        <circle cx="110" cy="10.8" r="4.4"/><circle cx="72" cy="32.8" r="3.6"/><circle cx="148" cy="32.8" r="3.6"/>
+        <circle cx="40" cy="52.8" r="3"/><circle cx="180" cy="52.8" r="3"/>
+        <circle cx="34.4" cy="94.4" r="1.5"/><circle cx="43.8" cy="96.1" r="1.5"/><circle cx="53.3" cy="97.6" r="1.5"/><circle cx="62.8" cy="98.9" r="1.5"/><circle cx="81.7" cy="100.8" r="1.5"/><circle cx="91.1" cy="101.4" r="1.5"/><circle cx="100.5" cy="101.7" r="1.5"/><circle cx="119.5" cy="101.7" r="1.5"/><circle cx="128.9" cy="101.4" r="1.5"/><circle cx="138.3" cy="100.8" r="1.5"/><circle cx="157.2" cy="98.9" r="1.5"/><circle cx="166.7" cy="97.6" r="1.5"/><circle cx="176.1" cy="96.1" r="1.5"/><circle cx="185.6" cy="94.4" r="1.5"/>
+      </g>
+    </symbol>
+
+    <!-- Sello de cera lila con las iniciales OS (el texto usa la fuente de títulos) -->
+    <symbol id="sello" viewBox="0 0 120 120">
+      <path fill="url(#g-cera)" d="M 109 60 C 109.4 63.9 108.7 67.8 108.3 71.9 C 107.9 76 107.8 80.4 106.6 84.5 C 105.5 88.6 104.5 94.1 101.2 96.5 C 97.9 98.9 90.8 97.3 86.9 99 C 83 100.7 81.2 105.1 77.7 106.7 C 74.2 108.4 69.9 108.1 65.9 108.6 C 61.9 109.2 57.7 110.6 53.9 109.9 C 50.2 109.2 46.9 105.7 43.2 104.3 C 39.4 102.9 34.9 103.3 31.4 101.5 C 27.9 99.6 25.8 96 22.3 93.4 C 18.8 90.8 12.3 89.6 10.4 86 C 8.5 82.5 11.2 76.4 11 72.1 C 10.8 67.7 8.7 63.9 9.2 60 C 9.7 56.1 13.2 52.8 13.8 48.6 C 14.3 44.5 10.7 38.4 12.5 35.1 C 14.4 31.8 21.9 31.8 24.9 28.9 C 27.9 25.9 27.7 19.9 30.6 17.4 C 33.5 14.9 38.6 15.4 42.5 13.7 C 46.3 12.1 49.7 7.7 53.6 7.3 C 57.5 6.9 61.9 10.2 65.9 11.4 C 69.9 12.6 73.5 13.1 77.3 14.3 C 81.2 15.4 85.1 16.5 88.7 18.4 C 92.4 20.2 96.2 22.4 99.2 25.3 C 102.1 28.2 105.3 31.8 106.4 35.7 C 107.5 39.6 105.3 44.7 105.7 48.7 C 106.1 52.8 108.5 56.1 109 60 Z"/>
+      <circle cx="60" cy="60" r="36.5" fill="none" stroke="#4B2F7C" stroke-width="2.2" opacity=".55"/>
+      <circle cx="59.3" cy="59.3" r="36.5" fill="none" stroke="#D9C9F3" stroke-width="1" opacity=".55"/>
+      <circle cx="60" cy="60" r="31" fill="#7A57B2" opacity=".35"/>
+      <g font-family="'Pinyon Script', cursive" font-size="38" text-anchor="middle">
+        <text x="61" y="73" fill="#45296F" opacity=".7">OS</text>
+        <text x="59.4" y="71.4" fill="#E2D5F7" opacity=".65">OS</text>
+        <text x="60" y="72" fill="#8F6CC6">OS</text>
+      </g>
+      <path d="M44 34 Q60 26 76 34" fill="none" stroke="#D9C9F3" stroke-width="1.2" opacity=".6" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Filete dorado que separa los momentos de la invitación -->
+    <symbol id="filete" viewBox="0 0 240 24">
+      <g fill="none" stroke="url(#g-oro)" stroke-linecap="round">
+        <path d="M10 12 H92" stroke-width="1.1"/>
+        <path d="M148 12 H230" stroke-width="1.1"/>
+        <path d="M92 12 C100 4.5 108 4.5 112 12 C108 19.5 100 19.5 92 12 Z" stroke-width="1.2"/>
+        <path d="M148 12 C140 4.5 132 4.5 128 12 C132 19.5 140 19.5 148 12 Z" stroke-width="1.2"/>
+      </g>
+      <path d="M120 4.5 L124.5 12 L120 19.5 L115.5 12 Z" fill="url(#g-oro)"/>
+      <circle cx="84" cy="12" r="1.7" fill="url(#g-oro)"/><circle cx="156" cy="12" r="1.7" fill="url(#g-oro)"/>
+    </symbol>
+
+    <!-- Íconos de línea (trazo dorado, 24×24) -->
+    <symbol id="i-calendario" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M12 17.6s-3-1.9-3-3.9a1.6 1.6 0 0 1 3-.8 1.6 1.6 0 0 1 3 .8c0 2-3 3.9-3 3.9z"/></g></symbol>
+    <symbol id="i-reloj" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.2 2"/></g></symbol>
+    <symbol id="i-piscina" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="16.5" cy="6.5" r="2.6"/><path d="M16.5 1.8v1M21.2 6.5h-1M20 3l-.7.7M13 3l.7.7"/><path d="M2.5 15c1.6 0 1.6-1.3 3.2-1.3s1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 2.5 1.3"/><path d="M2.5 19.5c1.6 0 1.6-1.3 3.2-1.3s1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 2.5 1.3"/><path d="M5 12.5V6.8a2 2 0 0 1 3.6-1.2M10 12.5V6.8"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.2s-6.5-6-6.5-11.3a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11.3-6.5 11.3z"/><circle cx="12" cy="9.8" r="2.4"/></g></symbol>
+    <symbol id="i-percha" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.2a2 2 0 1 1 2 2v1.6"/><path d="M12 9.8 3.4 16a1.2 1.2 0 0 0 .7 2.2h15.8a1.2 1.2 0 0 0 .7-2.2L12 9.8z"/></g></symbol>
+    <symbol id="i-ola" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9c1.6 0 1.6-1.3 3.2-1.3S7.3 9 8.9 9s1.6-1.3 3.2-1.3S13.7 9 15.3 9s1.6-1.3 3.2-1.3S20.1 9 21.5 9"/><path d="M2.5 14c1.6 0 1.6-1.3 3.2-1.3S7.3 14 8.9 14s1.6-1.3 3.2-1.3 1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 3 1.3"/><path d="M2.5 19c1.6 0 1.6-1.3 3.2-1.3S7.3 19 8.9 19s1.6-1.3 3.2-1.3 1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 3 1.3"/></g></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 19.4l1-3.4A8.3 8.3 0 1 1 8.3 18.6z"/><path d="M9.3 8.6c.3-.5.8-.5 1 0l.6 1.4c.1.3 0 .6-.2.8l-.5.5a6 6 0 0 0 2.6 2.6l.5-.5c.2-.2.5-.3.8-.2l1.4.6c.5.2.5.7 0 1l-.8.6c-.6.4-1.4.4-2.1.1a8.5 8.5 0 0 1-3.9-3.9c-.3-.7-.3-1.5.1-2.1z"/></g></symbol>
+    <symbol id="i-mapa" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.5 3.5 6.6v13l5.5-2.1 6 2.1 5.5-2.1v-13L15 6.6z"/><path d="M9 4.5v13M15 6.6v13"/></g></symbol>
+    <symbol id="i-ruta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20.2 21 12 16.8 3.8 21z"/></g></symbol>
+    <symbol id="i-nota" viewBox="0 0 24 24"><g fill="currentColor"><path d="M9 17.2V6.4l10-2.2v10.6a2.6 2.6 0 1 1-1.6-2.4V7.1L10.6 8.6v8.9a2.6 2.6 0 1 1-1.6-.3z"/></g></symbol>
+    <symbol id="i-silencio" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/></g></symbol>
+    <symbol id="i-flecha" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></g></symbol>
+    <symbol id="i-mas" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></g></symbol>
+    <symbol id="i-menos" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/></g></symbol>
+    <symbol id="i-sobre" viewBox="0 0 64 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="6" width="56" height="38" rx="3"/><path d="M4.8 7.5 32 28 59.2 7.5"/><path d="M4.8 43 24 22.2M59.2 43 40 22.2"/></g></symbol>
+  </svg>
+
+  <!-- ===========================================================
+       PORTAL: EL SOBRE ANIMADO (pantalla de entrada)
+       Qué es: un sobre lila con sello de cera; al tocar el sello se abre,
+               sale la tarjeta, caen pétalos y arranca la música.
+       Función: primera impresión + el toque es lo que permite que la
+                música suene (los celulares bloquean el audio automático).
+       Depende de: .portal y .sobre en styles.css; abrirSobre() en script.js.
+       Sin JavaScript no se muestra (clase .no-js) y la invitación se ve completa.
+       =========================================================== -->
+  <div class="portal" id="portal" role="dialog" aria-modal="true" aria-labelledby="portal-titulo">
+    <div class="portal__marco">
+      <p class="portal__intro" id="portal-titulo">Una invitación muy especial para ti</p>
+      <p class="portal__para" id="portal-para" hidden>Para <span id="portal-nombre"></span></p>
+      <p class="portal__pases" id="portal-pases" hidden></p>
+
+      <div class="sobre" id="sobre">
+        <div class="sobre__dorso" aria-hidden="true"></div>
+        <div class="sobre__carta" aria-hidden="true">
+          <svg class="sobre__corona"><use href="#corona"/></svg>
+          <span class="sobre__xv">Mis XV años</span>
+          <span class="sobre__nombre">Oriana Sofía</span>
+        </div>
+        <div class="sobre__frente" aria-hidden="true"></div>
+        <div class="sobre__solapa" aria-hidden="true">
+          <span class="sobre__solapa-cara sobre__solapa-cara--fuera"></span>
+          <span class="sobre__solapa-cara sobre__solapa-cara--dentro"></span>
+        </div>
+        <button class="sello" id="boton-sello" type="button" aria-label="Abrir la invitación">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><use href="#sello"/></svg>
+        </button>
+      </div>
+
+      <p class="portal__ayuda">Toca el sello para abrirla</p>
+      <p class="portal__sonido"><svg aria-hidden="true"><use href="#i-nota"/></svg> Tiene música, sube el volumen</p>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       PORTADA
+       Qué es: corona, "Mis XV años", foto de Oriana en un arco dorado
+               rodeado de acuarelas, su nombre y la fecha.
+       Función: lo primero que se ve al abrir el sobre; resume la invitación.
+       Depende de: .portada, .arco y .fecha-portada en styles.css.
+       La foto es la imagen principal (LCP): fetchpriority="high", sin lazy.
+       =========================================================== -->
+  <header class="portada" id="inicio">
+    <img class="portada__ramo portada__ramo--izq" src="img/ramo-acuarela-lila-esquina.webp" width="1008" height="792" alt="" aria-hidden="true">
+    <img class="portada__ramo portada__ramo--der" src="img/ramo-acuarela-lila-esquina.webp" width="1008" height="792" alt="" aria-hidden="true">
+
+    <div class="portada__contenido">
+      <svg class="portada__corona" aria-hidden="true"><use href="#corona"/></svg>
+      <p class="sello-xv" aria-hidden="true">
+        <span class="sello-xv__lado">Mis</span>
+        <span class="sello-xv__num">XV</span>
+        <span class="sello-xv__lado">años</span>
+      </p>
+
+      <figure class="arco">
+        <div class="arco__foto">
+          <img src="img/oriana-sofia-portada-xv.webp" width="678" height="904" fetchpriority="high"
+               alt="Oriana Sofía, la quinceañera, sonriendo con su cabello rizado suelto">
+        </div>
+        <svg class="arco__marco" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M6 397 V150 A144 144 0 0 1 294 150 V397" fill="none" stroke="url(#g-oro)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <path d="M14 391 V152 A136 136 0 0 1 286 152 V391" fill="none" stroke="url(#g-oro)" stroke-width="1" vector-effect="non-scaling-stroke" opacity=".8"/>
+        </svg>
+        <img class="arco__ramo arco__ramo--izq" src="img/ramo-acuarela-lila-arco.webp" width="780" height="639" alt="" aria-hidden="true">
+        <img class="arco__ramo arco__ramo--der" src="img/ramo-acuarela-lila-arco.webp" width="780" height="639" alt="" aria-hidden="true">
+      </figure>
+
+      <h1 class="portada__nombre"><span class="solo-lectores">Mis XV años · </span>Oriana Sofía</h1>
+
+      <p class="fecha-portada">
+        <time datetime="2026-11-01">
+          <span class="fecha-portada__lado">Domingo</span>
+          <span class="fecha-portada__dia">1</span>
+          <span class="fecha-portada__lado">Nov · 2026</span>
+        </time>
+      </p>
+
+      <a class="desliza" href="#mensaje">
+        <span>Desliza</span>
+        <svg aria-hidden="true"><use href="#i-flecha"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="contenido" tabindex="-1">
+
+    <!-- ===========================================================
+         MENSAJE DE ORIANA
+         Qué es: sus palabras de invitación (el texto que ella escribió,
+                 pulido) y su firma.
+         Función: el tono personal y cariñoso de la invitación.
+         Depende de: .mensaje y .firma en styles.css.
+         =========================================================== -->
+    <section class="mensaje" id="mensaje" aria-labelledby="t-mensaje">
+      <svg class="filete" aria-hidden="true"><use href="#filete"/></svg>
+      <h2 class="solo-lectores" id="t-mensaje">Mensaje de Oriana Sofía</h2>
+
+      <!-- ▼▼▼ ZONA EDITABLE · TEXTOS ▼▼▼
+           QUÉ CAMBIAR: las frases del mensaje de Oriana y su firma.
+           CÓMO: cambia solo el texto que está entre > y < sin borrar las etiquetas.
+           EJEMPLO: <p class="mensaje__remate">Y tú eres una de ellas.</p>  →  <p class="mensaje__remate">Y tú no puedes faltar.</p>
+           LÍMITE: mensaje principal máx. 260 caracteres; frases cortas máx. 60 (más largo rompe el ritmo en celular).
+           NO TOCAR: class, p, span, ni nada fuera de esta zona.
+      -->
+      <p class="mensaje__intro">Quince años de sueños, risas y aprendizajes…</p>
+      <p class="mensaje__texto">Quiero celebrar esta etapa tan especial de una manera diferente: compartiendo un día lleno de música, alegría y momentos bonitos con las personas que hacen parte de mi vida.</p>
+      <p class="mensaje__remate">Y tú eres una de ellas.</p>
+      <p class="firma">Oriana Sofía</p>
+      <!-- ▲▲▲ FIN ZONA EDITABLE · TEXTOS ▲▲▲ -->
+    </section>
+
+    <!-- ===========================================================
+         CUENTA REGRESIVA + GUARDAR LA FECHA
+         Qué es: días, horas, minutos y segundos que faltan para el
+                 encuentro, y botones para agregar la fecha al calendario.
+         Función: crear expectativa y que nadie olvide el día.
+         Depende de: iniciarCuenta() en script.js (lee data-fecha-evento);
+                     evento-xv-oriana-sofia.ics en la raíz.
+         Los números "00" son el estado inicial; el JS los reemplaza al cargar.
+         =========================================================== -->
+    <section class="cuenta" id="cuenta" aria-labelledby="t-cuenta">
+      <img class="cuenta__mancha" src="img/mancha-acuarela-lila.webp" width="1200" height="570" alt="" aria-hidden="true" loading="lazy">
+      <h2 class="titulo-script" id="t-cuenta">Faltan</h2>
+      <div class="reloj" id="reloj" data-fecha-evento="2026-11-01T07:00:00-05:00" data-fecha-texto="el domingo 1 de noviembre" role="timer" aria-label="Tiempo que falta para los XV de Oriana Sofía">
+        <div class="reloj__unidad"><span class="reloj__num" data-unidad="dias">00</span><span class="reloj__lab">días</span></div>
+        <div class="reloj__unidad"><span class="reloj__num" data-unidad="horas">00</span><span class="reloj__lab">horas</span></div>
+        <div class="reloj__unidad"><span class="reloj__num" data-unidad="minutos">00</span><span class="reloj__lab">minutos</span></div>
+        <div class="reloj__unidad"><span class="reloj__num" data-unidad="segundos">00</span><span class="reloj__lab">segundos</span></div>
+      </div>
+      <p class="cuenta__nota" id="cuenta-nota">para celebrar juntos este día tan especial</p>
+
+      <div class="guardar">
+        <p class="guardar__titulo">Guarda la fecha</p>
+        <div class="guardar__botones">
+          <a class="boton boton--linea" target="_blank" rel="noopener"
+             href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=XV%20a%C3%B1os%20de%20Oriana%20Sof%C3%ADa&amp;dates=20261101/20261102&amp;ctz=America/Bogota&amp;details=Punto%20de%20encuentro%20antes%20de%20las%207%3A00%20a.%20m.%20en%20Barrio%20Espa%C3%B1a%2C%20TR%2044%20calle%2026D12%20%28Cartagena%29.%20Pasad%C3%ADa%20con%20piscina.%20C%C3%B3digo%20de%20vestuario%3A%20semiformal%3B%20el%20morado%20y%20el%20lila%20est%C3%A1n%20reservados%20para%20la%20quincea%C3%B1era.%20No%20olvides%20tu%20traje%20de%20ba%C3%B1o.&amp;location=Barrio%20Espa%C3%B1a%2C%20TR%2044%20calle%2026D12%2C%20Cartagena">
+            <svg aria-hidden="true"><use href="#i-calendario"/></svg> Google Calendar
+          </a>
+          <a class="boton boton--linea" href="evento-xv-oriana-sofia.ics" type="text/calendar">
+            <svg aria-hidden="true"><use href="#i-calendario"/></svg> iPhone u otro calendario
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================================
+         EL GRAN DÍA: FECHA, HORA, PLAN Y PUNTO DE ENCUENTRO
+         Qué es: los datos del evento y la ubicación con mapa.
+         Función: que cada invitado sepa cuándo y dónde llegar.
+         Depende de: .detalles, .encuentro y .mapa en styles.css;
+                     iniciarMapa() en script.js (el mapa de Google solo
+                     carga si el invitado toca "Ver mapa aquí").
+         =========================================================== -->
+    <section class="detalles" id="detalles" aria-labelledby="t-detalles">
+      <svg class="filete" aria-hidden="true"><use href="#filete"/></svg>
+      <h2 class="titulo-script" id="t-detalles">El gran día</h2>
+
+      <!-- ▼▼▼ ZONA EDITABLE · HORARIOS ▼▼▼
+           QUÉ CAMBIAR: la fecha, la hora de llegada y el plan del día.
+           CÓMO: cambia solo el texto que está entre > y < sin borrar las etiquetas.
+           EJEMPLO: <p>Antes de las 7:00 a. m. …</p>  →  <p>Antes de las 6:30 a. m. …</p>
+           LÍMITE: cada dato máx. 70 caracteres.
+           ⚠ SE REPITE EN: portada (fecha), data-fecha-evento de la cuenta regresiva,
+             botón de Google Calendar, archivo evento-xv-oriana-sofia.ics, la descripción
+             y og:description del <head>, la imagen og-xv-oriana-sofia.webp y la tarjeta
+             cuadrada. SI CAMBIA, HAY QUE CAMBIARLO EN TODOS (lo cambia JX).
+           NO TOCAR: class, li, svg, use, ni nada fuera de esta zona.
+      -->
+      <ul class="detalles__lista">
+        <li class="dato">
+          <span class="dato__icono"><svg aria-hidden="true"><use href="#i-calendario"/></svg></span>
+          <div class="dato__texto"><h3>Fecha</h3><p>Domingo 1 de noviembre de 2026</p></div>
+        </li>
+        <li class="dato">
+          <span class="dato__icono"><svg aria-hidden="true"><use href="#i-reloj"/></svg></span>
+          <div class="dato__texto"><h3>Hora</h3><p>Estar en el punto de encuentro antes de las 7:00 a. m.</p></div>
+        </li>
+        <li class="dato">
+          <span class="dato__icono"><svg aria-hidden="true"><use href="#i-piscina"/></svg></span>
+          <div class="dato__texto"><h3>Plan</h3><p>Pasadía con piscina</p></div>
+        </li>
+      </ul>
+      <!-- ▲▲▲ FIN ZONA EDITABLE · HORARIOS ▲▲▲ -->
+
+      <div class="encuentro">
+        <!-- ▼▼▼ ZONA EDITABLE · CONTACTO ▼▼▼
+             QUÉ CAMBIAR: la dirección del punto de encuentro, lo que se busca en el mapa
+               (data-direccion-mapa) y el WhatsApp que recibe las confirmaciones (data-whatsapp).
+             CÓMO: cambia el texto entre > y < y, si cambia la dirección o el número, el valor
+               entre comillas de data-direccion-mapa / data-whatsapp.
+             EJEMPLO: data-whatsapp="573157800663"  →  data-whatsapp="573001234567"
+             LÍMITE: el WhatsApp siempre con 57 adelante, sin +, sin espacios ni guiones.
+             ⚠ SE REPITE EN: botón de Google Calendar, archivo evento-xv-oriana-sofia.ics,
+               la tarjeta cuadrada y el generador de enlaces (generador.html usa la misma página).
+               SI CAMBIA, HAY QUE CAMBIARLO EN TODOS (lo cambia JX).
+             NO TOCAR: class, id, div, ni nada fuera de esta zona.
+        -->
+        <div class="datos-evento" id="datos-evento" hidden
+             data-whatsapp="573157800663"
+             data-direccion-mapa="Transversal 44 #26D-12, España, Cartagena, Bolívar, Colombia"></div>
+        <h3 class="encuentro__titulo"><svg aria-hidden="true"><use href="#i-pin"/></svg> Punto de encuentro</h3>
+        <p class="encuentro__dir">Barrio España, TR 44 calle 26D12<br>Cartagena</p>
+        <!-- ▲▲▲ FIN ZONA EDITABLE · CONTACTO ▲▲▲ -->
+
+        <div class="mapa" id="mapa">
+          <div class="mapa__ilustracion" aria-hidden="true">
+            <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+              <rect width="320" height="180" fill="#F4EDFA"/>
+              <g fill="none" stroke="#DCCBEE" stroke-width="10" stroke-linecap="round">
+                <path d="M-10 128 C70 110 120 132 180 116 S280 84 340 92"/>
+                <path d="M96 -10 C104 50 92 110 112 190"/>
+                <path d="M210 -10 C200 60 226 120 214 190"/>
+              </g>
+              <g fill="none" stroke="#E8DCF4" stroke-width="5" stroke-linecap="round">
+                <path d="M-10 52 C60 60 140 40 200 54 S300 70 340 58"/>
+                <path d="M150 -10 C160 70 140 120 156 190"/>
+                <path d="M262 -10 C270 50 256 110 270 190"/>
+                <path d="M30 -10 C40 60 20 120 44 190"/>
+              </g>
+              <g transform="translate(160 64)">
+                <ellipse cx="0" cy="30" rx="12" ry="4" fill="#CDB9E6" opacity=".7"/>
+                <path d="M0 30 C-11 15 -16 6 -16 -2 a16 16 0 0 1 32 0 c0 8 -5 17 -16 32z" fill="url(#g-oro)" stroke="#8A6A27" stroke-width="1"/>
+                <circle cx="0" cy="-2" r="6" fill="#FBF7FC"/>
+              </g>
+            </svg>
+          </div>
+          <button class="boton boton--claro mapa__boton" id="boton-mapa" type="button">
+            <svg aria-hidden="true"><use href="#i-mapa"/></svg> Ver mapa aquí
+          </button>
+        </div>
+
+        <div class="encuentro__botones">
+          <a class="boton boton--linea" id="enlace-maps" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&amp;query=Transversal%2044%20%2326D-12%2C%20Espa%C3%B1a%2C%20Cartagena%2C%20Bol%C3%ADvar%2C%20Colombia">
+            <svg aria-hidden="true"><use href="#i-pin"/></svg> Abrir en Google Maps
+          </a>
+          <a class="boton boton--linea" id="enlace-waze" target="_blank" rel="noopener"
+             href="https://waze.com/ul?q=Transversal%2044%20%2326D-12%2C%20Espa%C3%B1a%2C%20Cartagena&amp;navigate=yes">
+            <svg aria-hidden="true"><use href="#i-ruta"/></svg> Abrir en Waze
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================================
+         CÓDIGO DE VESTUARIO
+         Qué es: semiformal, con las muestras de color reservadas para la
+                 quinceañera (morado y lila) y el recordatorio del traje de baño.
+         Función: que los invitados sepan cómo ir vestidos.
+         Depende de: .vestuario y .muestra en styles.css.
+         =========================================================== -->
+    <section class="vestuario" id="vestuario" aria-labelledby="t-vestuario">
+      <svg class="filete" aria-hidden="true"><use href="#filete"/></svg>
+      <div class="vestuario__cabeza">
+        <span class="vestuario__icono"><svg aria-hidden="true"><use href="#i-percha"/></svg></span>
+        <h2 class="titulo-script" id="t-vestuario">Código de vestuario</h2>
+      </div>
+      <p class="vestuario__tipo">Semiformal</p>
+
+      <div class="reservado">
+        <ul class="reservado__muestras" aria-hidden="true">
+          <li class="muestra muestra--morado"><span class="muestra__color"></span><span class="muestra__nombre">Morado</span></li>
+          <li class="muestra muestra--lila"><span class="muestra__color"></span><span class="muestra__nombre">Lila</span></li>
+        </ul>
+        <p class="reservado__texto">El <strong>morado</strong> y el <strong>lila</strong> quedan reservados para la quinceañera.</p>
+      </div>
+
+      <p class="vestuario__bano">
+        <svg aria-hidden="true"><use href="#i-ola"/></svg>
+        <span>Llega semiformal y no olvides tu <strong>traje de baño</strong> para disfrutar la piscina.</span>
+      </p>
+    </section>
+
+    <!-- ===========================================================
+         REGALO: LLUVIA DE SOBRES
+         Qué es: la forma de obsequio que eligió la familia, dicha con cariño.
+         Función: informar sin que suene a cobro.
+         Depende de: .regalo en styles.css.
+         =========================================================== -->
+    <section class="regalo" id="regalo" aria-labelledby="t-regalo">
+      <div class="regalo__ilustracion" aria-hidden="true">
+        <svg class="regalo__sobre regalo__sobre--a"><use href="#i-sobre"/></svg>
+        <svg class="regalo__sobre regalo__sobre--b"><use href="#i-sobre"/></svg>
+        <svg class="regalo__sobre regalo__sobre--c"><use href="#i-sobre"/></svg>
+      </div>
+      <h2 class="titulo-script" id="t-regalo">Lluvia de sobres</h2>
+      <p class="regalo__texto">Tu presencia es mi mejor regalo. Si deseas tener un detalle conmigo, habrá una lluvia de sobres.</p>
+    </section>
+
+    <!-- ===========================================================
+         CONFIRMACIÓN DE ASISTENCIA (WhatsApp)
+         Qué es: formulario corto (nombre, si asiste, cuántos y un
+                 mensajito para Oriana) que abre WhatsApp con el mensaje listo.
+         Función: confirmar asistencias sin llamadas ni listas a mano.
+         Depende de: iniciarConfirmacion() en script.js, que lee el número de
+                     data-whatsapp (#datos-evento) y los pases del enlace.
+         Nota: es el único botón de WhatsApp de la página (sin flotante).
+         =========================================================== -->
+    <section class="confirmar" id="confirmar" aria-labelledby="t-confirmar">
+      <img class="confirmar__mancha" src="img/mancha-acuarela-lila.webp" width="1200" height="570" alt="" aria-hidden="true" loading="lazy">
+      <div class="tarjeta">
+        <h2 class="titulo-script" id="t-confirmar">¿Me acompañas?</h2>
+        <p class="tarjeta__intro">Me hará muy feliz contar contigo. Confírmame tu asistencia por WhatsApp.</p>
+        <p class="tarjeta__pases" id="texto-pases" hidden></p>
+
+        <form class="formulario" id="form-confirmar" novalidate>
+          <div class="campo">
+            <label for="nombre">Tu nombre</label>
+            <input id="nombre" name="nombre" type="text" autocomplete="name" maxlength="60" required placeholder="Ej.: Familia Pérez">
+            <p class="campo__error" id="error-nombre" hidden>Escribe tu nombre para que Oriana sepa quién confirma.</p>
+          </div>
+
+          <fieldset class="campo asistencia">
+            <legend>¿Asistirás?</legend>
+            <div class="asistencia__opciones">
+              <label class="opcion"><input type="radio" name="asiste" value="si" checked><span>¡Sí, ahí estaré!</span></label>
+              <label class="opcion"><input type="radio" name="asiste" value="no"><span>No podré ir</span></label>
+            </div>
+          </fieldset>
+
+          <div class="campo" id="campo-personas">
+            <label for="personas">¿Cuántas personas asistirán?</label>
+            <div class="contador">
+              <button class="contador__boton" type="button" data-paso="-1" aria-label="Una persona menos"><svg aria-hidden="true"><use href="#i-menos"/></svg></button>
+              <input id="personas" name="personas" type="number" inputmode="numeric" min="1" max="10" value="1">
+              <button class="contador__boton" type="button" data-paso="1" aria-label="Una persona más"><svg aria-hidden="true"><use href="#i-mas"/></svg></button>
+            </div>
+            <p class="campo__ayuda" id="ayuda-personas" hidden></p>
+          </div>
+
+          <div class="campo">
+            <label for="mensajito">Mensajito para Oriana <span class="campo__opcional">(opcional)</span></label>
+            <textarea id="mensajito" name="mensajito" rows="3" maxlength="300" placeholder="Escríbele unas palabras bonitas…"></textarea>
+          </div>
+
+          <button class="boton boton--principal" type="submit">
+            <svg aria-hidden="true"><use href="#i-chat"/></svg> Confirmar por WhatsApp
+          </button>
+          <p class="formulario__estado" id="estado-confirmar" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===========================================================
+       CIERRE Y PIE DE PÁGINA
+       Qué es: despedida de Oriana y el crédito de JX Company.
+       Función: cerrar la invitación con cariño.
+       Depende de: .cierre y .footer-dev en styles.css (crédito con el
+                   formato EXACTO del estándar de JX Company; fondo claro
+                   → "Diseño y desarrollo:" en negro #111).
+       =========================================================== -->
+  <footer class="cierre">
+    <img class="cierre__ramo" src="img/ramo-acuarela-lila-esquina.webp" width="1008" height="792" alt="" aria-hidden="true" loading="lazy">
+    <svg class="cierre__corona" aria-hidden="true"><use href="#corona"/></svg>
+    <p class="cierre__texto">Te espero para celebrar juntos este día tan especial.</p>
+    <p class="firma firma--cierre">Con cariño, Oriana Sofía</p>
+    <p class="footer-dev">
+      <span class="footer-dev-txt">Diseño y desarrollo:</span>
+      <span class="footer-dev-jx">JX</span>
+      <span class="footer-dev-co">Company</span>
+    </p>
+  </footer>
+
+  <!-- ===========================================================
+       MÚSICA
+       Qué es: botón flotante para pausar/reanudar el vals y el audio.
+       Función: la música arranca al abrir el sobre; el invitado decide si la pausa.
+       Depende de: iniciarMusica() en script.js; .musica en styles.css.
+       El MP3 se empieza a descargar cuando la página termina de cargar.
+       =========================================================== -->
+  <button class="musica" id="boton-musica" type="button" aria-pressed="true" aria-label="Pausar la música" hidden>
+    <svg class="musica__icono musica__icono--nota" aria-hidden="true"><use href="#i-nota"/></svg>
+    <svg class="musica__icono musica__icono--silencio" aria-hidden="true"><use href="#i-silencio"/></svg>
+  </button>
+  <audio id="audio-vals" src="musica/vals-xv-oriana-sofia.mp3" loop preload="none"></audio>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "Mis XV años · Oriana Sofía",
+  "short_name": "XV Oriana Sofía",
+  "description": "Invitación a los XV años de Oriana Sofía, domingo 1 de noviembre de 2026.",
+  "lang": "es-CO",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBF7FC",
+  "theme_color": "#EFE5F8",
+  "icons": [
+    { "src": "img/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "img/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

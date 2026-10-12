@@ -1,1 +1,149 @@
-# XV_oriana
+# Invitación web · Mis XV años de Oriana Sofía
+
+Invitación digital para los XV años de **Oriana Sofía** (domingo 1 de noviembre de 2026, Cartagena).
+Se envía por WhatsApp como un enlace: el invitado abre un sobre lila con sello de cera, suena un vals,
+ve la información del día, el punto de encuentro con mapa y confirma su asistencia por WhatsApp.
+
+Encargo de Moisés Escalante. Diseño y desarrollo: **JX Company**.
+
+---
+
+## Zonas editables (para cambios rápidos)
+
+| Zona | Qué cambia | Archivo | ¿Se repite? |
+|---|---|---|---|
+| `ZONA EDITABLE · TEXTOS` | Mensaje de Oriana y su firma | `index.html` | No |
+| `ZONA EDITABLE · HORARIOS` | Fecha, hora de llegada y plan del día | `index.html` | **Sí**: portada, cuenta regresiva, Google Calendar, `evento-xv-oriana-sofia.ics`, `<head>`, imagen de vista previa y tarjeta |
+| `ZONA EDITABLE · CONTACTO` | Dirección del punto de encuentro, búsqueda del mapa y WhatsApp que recibe las confirmaciones | `index.html` | **Sí**: Google Calendar, `.ics` y tarjeta |
+
+Cómo llegar a una zona:
+1. Abre `index.html` y busca `ZONA EDITABLE` con Ctrl+F.
+2. Cambia solo lo que dice el comentario de esa zona (el texto entre `>` y `<`, o el valor entre comillas que indica).
+3. Guarda y vuelve a subir la carpeta a Cloudflare Pages.
+
+> Fecha, hora, dirección y WhatsApp los cambia JX: viven en varios lugares a la vez (lo dice el aviso `⚠ SE REPITE EN`).
+
+---
+
+## Qué tiene la invitación
+
+- **Sobre animado** con sello de cera lila (iniciales OS): al tocarlo se abre, sale la tarjeta, caen pétalos y arranca la música.
+- **Enlace personal por invitado**: el sobre dice "Para Familia Pérez · 3 pases" y la confirmación queda limitada a esos pases.
+- **Portada**: corona dorada, "Mis XV años", foto de Oriana en un arco dorado con flores en acuarela, nombre y fecha.
+- **Mensaje de Oriana** con su firma.
+- **Cuenta regresiva** (días, horas, minutos y segundos) hasta las 7:00 a. m. del 1 de noviembre.
+- **Guarda la fecha**: botón de Google Calendar y archivo para iPhone u otro calendario (con recordatorio la noche anterior).
+- **El gran día**: fecha, hora, plan (pasadía con piscina) y punto de encuentro con mapa, Google Maps y Waze.
+- **Código de vestuario**: semiformal, morado y lila reservados para la quinceañera y recordatorio del traje de baño.
+- **Lluvia de sobres** explicada con cariño.
+- **Confirmación por WhatsApp**: nombre, si asiste, cuántas personas y un mensajito para Oriana; abre WhatsApp con el mensaje listo.
+- **Música**: vals instrumental original (composición propia del proyecto, sin derechos de terceros) con botón para pausar.
+- **Privada**: no aparece en Google ni en buscadores (noindex + robots.txt), pero al pegar el enlace en WhatsApp sí sale la vista previa con imagen.
+- Hecha primero para celular; probada de 360 px a pantallas grandes.
+
+---
+
+## Estructura de archivos
+
+```
+invitacion-xv-oriana-sofia/
+├── index.html                  ← la invitación
+├── generador.html              ← herramienta PRIVADA para crear los enlaces de cada invitado
+├── 404.html                    ← página de error con el mismo diseño
+├── evento-xv-oriana-sofia.ics  ← evento para "iPhone u otro calendario"
+├── _headers                    ← cabeceras de Cloudflare (noindex, sin caché en CSS/JS)
+├── robots.txt                  ← bloquea buscadores; permite la vista previa de WhatsApp
+├── site.webmanifest            ← nombre, ícono y color si la guardan en la pantalla de inicio
+├── README.md / CLAUDE.md       ← documentación
+├── css/styles.css              ← todo el diseño
+├── js/arranque.js              ← activa el sobre antes de pintar (evita parpadeos)
+├── js/script.js                ← sobre, música, invitado, cuenta regresiva, mapa y confirmación
+├── js/generador.js             ← lógica del generador de enlaces
+├── img/                        ← foto, acuarelas, textura e imagen de vista previa (WebP) + íconos
+├── fonts/                      ← Pinyon Script y Cormorant Garamond (licencia OFL incluida)
+└── musica/vals-xv-oriana-sofia.mp3
+```
+
+---
+
+## Cómo publicarla en Cloudflare Pages (gratis)
+
+1. Entra a Cloudflare → **Workers & Pages** → **Create** → **Pages** → **Upload assets**.
+2. Nombre del proyecto: `xv-oriana-sofia` (así queda en `https://xv-oriana-sofia.pages.dev`).
+3. Sube el ZIP (o la carpeta) tal cual: `index.html` debe quedar en la raíz.
+4. **Deploy**. En 1–2 minutos queda en línea.
+
+**Si Cloudflare asigna otra dirección** (por ejemplo si el nombre ya está tomado), cambia
+`https://xv-oriana-sofia.pages.dev/` por la dirección real en estas 4 etiquetas del `<head>` de `index.html`:
+`canonical`, `og:url`, `og:image` y `twitter:image`. Sin eso, la vista previa de WhatsApp no muestra la imagen.
+
+Para actualizarla después: Cloudflare → el proyecto → **Create new deployment** → subir de nuevo.
+
+---
+
+## Cómo crear y enviar las invitaciones
+
+1. Abre `https://xv-oriana-sofia.pages.dev/generador.html` (esta página es privada: no se la mandes a los invitados).
+2. Escribe el nombre del invitado ("Familia Pérez", "Tía Luz y Carlos"…) y cuántos pases tiene.
+3. Opcional: su número de WhatsApp para abrirle el chat directo.
+4. Toca **Crear enlace** → **Enviar por WhatsApp** (el mensaje se puede editar antes) o **Copiar enlace**.
+5. La lista de abajo lleva la cuenta de invitaciones y pases creados en ese celular.
+
+El enlace general (sin nombre) también sirve: `https://xv-oriana-sofia.pages.dev/`.
+
+Las confirmaciones llegan al WhatsApp **315 780 0663**.
+
+---
+
+## Cómo probarla en el computador
+
+Abre la carpeta con un servidor local (las fuentes y la música cargan mejor así):
+
+- VS Code → extensión **Live Server** → clic derecho en `index.html` → *Open with Live Server*.
+- O en una terminal dentro de la carpeta: `python3 -m http.server 8000` y abre `http://localhost:8000`.
+
+Para ver el sobre personalizado: `http://localhost:8000/?para=Familia%20P%C3%A9rez&pases=3`.
+
+---
+
+## Cambios frecuentes
+
+- **Foto de portada**: reemplaza `img/oriana-sofia-portada-xv.webp` por otra en WebP, vertical 3:4 (ej. 678×904). JX la convierte.
+- **Música**: reemplaza `musica/vals-xv-oriana-sofia.mp3` por otro MP3 con el mismo nombre (que la familia tenga derecho a usarlo).
+- **Textos**: zona `TEXTOS` en `index.html`.
+- **Fecha, hora, dirección o WhatsApp**: zonas `HORARIOS` y `CONTACTO` + los lugares que indica `⚠ SE REPITE EN`.
+- **Colores**: variables al inicio de `css/styles.css` (`:root`).
+
+**Vista previa de WhatsApp desactualizada**: WhatsApp guarda en caché la imagen. Prueba el enlace con `?v=2` al final o
+revísalo en el *Sharing Debugger* de Facebook.
+
+---
+
+## Privacidad
+
+La invitación lleva la foto, el nombre de Oriana y la dirección del punto de encuentro, por eso:
+- No se indexa en Google ni en buscadores de IA (`noindex`, `X-Robots-Tag` y `robots.txt`).
+- Solo la ve quien tenga el enlace.
+- El mapa de Google solo se carga si el invitado toca "Ver mapa aquí".
+- No hay analítica ni cookies propias. El navegador guarda solo si ya confirmaste (para recordártelo).
+
+---
+
+## Créditos y licencias
+
+- Diseño, ilustraciones en acuarela, corona, sello y música: creados para este proyecto por JX Company.
+- Foto de portada: enviada por la familia.
+- Tipografías: Pinyon Script y Cormorant Garamond, licencia SIL Open Font License (archivos en `fonts/`).
+
+---
+
+## Propiedad, hosting y respaldo
+
+- El código fuente y el contenido son de la familia de Oriana Sofía; se entregan completos y sin minificar.
+- Hosting: cliente básico → el sitio queda en la **cuenta de Cloudflare de JX**. Si la familia quiere tenerlo en su
+  propia cuenta, JX crea el proyecto allá y sube la misma carpeta (no hay base de datos ni configuración extra).
+- Respaldo: guarda una copia de esta carpeta (o del ZIP). Con eso se puede volver a publicar en cualquier momento.
+
+---
+
+Diseño y desarrollo: **JX Company**

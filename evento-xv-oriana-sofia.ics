@@ -1,0 +1,24 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//JX Company//Invitacion XV Oriana Sofia//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:xv-oriana-sofia-20261101@xv-oriana-sofia.pages.dev
+DTSTAMP:20261011T050000Z
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261102
+SUMMARY:XV años de Oriana Sofía
+LOCATION:Barrio España\, TR 44 calle 26D12\, Cartagena
+DESCRIPTION:Punto de encuentro antes de las 7:00 a. m. en Barrio España\, 
+ TR 44 calle 26D12 (Cartagena). Pasadía con piscina. Código de vestuario:
+  semiformal\; el morado y el lila están reservados para la quinceañera. 
+ No olvides tu traje de baño.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Mañana son los XV de Oriana Sofía: punto de encuentro antes d
+ e las 7:00 a. m.
+TRIGGER:-PT4H
+END:VALARM
+END:VEVENT
+END:VCALENDAR

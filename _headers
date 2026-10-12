@@ -1,0 +1,21 @@
+# ===========================================================
+# Cabeceras de Cloudflare Pages · Invitación XV Oriana Sofía
+# - noindex en todo el sitio (invitación privada)
+# - CSS y JS sin caché: los cambios se ven al instante en cualquier celular
+# - el .ics se sirve como calendario (iPhone ofrece "Agregar")
+# ===========================================================
+
+/*
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/css/*
+  Cache-Control: no-cache
+
+/js/*
+  Cache-Control: no-cache
+
+/evento-xv-oriana-sofia.ics
+  Content-Type: text/calendar; charset=utf-8
