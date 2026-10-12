@@ -10,9 +10,11 @@
      4. Cuenta regresiva hasta el encuentro.
      5. Mapa: el de Google solo carga si el invitado lo pide.
      6. Confirmación: arma un mensaje bonito y abre WhatsApp.
+     7. Fotos: carrusel lento dentro del arco y visor a pantalla completa.
    Datos que lee del HTML (para no repetirlos aquí):
      · #datos-evento  → data-whatsapp y data-direccion-mapa (zona CONTACTO)
      · #reloj         → data-fecha-evento y data-fecha-texto
+     · #carrusel      → las fotos (img.carrusel__foto, en orden)
    Sin dependencias externas. Cargado con defer: el DOM ya existe.
    Diseño y desarrollo: JX Company.
    =========================================================== */
@@ -226,6 +228,7 @@
       document.body.classList.remove('con-portal');
       document.body.classList.add('invitacion-abierta');
       musica.mostrarBoton();
+      document.dispatchEvent(new CustomEvent('invitacion:abierta'));   // el carrusel empieza a pasar fotos
     }
 
     function abrir(conAnimacion, conMusica) {
@@ -442,6 +445,211 @@
   }
 
   /* ===========================================================
+     7. FOTOS: CARRUSEL DEL ARCO Y VISOR A PANTALLA COMPLETA
+     Las fotos se leen del HTML (#carrusel .carrusel__foto, en orden):
+     para agregar o quitar fotos no hay que tocar este archivo.
+     =========================================================== */
+  /**
+   * Llama a haciaLado(1) o haciaLado(-1) cuando se desliza el dedo a un lado
+   * (siguiente / anterior) sobre el elemento. Ignora los gestos verticales.
+   */
+  function alDeslizar(el, haciaLado) {
+    var x0 = null, y0 = 0;
+    el.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, { passive: true });
+    el.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) haciaLado(dx < 0 ? 1 : -1);
+    }, { passive: true });
+  }
+
+  /**
+   * Carrusel: una foto a la vez con fundido lento. Pasa sola cada PASO_MS solo si hay
+   * más de una foto, ya se abrió el sobre, la portada está a la vista, la pestaña está
+   * visible, el visor está cerrado y el celular no pide "reducir movimiento".
+   * Se desliza con el dedo; al tocar la foto se abre el visor.
+   * Ahorro de datos: solo la primera foto viene con la página; las demás se piden
+   * (data-src → src) justo antes de que les toque.
+   * Visor: <dialog> a pantalla completa con flechas, deslizar, teclado y contador;
+   * el botón "atrás" del celular lo cierra sin salir de la invitación (history.pushState).
+   */
+  function iniciarFotos() {
+    var carrusel = $('#carrusel');
+    var visor = $('#visor');
+    if (!carrusel || !visor) return;
+    var fotos = Array.prototype.slice.call(carrusel.querySelectorAll('.carrusel__foto'));
+    if (!fotos.length) return;
+    var botonVer = $('#carrusel-ver');
+    var cajaPuntos = $('#carrusel-puntos');
+    var ayuda = $('#carrusel-ayuda');
+    var visorFoto = $('#visor-foto');
+    var contador = $('#visor-contador');
+    var PASO_MS = 5500;
+    var actual = 0, enVisor = 0;
+    var temporizador = null, aLaVista = true, abierta = false, deslizo = false, cerrando = false, esperaCierre = null;
+    var puntos = [];
+
+    /** Pide la foto (data-src → src) si falta; llama a listo() cuando cargó. Si falla, la saca del carrusel. */
+    function cargar(img, listo) {
+      var pendiente = img.getAttribute('data-src');
+      if (pendiente && !img.getAttribute('src')) img.src = pendiente;
+      if (img.complete && img.naturalWidth) { if (listo) listo(); return; }
+      img.addEventListener('load', function () { if (listo) listo(); }, { once: true });
+      img.addEventListener('error', function () { quitarRota(img); }, { once: true });
+    }
+
+    function quitarRota(img) {
+      var k = fotos.indexOf(img);
+      if (k < 1) return;   // la primera viene con la página: no se quita
+      fotos.splice(k, 1);
+      img.remove();
+      if (actual > k) actual--;
+      crearPuntos();
+    }
+
+    function crearPuntos() {
+      cajaPuntos.textContent = '';
+      puntos = fotos.map(function () {
+        var p = document.createElement('span');
+        p.className = 'carrusel__punto';
+        cajaPuntos.appendChild(p);
+        return p;
+      });
+      cajaPuntos.hidden = fotos.length < 2;
+      ayuda.textContent = fotos.length < 2 ? 'Toca la foto para verla en grande' : 'Toca una foto para verla en grande';
+      visor.classList.toggle('visor--una', fotos.length < 2);
+      pintarPuntos();
+    }
+
+    function pintarPuntos() {
+      puntos.forEach(function (p, k) { p.classList.toggle('es-actual', k === actual); });
+    }
+
+    /** Pasa a la foto i (con fundido) cuando ya cargó, y deja pedida la siguiente. */
+    function mostrar(i) {
+      var n = fotos.length;
+      if (n < 2) return;
+      var img = fotos[((i % n) + n) % n];
+      if (img === fotos[actual]) return;
+      cargar(img, function () {
+        if (fotos.indexOf(img) === -1) return;
+        fotos[actual].classList.remove('es-actual');
+        fotos[actual].setAttribute('aria-hidden', 'true');
+        img.classList.add('es-actual');
+        img.removeAttribute('aria-hidden');
+        actual = fotos.indexOf(img);
+        pintarPuntos();
+        cargar(fotos[(actual + 1) % fotos.length]);
+      });
+    }
+
+    function programar() {
+      clearTimeout(temporizador);
+      if (fotos.length < 2 || reducirMovimiento || !abierta || !aLaVista || document.hidden || visor.open) return;
+      temporizador = setTimeout(function () { mostrar(actual + 1); programar(); }, PASO_MS);
+    }
+
+    // Estado inicial: solo la primera se ve y se lee en voz alta
+    fotos.forEach(function (img, k) { if (k !== actual) img.setAttribute('aria-hidden', 'true'); });
+    crearPuntos();
+    $('#carrusel-pie').hidden = false;
+
+    function empezar() {
+      if (abierta) return;
+      abierta = true;
+      carrusel.classList.add('carrusel--anima');
+      if (fotos.length > 1) cargar(fotos[1]);
+      programar();
+    }
+    document.addEventListener('invitacion:abierta', empezar);
+    if (document.body.classList.contains('invitacion-abierta')) empezar();
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entradas) {
+        aLaVista = entradas[0].isIntersecting;
+        programar();
+      }).observe(carrusel);
+    }
+    document.addEventListener('visibilitychange', programar);
+
+    alDeslizar(carrusel, function (paso) {
+      deslizo = true;
+      setTimeout(function () { deslizo = false; }, 400);
+      mostrar(actual + paso);
+      programar();
+    });
+
+    /* --- Visor a pantalla completa --- */
+    function verEnVisor(i) {
+      var n = fotos.length;
+      enVisor = ((i % n) + n) % n;
+      var img = fotos[enVisor];
+      cargar(img);
+      var src = img.getAttribute('src') || img.getAttribute('data-src');
+      if (visorFoto.getAttribute('src') !== src) {
+        visorFoto.classList.add('cargando');
+        visorFoto.onload = visorFoto.onerror = function () { visorFoto.classList.remove('cargando'); };
+        visorFoto.src = src;
+      }
+      visorFoto.alt = img.alt;
+      contador.textContent = (enVisor + 1) + ' / ' + n;
+    }
+
+    function abrirVisor(i) {
+      if (typeof visor.showModal !== 'function') {   // navegador sin <dialog>: abre la foto sola
+        abrirEnlace(fotos[i].getAttribute('src') || fotos[i].getAttribute('data-src'));
+        return;
+      }
+      verEnVisor(i);
+      visor.showModal();
+      document.body.classList.add('con-visor');
+      try { history.pushState({ visorXV: true }, ''); } catch (e) { /* sin historial: se cierra con la X */ }
+      programar();   // el carrusel se detiene mientras el visor está abierto
+    }
+
+    function cerrarVisor() {
+      if (cerrando || !visor.open) return;
+      cerrando = true;
+      if (history.state && history.state.visorXV) {
+        history.back();   // el popstate lo cierra; así "atrás" y la X hacen lo mismo
+        esperaCierre = setTimeout(function () { if (visor.open) visor.close(); }, 700);   // respaldo
+      } else {
+        visor.close();
+      }
+    }
+
+    botonVer.addEventListener('click', function () {
+      if (deslizo) return;   // fue un deslizamiento, no un toque
+      abrirVisor(actual);
+    });
+    window.addEventListener('popstate', function () { if (visor.open) visor.close(); });
+    visor.addEventListener('cancel', function (e) { e.preventDefault(); cerrarVisor(); });   // tecla Esc
+    visor.addEventListener('close', function () {
+      clearTimeout(esperaCierre);   // si no, el respaldo cerraría el visor la próxima vez que se abra
+      cerrando = false;
+      document.body.classList.remove('con-visor');
+      mostrar(enVisor);   // el arco sigue desde la foto que estaban viendo
+      programar();
+      botonVer.focus({ preventScroll: true });
+    });
+    $('#visor-cerrar').addEventListener('click', cerrarVisor);
+    $('#visor-anterior').addEventListener('click', function () { verEnVisor(enVisor - 1); });
+    $('#visor-siguiente').addEventListener('click', function () { verEnVisor(enVisor + 1); });
+    visor.addEventListener('click', function (e) { if (e.target === visor) cerrarVisor(); });   // tocar el fondo cierra
+    visor.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') verEnVisor(enVisor - 1);
+      else if (e.key === 'ArrowRight') verEnVisor(enVisor + 1);
+    });
+    alDeslizar(visor, function (paso) { verEnVisor(enVisor + paso); });
+    // Con un dedo no se mueve la página de atrás (con dos dedos sí se puede hacer zoom)
+    visor.addEventListener('touchmove', function (e) { if (e.touches.length === 1) e.preventDefault(); }, { passive: false });
+  }
+
+  /* ===========================================================
      ARRANQUE
      =========================================================== */
   // iPhone solo pinta los estilos :active (respuesta al tocar) si la página escucha toques.
@@ -454,7 +662,7 @@
   window.__XV_SOBRE_LISTO__ = true;   // arranque.js lo revisa: si el sobre no quedó listo, lo quita
 
   // Cada parte arranca por separado: si una falla en un celular raro, las demás siguen funcionando.
-  [iniciarCuenta, iniciarMapa, function () { iniciarConfirmacion(invitado); }].forEach(function (iniciar) {
+  [iniciarCuenta, iniciarMapa, iniciarFotos, function () { iniciarConfirmacion(invitado); }].forEach(function (iniciar) {
     try { iniciar(); } catch (e) { if (window.console) console.error(e); }
   });
 })();

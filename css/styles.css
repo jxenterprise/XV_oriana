@@ -74,6 +74,7 @@
   --error: #9B2C4F;          /* mensaje de error del formulario */
   --linea-oro: rgba(176, 138, 62, .45);
   --velo-blanco: rgba(255, 255, 255, .72);
+  --velo-tinta: rgba(59, 42, 80, .96);   /* fondo del visor de fotos (tinta casi opaca) */
   --sombra: 0 18px 40px -22px rgba(59, 42, 80, .45);
   --sombra-suave: 0 8px 24px -14px rgba(59, 42, 80, .35);
 
@@ -385,6 +386,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 .portada__ramo--der { right: -44px; top: -24px; width: clamp(190px, 52vw, 440px); transform: scaleX(-1); opacity: .9; }
 
 .portada__contenido {
+  --arco-ancho: min(70vw, 300px);   /* ancho del arco de fotos (cambia en los breakpoints) */
   position: relative; max-width: var(--ancho); margin: 0 auto;
   display: flex; flex-direction: column; align-items: center;
 }
@@ -408,7 +410,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
   }
 }
 
-.arco { position: relative; width: min(70vw, 300px); margin: 0; }
+.arco { position: relative; width: var(--arco-ancho); margin: 0; }
 .arco__foto {
   position: relative; aspect-ratio: 3 / 4; overflow: hidden;
   border-radius: 50% 50% 0 0 / 37.5% 37.5% 0 0;
@@ -416,9 +418,41 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 }
 .arco__foto img { width: 100%; height: 100%; object-fit: cover; }
 .arco__foto::after {   /* tono lila suave abajo para fundir la foto con las flores */
-  content: ''; position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(180deg, transparent 58%, rgba(95, 63, 147, .18));
 }
+
+/* --- Carrusel de fotos dentro del arco (iniciarFotos() en script.js) ---
+   Las fotos se apilan y se cambian con un fundido lento (clase es-actual).
+   La primera queda en el flujo normal (da el alto al arco aunque el navegador
+   no conozca aspect-ratio); las demás se superponen encima. */
+.carrusel { touch-action: pan-y pinch-zoom; }   /* el deslizamiento lateral lo maneja el JS */
+.carrusel__foto {
+  position: absolute; inset: 0;
+  object-position: var(--enfoque, 50% 30%);   /* qué parte de la foto queda dentro del arco */
+  opacity: 0; transition: opacity 1.8s ease;
+}
+.carrusel__foto:first-child { position: relative; }
+.carrusel__foto.es-actual { opacity: 1; }
+.carrusel__ver {   /* toda la foto es el botón para verla en grande (transparente) */
+  position: absolute; inset: 0; z-index: 1; width: 100%; padding: 0; border: 0;
+  background: none; cursor: zoom-in;
+}
+.carrusel__ver:focus-visible { outline-offset: -6px; }
+.no-js .carrusel__ver { display: none; }
+
+.carrusel__pie {   /* puntos dorados + ayuda, justo debajo de las flores del arco */
+  display: grid; justify-items: center; gap: .45rem;
+  margin-top: calc(var(--arco-ancho) * .17);
+}
+.carrusel__pie:not([hidden]) + .portada__nombre { margin-top: 1.1rem; }
+.carrusel__puntos { display: flex; gap: 9px; }
+.carrusel__punto {
+  width: 7px; height: 7px; border-radius: 50%;
+  border: 1px solid var(--oro); transition: background-color .5s;
+}
+.carrusel__punto.es-actual { background: var(--oro); }
+.carrusel__ayuda { font-style: italic; font-size: 1.02rem; color: var(--tinta-suave); }
 .arco__marco { position: absolute; left: -12px; top: -12px; width: calc(100% + 24px); height: calc(100% + 12px); overflow: visible; }
 .arco__ramo { position: absolute; bottom: -15%; width: 92%; height: auto; pointer-events: none; }
 .arco__ramo--izq { left: -40%; }
@@ -755,6 +789,54 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 
 
 /* ===========================================================
+   VISOR DE FOTOS (pantalla completa)
+   Qué hace: <dialog> que ocupa toda la pantalla con fondo tinta; la foto
+   entera (sin recortar) y botones redondos como el de la música: cerrar
+   arriba y anterior/siguiente abajo (al alcance del pulgar), con el
+   contador "3 / 8" en medio. Depende de: iniciarFotos() en script.js.
+   =========================================================== */
+.visor {
+  width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0;
+  background: var(--velo-tinta); color: var(--blanco);
+  overscroll-behavior: contain;
+}
+.visor[open] { display: grid; place-items: center; }
+.visor::backdrop { background: var(--velo-tinta); }
+.visor__foto {
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 170px);
+  max-height: calc(100dvh - 170px);   /* deja aire para los botones de arriba y abajo */
+  width: auto; height: auto; object-fit: contain;
+  border-radius: var(--radio); box-shadow: 0 0 0 1px var(--linea-oro), var(--sombra);
+  transition: opacity .35s ease;
+}
+.visor__foto.cargando { opacity: 0; }
+.visor__contador {
+  position: fixed; left: 50%; bottom: calc(36px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  font-size: var(--t-etiqueta); font-weight: 600; letter-spacing: .24em; color: var(--oro-claro);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.visor__boton {
+  position: fixed; z-index: 1;
+  width: 54px; height: 54px; border-radius: 50%; padding: 0;
+  display: grid; place-items: center;
+  border: 1px solid var(--oro); background: rgba(255, 255, 255, .94); color: var(--lila-profundo);
+  box-shadow: var(--sombra-suave); cursor: pointer;
+  transition: transform .15s;
+}
+.visor__boton svg { width: 24px; height: 24px; }
+.visor__boton:active { transform: scale(.94); }
+.visor__boton--cerrar { top: calc(16px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); }
+.visor__boton--anterior { left: calc(16px + env(safe-area-inset-left, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+.visor__boton--siguiente { right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+.visor--una .visor__boton--anterior,
+.visor--una .visor__boton--siguiente,
+.visor--una .visor__contador { display: none; }   /* con una sola foto no hay nada que pasar */
+body.con-visor { overflow: hidden; }
+
+
+/* ===========================================================
    ANIMACIONES SUAVES
    · Entrada de la portada cuando se abre el sobre (un solo momento
      orquestado). Parte de opacidad 0 SOLO mientras corre la animación.
@@ -772,7 +854,10 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
   .invitacion-abierta .portada__contenido > :nth-child(4) { animation-delay: .42s; }
   .invitacion-abierta .portada__contenido > :nth-child(5) { animation-delay: .56s; }
   .invitacion-abierta .portada__contenido > :nth-child(6) { animation-delay: .7s; }
+  .invitacion-abierta .portada__contenido > :nth-child(7) { animation-delay: .82s; }
   .invitacion-abierta .portada__ramo { animation: entrada-ramo 1.4s ease both; }
+  /* Carrusel: la foto que se ve se acerca muy despacio mientras está en pantalla */
+  .carrusel--anima .carrusel__foto.es-actual { animation: acercar 7.5s ease-out both; }
 
   @supports (animation-timeline: view()) {
     .mensaje > *, .reloj, .guardar, .dato, .encuentro, .vestuario__tipo, .reservado,
@@ -786,9 +871,11 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 @keyframes entrada { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes entrada-ramo { from { opacity: 0; } to { opacity: 1; } }
 @keyframes revela { from { transform: translateY(22px); } to { transform: none; } }   /* solo movimiento: el contenido nunca queda transparente */
+@keyframes acercar { from { transform: scale(1.07); } to { transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .sobre__solapa, .sobre__carta, .sello, .portal { transition: none; }
+  .carrusel__foto { transition-duration: .4s; }   /* el carrusel no pasa solo; al deslizar, cambio corto */
 }
 
 
@@ -879,7 +966,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 @media (min-width: 600px) {
   .portada__ramo--izq { left: -20px; }
   .portada__ramo--der { right: -30px; }
-  .arco { width: 300px; }
+  .portada__contenido { --arco-ancho: 300px; }
 }
 
 /* ≥768px: tablet */
@@ -887,7 +974,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
   :root { --t-base: 1.25rem; }
   .portada { padding-bottom: 2rem; }
   .portada__corona { margin-top: 2.4rem; }
-  .arco { width: 320px; }
+  .portada__contenido { --arco-ancho: 320px; }
   .detalles__lista { max-width: 52rem; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; align-items: start; text-align: center; }
   .dato { grid-template-columns: 1fr; justify-items: center; align-content: start; border: 0; padding: 0 .6rem; gap: .7rem; }
   .dato:first-child { border: 0; }
@@ -902,7 +989,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
   .portada__ramo--izq { left: 0; width: min(40vw, 600px); }
   .portada__ramo--der { right: 0; width: min(32vw, 470px); }
   .portada__corona { margin-top: 1.2rem; }
-  .arco { width: 340px; }
+  .portada__contenido { --arco-ancho: 340px; }
   .mapa { aspect-ratio: 16 / 8; }
 }
 
@@ -911,7 +998,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
   :root { --t-base: 1.3rem; --ancho: 36rem; }
   .portada__ramo--izq { width: 620px; }
   .portada__ramo--der { width: 500px; }
-  .arco { width: 360px; }
+  .portada__contenido { --arco-ancho: 360px; }
 }
 
 /* Teléfono horizontal / pantallas bajas (navegador interno con barras): el sobre cabe sin scroll.

@@ -167,6 +167,10 @@
     <symbol id="i-mas" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></g></symbol>
     <symbol id="i-menos" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/></g></symbol>
     <symbol id="i-sobre" viewBox="0 0 64 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="6" width="56" height="38" rx="3"/><path d="M4.8 7.5 32 28 59.2 7.5"/><path d="M4.8 43 24 22.2M59.2 43 40 22.2"/></g></symbol>
+    <!-- Íconos del visor de fotos -->
+    <symbol id="i-cerrar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></g></symbol>
+    <symbol id="i-anterior" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></g></symbol>
+    <symbol id="i-siguiente" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5.5 16 12l-6.5 6.5"/></g></symbol>
   </svg>
 
   <!-- ===========================================================
@@ -208,11 +212,12 @@
 
   <!-- ===========================================================
        PORTADA
-       Qué es: corona, "Mis XV años", foto de Oriana en un arco dorado
-               rodeado de acuarelas, su nombre y la fecha.
+       Qué es: corona, "Mis XV años", carrusel de fotos de Oriana dentro de
+               un arco dorado rodeado de acuarelas, su nombre y la fecha.
        Función: lo primero que se ve al abrir el sobre; resume la invitación.
-       Depende de: .portada, .arco y .fecha-portada en styles.css.
-       La foto es la imagen principal (LCP): fetchpriority="high", sin lazy.
+       Depende de: .portada, .arco, .carrusel y .fecha-portada en styles.css;
+                   iniciarFotos() en script.js (carrusel + visor).
+       La primera foto es la imagen principal (LCP): fetchpriority="high", sin lazy.
        =========================================================== -->
   <header class="portada" id="inicio">
     <img class="portada__ramo portada__ramo--izq" src="img/ramo-acuarela-lila-esquina.webp" width="1008" height="792" alt="" aria-hidden="true">
@@ -226,10 +231,18 @@
         <span class="sello-xv__lado">años</span>
       </p>
 
+      <!-- CARRUSEL DE FOTOS (dentro del arco)
+           Cómo agregar, quitar o reordenar fotos: cada foto es una <img class="carrusel__foto"> dentro de
+           #carrusel, en el orden en que pasan. Solo la PRIMERA lleva src, fetchpriority="high" y la clase
+           es-actual; las demás llevan data-src (script.js las carga cuando les va a tocar: ahorra datos).
+           Siempre WebP en img/. style="--enfoque: X% Y%" elige qué parte de la foto queda dentro del arco
+           (50% 30% por defecto; subir Y si se corta la cabeza, p. ej. 50% 15%). El visor de pantalla
+           completa usa estas mismas fotos: no hay que repetirlas en otro lado. -->
       <figure class="arco">
-        <div class="arco__foto">
-          <img src="img/oriana-sofia-portada-xv.webp" width="678" height="904" fetchpriority="high"
+        <div class="arco__foto carrusel" id="carrusel" role="group" aria-roledescription="carrusel" aria-label="Fotos de Oriana Sofía">
+          <img class="carrusel__foto es-actual" src="img/oriana-sofia-portada-xv.webp" width="678" height="904" fetchpriority="high"
                alt="Oriana Sofía, la quinceañera, sonriendo con su cabello rizado suelto">
+          <button class="carrusel__ver" id="carrusel-ver" type="button" aria-label="Ver las fotos en pantalla completa"></button>
         </div>
         <svg class="arco__marco" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
           <path d="M6 397 V150 A144 144 0 0 1 294 150 V397" fill="none" stroke="url(#g-oro)" stroke-width="2" vector-effect="non-scaling-stroke"/>
@@ -238,6 +251,13 @@
         <img class="arco__ramo arco__ramo--izq" src="img/ramo-acuarela-lila-arco.webp" width="780" height="639" alt="" aria-hidden="true">
         <img class="arco__ramo arco__ramo--der" src="img/ramo-acuarela-lila-arco.webp" width="780" height="639" alt="" aria-hidden="true">
       </figure>
+
+      <!-- Debajo del arco: puntos dorados (uno por foto, los crea script.js) y ayuda para ampliar.
+           Oculto sin JavaScript (sin JS solo se ve la primera foto). -->
+      <div class="carrusel__pie" id="carrusel-pie" hidden>
+        <div class="carrusel__puntos" id="carrusel-puntos" aria-hidden="true"></div>
+        <p class="carrusel__ayuda" id="carrusel-ayuda">Toca la foto para verla en grande</p>
+      </div>
 
       <h1 class="portada__nombre"><span class="solo-lectores">Mis XV años · </span>Oriana Sofía</h1>
 
@@ -535,6 +555,23 @@
       <span class="footer-dev-co">Company</span>
     </p>
   </footer>
+
+  <!-- ===========================================================
+       VISOR DE FOTOS (pantalla completa)
+       Qué es: ventana a pantalla completa para ver en grande las fotos
+               del carrusel; se pasa con las flechas o deslizando el dedo.
+       Función: que los invitados vean las fotos de Oriana con calma.
+       Depende de: iniciarFotos() en script.js; .visor en styles.css.
+       Usa las mismas fotos del carrusel (no se repiten aquí). El botón
+       "atrás" del celular lo cierra sin salir de la invitación.
+       =========================================================== -->
+  <dialog class="visor" id="visor" aria-label="Fotos de Oriana Sofía">
+    <img class="visor__foto" id="visor-foto" alt="">
+    <p class="visor__contador" id="visor-contador" aria-live="polite"></p>
+    <button class="visor__boton visor__boton--cerrar" id="visor-cerrar" type="button" aria-label="Cerrar las fotos"><svg aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+    <button class="visor__boton visor__boton--anterior" id="visor-anterior" type="button" aria-label="Foto anterior"><svg aria-hidden="true"><use href="#i-anterior"/></svg></button>
+    <button class="visor__boton visor__boton--siguiente" id="visor-siguiente" type="button" aria-label="Foto siguiente"><svg aria-hidden="true"><use href="#i-siguiente"/></svg></button>
+  </dialog>
 
   <!-- ===========================================================
        MÚSICA

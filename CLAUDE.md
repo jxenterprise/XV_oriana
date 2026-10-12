@@ -6,8 +6,9 @@ Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). S
 enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
 `https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (11/10/2026, noche): versión 1.1 publicada (v1 + arreglos para celular). **Hay pedidos nuevos en curso:
-carrusel de fotos + visor a pantalla completa y música nueva** → ver la sección siguiente.
+Estado (12/10/2026): versión 1.2 publicada (v1.1 + **carrusel de fotos y visor a pantalla completa ya
+programados**). Por ahora el carrusel solo tiene la foto actual: **faltan las otras 7 fotos y la música nueva**,
+que JX aún no ha enviado → ver la sección siguiente.
 
 ## 🚦 ESTADO ACTUAL Y QUÉ SIGUE (leer primero en cada sesión)
 ### Hecho el 11/10/2026
@@ -25,11 +26,34 @@ carrusel de fotos + visor a pantalla completa y música nueva** → ver la secci
    - Generador: Enter pasa nombre → pases → WhatsApp; "Copiar" funciona en navegadores internos y ya no deja
      seleccionado el enlace de OTRO invitado cuando falla el portapapeles.
 
+### Hecho el 12/10/2026
+4. **Versión 1.2: carrusel de fotos en el arco + visor a pantalla completa**, programado y probado (detalle en el
+   MAPA DEL CÓDIGO → 1.2). Se probó con 5 fotos de relleno, solo en una copia fuera del repo, en WebKit y Chromium:
+   - Las fotos pasan solas cada 5,5 s con fundido y un acercamiento muy lento; los puntos dorados las siguen.
+   - Se puede deslizar con el dedo. Con "reducir movimiento" no pasan solas.
+   - Ahorro de datos: antes de abrir el sobre solo baja la primera foto; las demás se piden de a una.
+   - Visor: flechas, deslizar, contador, Esc, X, tocar el fondo y el botón "atrás" del celular lo cierran sin
+     salir de la invitación. Un doble toque rápido en la X no saca de la página.
+   - Hoy tiene **una sola foto** (la actual): no hay puntos ni flechas y la ayuda dice "Toca la foto para verla
+     en grande".
+   - Sin regresiones en los 12 perfiles de celular.
+
 ### Pendiente (en este orden)
-1. **Carrusel de fotos en la portada + visor a pantalla completa** (pedido de JX/familia, 11/10/2026: "no una sola
-   foto"; que pasen solas y despacio; que se puedan ver en grande).
+1. **Agregar las fotos al carrusel**. El código ya está (v1.2); solo falta el material. Fue un pedido de JX y la
+   familia el 11/10/2026: "no una sola foto", que pasen solas y despacio y que se puedan ver en grande.
    - Material: JX lo copia en `C:\Users\jampi\Documents\JX COMPANY\PAGINAS WEBS JX\Material_XV_Oriana` (FUERA del
-     proyecto: los JPG/MP4 originales nunca van al repo). Preguntar si ya está.
+     proyecto: los JPG/MP4 originales nunca van al repo). Preguntar si ya está. Al 12/10/2026 aún no existe.
+   - **Cómo agregarlas** (no hay que tocar el JS):
+     1. Convertir cada foto a WebP en `img/` con nombre descriptivo (p. ej. `oriana-sofia-bebe-2011.webp`),
+        corrigiendo rotación y recortes.
+     2. Agregar en `index.html`, dentro de `#carrusel` y después de la primera foto, una línea por foto en el orden
+        en que deben pasar:
+        `<img class="carrusel__foto" data-src="img/NOMBRE.webp" width="ANCHO" height="ALTO" alt="DESCRIPCIÓN" decoding="async">`
+        Solo la primera lleva `src`, `fetchpriority="high"` y la clase `es-actual`.
+     3. Si el arco corta la cara, agregar `style="--enfoque: 50% 15%"` (x% y%; por defecto 50% 30%).
+     4. Revisar en celular con el banco de pruebas: arco, visor y que la foto quede entera en el visor.
+     Opcional: reemplazar la primera foto (hoy un recorte de 678×904) por la original completa, porque en el visor
+     se ve entera.
    - Las 8 fotos (también las pegó en el chat): 1) selfie actual de la portada (original 900×1600); 2) niña
      pequeña sentada con galletas: es una **captura de la galería de Samsung**, hay que recortar la interfaz y
      **rotar 90°** (la foto está de lado); 3) graduación de preescolar con toga azul: **captura con barras negras**
@@ -37,15 +61,12 @@ carrusel de fotos + visor a pantalla completa y música nueva** → ver la secci
      5) selfie en espejo con vestido beige (960×1280); 6) selfie muy cercana **de lado, hay que rotarla**;
      7) bebé con sombrero blanco con flores, horizontal 1080×722, con fecha impresa 19/10/2012;
      8) bebé de meses con vestido verde y balaca rosada (1080×1443).
-   - Diseño acordado (mismo diseño de la web): el carrusel va DENTRO del arco dorado actual (mismo marco, ramos y
-     proporción 3:4), cambia solo y despacio con fundido suave (~5 s por foto), puntos dorados debajo, se puede
-     deslizar con el dedo; con "reducir movimiento" no pasa solo. Al tocar una foto se abre un visor a pantalla
-     completa (`<dialog>`, fondo color tinta, botón cerrar dorado como el de la música, deslizar y flechas,
-     contador "3 / 8", Esc; el botón "atrás" de Android lo cierra usando `history.pushState`).
+   - Diseño (ya implementado en v1.2, mismo diseño de la web): carrusel dentro del arco dorado, puntos dorados y
+     ayuda debajo de las flores, visor `<dialog>` con fondo color tinta y botones redondos como el de la música.
      Orden propuesto a JX: primero la foto actual de Oriana y luego de bebé a hoy.
-   - Técnica: convertir a WebP en `img/` (regla), conservando resolución; `object-position` por foto para que el
-     arco (`object-fit: cover`) no corte caras; la primera foto con `fetchpriority="high"` y las demás cargando
-     después de abrir el sobre (datos móviles). `alt` descriptivo por foto. Actualizar README, decisiones y mapa.
+   - Técnica: convertir a WebP en `img/` (regla), conservando la resolución original (para el visor). Usar
+     `ImageOps.exif_transpose` de Pillow para corregir la rotación y calidad ~86. `alt` descriptivo por foto, y
+     actualizar README y el decision log.
 2. **Música nueva** (no les gustó el vals): viene dentro de un **video MP4** en la misma carpeta. Extraer el audio
    con ffmpeg (no hay ffmpeg instalado en el PC; funciona `npm i ffmpeg-static` en una carpeta temporal), quitar
    silencios, fundido de entrada y salida, normalizar volumen (`loudnorm`), MP3 de ~112–128 kbps, reemplazar
@@ -60,9 +81,10 @@ carrusel de fotos + visor a pantalla completa y música nueva** → ver la secci
 4. **Vista previa de WhatsApp**: ya con el dominio correcto, el WhatsApp de JX guardó en caché la tarjeta vacía de
    la dirección raíz. Probar pegando `https://mis-xv-de-oriana-sofia.pages.dev/?v=2` y esperar 5–10 s. Si aun así
    no sale la imagen, hacer una excepción técnica documentada (como el favicon): `og:image` en JPG.
-5. Auditoría móvil a fondo (6 revisores, 11/10/2026): integrar lo que no se alcance en la sesión, como modo
-   oscuro forzado (Samsung Internet o navegadores internos: probar `color-scheme: only light`), enlace de
-   respaldo de WhatsApp en la misma pestaña, rendimiento en 3G y foco/lectores de pantalla.
+5. Auditoría móvil a fondo: el workflow de 6 revisores del 11/10/2026 **se cortó por el límite de sesión** antes de
+   entregar resultados. Lo urgente ya se había corregido en v1.1. Quedan por revisar: modo oscuro forzado (Samsung
+   Internet o navegadores internos: probar `color-scheme: only light`), enlace de respaldo de WhatsApp en la misma
+   pestaña (navegadores internos), rendimiento en 3G y foco/lectores de pantalla.
 6. Pin exacto del punto de encuentro (ver {POR CONFIRMAR} 1).
 7. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
    Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
@@ -120,7 +142,8 @@ archivos de prueba (punto 18 de la auditoría).
 
 ## Estructura de secciones (index.html)
 1. Portal / sobre animado (`#portal`) — sello de cera, nombre y pases del invitado.
-2. Portada (`.portada`) — corona, "Mis XV años", foto en arco, nombre (único `<h1>`), fecha.
+2. Portada (`.portada`) — corona, "Mis XV años", carrusel de fotos en el arco (`#carrusel`) con puntos y ayuda
+   (`#carrusel-pie`), nombre (único `<h1>`), fecha.
 3. Mensaje de Oriana (`#mensaje`).
 4. Cuenta regresiva + Guarda la fecha (`#cuenta`).
 5. El gran día: fecha, hora, plan, punto de encuentro y mapa (`#detalles`).
@@ -128,7 +151,8 @@ archivos de prueba (punto 18 de la auditoría).
 7. Lluvia de sobres (`#regalo`).
 8. Confirmación por WhatsApp (`#confirmar`).
 9. Cierre + crédito JX Company (`footer.cierre`).
-10. Botón flotante de música (`#boton-musica`) y `<audio id="audio-vals">`.
+10. Visor de fotos a pantalla completa (`<dialog id="visor">`), cerrado hasta que tocan una foto.
+11. Botón flotante de música (`#boton-musica`) y `<audio id="audio-vals">`.
 
 ## Dónde editar cada cosa
 - Textos del mensaje → `index.html`, zona TEXTOS.
@@ -138,6 +162,8 @@ archivos de prueba (punto 18 de la auditoría).
 - Mensajes de WhatsApp (confirmación) → `js/script.js`, función `iniciarConfirmacion()`.
 - Mensaje que envía el generador → `js/generador.js`, función `mensajeSugerido()`.
 - Colores, tipografías, tamaños → `css/styles.css`, bloque `:root`.
+- Fotos del carrusel (y del visor) → `index.html`, comentario "CARRUSEL DE FOTOS" en la portada: una
+  `<img class="carrusel__foto">` por foto, en orden. El JS no se toca.
 - Foto, acuarelas, imagen de vista previa → `img/` (siempre WebP).
 - Música → `musica/vals-xv-oriana-sofia.mp3`.
 
@@ -266,6 +292,42 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
     (navegadores internos); si tampoco, selecciona el enlace de arriba solo si es el mismo texto y, si no,
     usa `prompt()` con el enlace correcto.
 
+### 12/10/2026 — versión 1.2 (carrusel de fotos + visor a pantalla completa)
+- **index.html**:
+  - Sprite con `#i-cerrar`, `#i-anterior` e `#i-siguiente`.
+  - En la portada, `.arco__foto` ahora es `#carrusel` (`role="group"`, `aria-roledescription="carrusel"`) con las
+    `img.carrusel__foto` y un botón transparente `#carrusel-ver` encima, que abre el visor.
+  - Debajo de la figura está `#carrusel-pie` (`hidden` sin JS), con `#carrusel-puntos` (los crea el JS) y la
+    ayuda `#carrusel-ayuda`.
+  - Antes de la música está el `<dialog id="visor">`: `#visor-foto`, `#visor-contador` (aria-live) y los botones
+    `#visor-cerrar`, `#visor-anterior` y `#visor-siguiente`.
+- **js/script.js**:
+  - `iniciarSobre().terminar()` dispara `document` → `invitacion:abierta`.
+  - Módulo nuevo `iniciarFotos()`, con try/catch propio en el arranque. Lee las fotos del HTML.
+  - `cargar(img)`: pasa `data-src` a `src` solo cuando hace falta. Si una foto falla, `quitarRota()` la saca del
+    carrusel, salvo la primera.
+  - `mostrar(i)`: fundido, `aria-hidden` en las fotos que no se ven y precarga la siguiente.
+  - `programar()`: avanza cada `PASO_MS` = 5500 solo si hay más de una foto, ya se abrió el sobre, la portada se ve
+    (IntersectionObserver), la pestaña está visible, el visor está cerrado y no se pidió `reducirMovimiento`.
+  - `alDeslizar(el, fn)`: gesto lateral de más de 40 px, que debe ser más horizontal que vertical.
+  - Visor: `showModal()` + `history.pushState({visorXV})`. `cerrarVisor()` hace `history.back()` y `popstate`
+    cierra el visor, así la X, Esc, tocar el fondo y "atrás" hacen lo mismo. La bandera `cerrando` evita dos
+    `back()` seguidos. El respaldo `esperaCierre` (700 ms) se cancela en `close`: si no, cerraba el visor cuando
+    lo volvían a abrir rápido (bug encontrado en las pruebas).
+  - Al cerrar el visor, el arco sigue desde la foto que estaban viendo y el foco vuelve a `#carrusel-ver`.
+  - `touchmove` de un dedo bloqueado dentro del visor, para que no se mueva la página de atrás; el zoom con dos
+    dedos sigue. Si el navegador no tiene `<dialog>`, abre la foto sola con `abrirEnlace`.
+- **css/styles.css**:
+  - `:root --velo-tinta` (fondo del visor).
+  - `.portada__contenido { --arco-ancho }` reemplaza los `width` sueltos de `.arco` en los breakpoints. Con esa
+    variable, `.carrusel__pie` queda justo bajo las flores (`margin-top: --arco-ancho × .17`).
+  - `.carrusel__foto` va apilada con `opacity` (1,8 s). La primera queda en el flujo para dar el alto aunque el
+    navegador no conozca `aspect-ratio`. `object-position: var(--enfoque, 50% 30%)`.
+  - `.carrusel--anima` hace un acercamiento lento (`@keyframes acercar`) solo sin "reducir movimiento".
+  - `.arco__foto::after` lleva `pointer-events: none` para no tapar el botón.
+  - Sección "VISOR DE FOTOS": botones de 54 px como `.musica` y `.visor--una`, que oculta flechas y contador con
+    una sola foto. `nth-child(7)` tiene retraso en la animación de entrada de la portada (el pie es un hijo nuevo).
+
 ## Auditoría de 24 puntos (versión invitación)
 1. ❌ Dominio propio — no aplica: JX eligió `pages.dev` gratis; canonical/og apuntan a `mis-xv-de-oriana-sofia.pages.dev` (confirmado).
 2. ✅ HTML real en el view-source (todo el contenido está en `index.html`).
@@ -285,8 +347,8 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 16. ✅ `lang="es"`, charset UTF-8 y viewport.
 17. ✅ `alt` en la foto; las acuarelas son decorativas (`alt=""` + `aria-hidden`).
 18. ✅ Sin sourcemaps, `.git`, `node_modules`, `.env` ni archivos de prueba.
-19. ✅ Cero errores y cero advertencias en consola (v1: Chromium en 360, 390 y 1440 px; v1.1: Playwright con WebKit y
-    Chromium en 12 perfiles de celular, de 280 a 430 px y en horizontal).
+19. ✅ Cero errores y cero advertencias en consola (v1: Chromium en 360, 390 y 1440 px; v1.1 y v1.2: Playwright con
+    WebKit y Chromium en 12 perfiles de celular, de 280 a 430 px y en horizontal, más pruebas del carrusel y el visor).
 20. ✅ JS propio mínimo, CSS puro para animaciones, imágenes WebP, foto con `fetchpriority="high"`, resto `lazy`, scripts con `defer`, fuentes con `font-display: swap`.
 21. ➖ Páginas legales y banner de cookies — no aplica: versión invitación aprobada por JX (sin analítica ni formularios que guarden datos; el mapa solo carga si el invitado lo pide).
 22. ➖ GA4 — no se instala (decisión de la versión invitación).

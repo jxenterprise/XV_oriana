@@ -29,7 +29,10 @@ Cómo llegar a una zona:
 
 - **Sobre animado** con sello de cera lila (iniciales OS): al tocarlo se abre, sale la tarjeta, caen pétalos y arranca la música.
 - **Enlace personal por invitado**: el sobre dice "Para Familia Pérez · 3 pases" y la confirmación queda limitada a esos pases.
-- **Portada**: corona dorada, "Mis XV años", foto de Oriana en un arco dorado con flores en acuarela, nombre y fecha.
+- **Portada**: corona dorada, "Mis XV años", **carrusel de fotos de Oriana** dentro de un arco dorado con flores en
+  acuarela (pasan solas y despacio, se pueden deslizar con el dedo), nombre y fecha.
+- **Fotos en pantalla completa**: al tocar una foto se abre en grande; se pasa con flechas o deslizando, y el botón
+  "atrás" del celular la cierra sin salir de la invitación.
 - **Mensaje de Oriana** con su firma.
 - **Cuenta regresiva** (días, horas, minutos y segundos) hasta las 7:00 a. m. del 1 de noviembre.
 - **Guarda la fecha**: botón de Google Calendar y archivo para iPhone u otro calendario (con recordatorio la noche anterior).
@@ -116,7 +119,10 @@ Para ver el sobre personalizado: `http://localhost:8000/?para=Familia%20P%C3%A9r
 
 ## Cambios frecuentes
 
-- **Foto de portada**: reemplaza `img/oriana-sofia-portada-xv.webp` por otra en WebP, vertical 3:4 (ej. 678×904). JX la convierte.
+- **Fotos del carrusel**: en `index.html`, dentro del comentario "CARRUSEL DE FOTOS" de la portada, hay una línea
+  `<img class="carrusel__foto">` por foto, en el orden en que pasan. Para agregar una: guardarla en `img/` en WebP
+  (JX la convierte) y copiar una línea con `data-src="img/NOMBRE.webp"`, su ancho, alto y una descripción en `alt`.
+  Solo la primera lleva `src`. Si el arco corta la cara, se ajusta con `style="--enfoque: 50% 15%"`.
 - **Música**: reemplaza `musica/vals-xv-oriana-sofia.mp3` por otro MP3 con el mismo nombre (que la familia tenga derecho a usarlo).
 - **Textos**: zona `TEXTOS` en `index.html`.
 - **Fecha, hora, dirección o WhatsApp**: zonas `HORARIOS` y `CONTACTO` + los lugares que indica `⚠ SE REPITE EN`.
@@ -140,7 +146,7 @@ La invitación lleva la foto, el nombre de Oriana y la dirección del punto de e
 ## Créditos y licencias
 
 - Diseño, ilustraciones en acuarela, corona, sello y música: creados para este proyecto por JX Company.
-- Foto de portada: enviada por la familia.
+- Fotos de Oriana: enviadas por la familia.
 - Tipografías: Pinyon Script y Cormorant Garamond, licencia SIL Open Font License (archivos en `fonts/`).
 
 ---
