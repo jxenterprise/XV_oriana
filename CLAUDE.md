@@ -97,7 +97,7 @@ Google Maps que mandó la familia), más una revisión completa de la web. Lo qu
       la ficha del lugar con su nombre). Los `href` del HTML (respaldo sin JS) también apuntan al punto exacto.
     - Texto visible: se dejó la dirección de la invitación ("Barrio España, TR 44 calle 26D12, Cartagena") y se agregó
       debajo "Referencia: Tienda Brisas del Sur" (`.encuentro__ref`: cursiva 500, `--tinta-suave`, como las demás notas).
-      **Falta confirmar con JX** si el encuentro es en la casa o en la tienda (ver {POR CONFIRMAR} 1).
+      ✅ JX confirmó (12/10/2026) que el texto se queda así: dirección de la invitación + referencia de la tienda.
     - Google Calendar y `evento-xv-oriana-sofia.ics`: `location` = la tienda (para que el mapa del calendario caiga bien),
       descripción con la dirección, la referencia y el enlace del mapa. El `.ics` ganó `GEO`, `X-APPLE-STRUCTURED-LOCATION`
       (pin en el calendario de iPhone), `URL`, `SEQUENCE:1` y `DTSTAMP` nuevo; mismo `UID`, CRLF y líneas ≤75 octetos.
@@ -114,9 +114,8 @@ Google Maps que mandó la familia), más una revisión completa de la web. Lo qu
 
 ### Pendiente (en este orden)
 1. **Que JX escuche la canción en el celular** (volumen y que se repita bien). No se puede escuchar desde aquí.
-2. **Confirmar el punto de encuentro**: ¿es la casa (Barrio España, TR 44 calle 26D12) o la tienda Brisas del Sur?
-   Si es la tienda, cambiar el texto visible (zona CONTACTO) y la descripción del calendario y del `.ics`.
-   La tarjeta cuadrada (se entrega aparte) tiene la dirección vieja sin la referencia: revisarla si la van a reenviar.
+2. La tarjeta cuadrada (se entrega aparte) tiene la dirección sin la referencia de la tienda: revisarla si la van a
+   reenviar.
 3. Probar en un iPhone real (o WebKit): la sesión en la nube solo tiene Chromium; v1.3 y v1.4 no se probaron en WebKit.
 4. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
    Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
@@ -181,8 +180,8 @@ archivos de prueba (punto 18 de la auditoría).
 
 ## {POR CONFIRMAR} pendientes
 1. ~~Pin exacto del punto de encuentro~~ ✅ 12/10/2026 (v1.4): la familia mandó el enlace de Google Maps (Tienda Brisas
-   del Sur, 10.4020598, −75.5113218). **Queda por confirmar el texto**: ¿el encuentro es en la casa de la dirección de
-   la invitación o en la tienda? (ver "Pendiente" 2).
+   del Sur, 10.4020598, −75.5113218). JX confirmó dejar el texto así: "Barrio España, TR 44 calle 26D12, Cartagena" +
+   "Referencia: Tienda Brisas del Sur".
 2. ~~Dirección final del sitio~~ ✅ resuelto el 11/10/2026: `https://mis-xv-de-oriana-sofia.pages.dev/`, ya puesta en
    `canonical`, `og:url`, `og:image` y `twitter:image` del `<head>` de `index.html`. El `UID` del `.ics` conserva
    el dominio viejo a propósito: es solo un identificador y cambiarlo duplicaría el evento a quien ya lo guardó.
