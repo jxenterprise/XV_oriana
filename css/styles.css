@@ -586,6 +586,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 }
 .mapa__ilustracion, .mapa__ilustracion svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mapa__boton { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); white-space: nowrap; }
+.mapa__boton:active { transform: translateX(-50%) scale(.98); }   /* .boton:active borraba el centrado: el botón saltaba y perdía el toque */
 .mapa iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .mapa--cargado .mapa__ilustracion { display: none; }
 .encuentro__botones { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-top: 1rem; }
@@ -806,6 +807,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
   overscroll-behavior: contain;
 }
 .visor[open] { display: grid; place-items: center; }
+.visor:not([open]) { display: none; }   /* navegadores sin <dialog> (iOS ≤ 15.3): si no, la X y las flechas quedaban flotando */
 .visor::backdrop { background: var(--velo-tinta); }
 .visor__foto {
   max-width: calc(100vw - 24px);
@@ -815,7 +817,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
   border-radius: var(--radio); box-shadow: 0 0 0 1px var(--linea-oro), var(--sombra);
   transition: opacity .35s ease;
 }
-.visor__foto.cargando { opacity: 0; }
+.visor__foto.cargando { opacity: .35; }   /* la foto anterior queda atenuada mientras baja la siguiente */
 .visor__contador {
   position: fixed; left: 50%; bottom: calc(36px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
   font-size: var(--t-etiqueta); font-weight: 600; letter-spacing: .24em; color: var(--oro-claro);

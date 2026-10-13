@@ -569,6 +569,7 @@
         img.removeAttribute('aria-hidden');
         actual = fotos.indexOf(img);
         pintarPuntos();
+        programar();   // los 5,5 s cuentan desde que la foto aparece (con datos lentos tarda en bajar)
         cargar(fotos[(actual + 1) % fotos.length]);
       });
     }
@@ -628,15 +629,27 @@
       var n = fotos.length;
       enVisor = ((i % n) + n) % n;
       var img = fotos[enVisor];
+      var pedida = enVisor;
       cargar(img);
       var src = img.getAttribute('src') || img.getAttribute('data-src');
-      if (visorFoto.getAttribute('src') !== src) {
-        visorFoto.classList.add('cargando');
-        visorFoto.onload = visorFoto.onerror = function () { visorFoto.classList.remove('cargando'); };
-        visorFoto.src = src;
-      }
-      visorFoto.alt = img.alt;
       contador.textContent = (enVisor + 1) + ' / ' + n;
+      if (visorFoto.getAttribute('src') !== src) {
+        // La foto anterior se queda (atenuada) hasta que la nueva termine de bajar:
+        // con datos lentos la pantalla ya no queda vacía.
+        visorFoto.classList.add('cargando');
+        var previa = new Image();
+        previa.onload = previa.onerror = function () {
+          if (pedida !== enVisor) return;   // ya pasaron a otra foto
+          visorFoto.src = src;
+          visorFoto.alt = img.alt;
+          visorFoto.classList.remove('cargando');
+        };
+        previa.src = src;
+      } else {
+        visorFoto.alt = img.alt;
+        visorFoto.classList.remove('cargando');
+      }
+      if (n > 1) cargar(fotos[(enVisor + 1) % n]);   // deja pedida la siguiente
     }
 
     function abrirVisor(i) {

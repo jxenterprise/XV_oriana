@@ -56,7 +56,7 @@
   <!-- arranque.js (diminuto, sin defer): marca que hay JavaScript para mostrar el sobre
        ANTES de pintar la página; sin JS la invitación se ve completa, sin sobre. -->
   <script src="js/arranque.js"></script>
-  <script src="js/script.js" defer></script>
+  <script src="js/script.js" defer fetchpriority="high"></script>   <!-- prioridad alta: con datos lentos el sello funciona ~1 s antes -->
 </head>
 <body>
 

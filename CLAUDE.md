@@ -6,7 +6,7 @@ Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). S
 enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
 `https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (13/10/2026, 4:06 a. m., hora de Colombia): versión 1.4 publicada: **canción nueva completa** (*Lavender's Blue*
+Estado (13/10/2026, 4:44 a. m., hora de Colombia): versión 1.4 publicada: **canción nueva completa** (*Lavender's Blue*
 en piano, 2:32, en bucle), **fotos en orden de bebé a grande** y **pin exacto del punto de encuentro** (el enlace de
 Google Maps que mandó la familia), más una revisión completa de la web. Lo que queda está en "Pendiente", abajo.
 
@@ -143,14 +143,36 @@ Google Maps que mandó la familia), más una revisión completa de la web. Lo qu
       exacto del estándar de JX (`.footer-dev-*`). Tampoco se puso un `src` de relleno a las fotos 2–8 (el validador lo
       pide, pero obligaría a cambiar la carga diferida del carrusel).
     - Sin regresiones: los 12 perfiles de celular siguen OK (8 fotos, visor, música 151,9 s, desborde 0, consola limpia).
-15. **Rendimiento y compatibilidad (iPhone/Samsung)**: revisión en curso; sus resultados van en el siguiente commit.
+15. **Rendimiento y compatibilidad (iPhone/Samsung)** (13/10/2026, 4:44 a. m.): 6 hallazgos, todos reproducidos por Claude contra la
+    versión anterior y corregidos (los 2 de compatibilidad, además, confirmados por el verificador del workflow):
+    - **Música y "Range" (medio, el más importante)**: Cloudflare Pages ignora las peticiones por partes (`Range`): a
+      `Range: bytes=0-1` responde 200 con los 2,4 MB y sin `Accept-Ranges` (comprobado con curl; jsDelivr, con el mismo
+      archivo, sí responde 206). Safari de iPhone pide el audio por partes y, sin 206, puede no reproducirlo, no saber su
+      duración o no repetirlo. En Chromium, sin rangos el audio no se puede adelantar (`seekable` 0–0). Arreglo:
+      **Pages Function `functions/musica/[[ruta]].js`** que pide el archivo a `env.ASSETS` y responde 206 con
+      `Content-Range` (también `bytes=N-`, `bytes=-N`, 416 fuera de rango e `If-Range`). Solo corre en `/musica/*`.
+      Probado con `wrangler pages dev` (entorno local de Cloudflare): 206 correctos, trozos idénticos al archivo,
+      `seekable` 0–151,9 s, salto al final y repetición OK, consola limpia. **Comprobar en un iPhone real que suene.**
+    - **Sello en datos lentos (medio)**: `js/script.js` con `fetchpriority="high"`: en 3G emulado (400 kbps, 400 ms,
+      CPU ×4) el sello funciona a los 6,5 s en vez de 9,6 s (antes el primer toque podía perderse).
+    - **Visor sin `<dialog>` (iOS 15.0–15.3)**: la X y las flechas quedaban flotando sobre toda la invitación.
+      `.visor:not([open]) { display: none; }`.
+    - **"Ver mapa aquí" al presionarlo** (medio según el verificador): `.boton:active` borraba el `translateX(-50%)`, el botón
+      saltaba ~73–86 px, se cortaba y podía perder el clic. `.mapa__boton:active { transform: translateX(-50%) scale(.98); }`.
+    - **Carrusel en datos lentos**: los 5,5 s contaban desde que se pedía la foto, no desde que aparecía (selfie XV y
+      vestido beige se veían 2,7–3,5 s). `mostrar()` llama a `programar()` cuando la foto aparece: en 3G todas 5,5 s.
+    - **Visor en datos lentos**: quedaba la pantalla vacía hasta 16 s. Ahora la foto anterior se queda atenuada
+      (`.visor__foto.cargando` a opacidad .35) hasta que baja la nueva (precarga con `new Image()`), y se deja pedida la
+      siguiente.
+    - Sin regresiones: los 12 perfiles de celular OK.
 
 ### Pendiente (en este orden)
 1. **Que JX escuche la canción en el celular** (volumen y que se repita bien). No se puede escuchar desde aquí.
 2. La tarjeta cuadrada (se entrega aparte) tiene la dirección sin la referencia de la tienda: revisarla si la van a
    reenviar.
 3. Probar en un iPhone real (o WebKit) y en un Samsung con el modo oscuro activado: la sesión en la nube solo tiene
-   Chromium; v1.3 y v1.4 no se probaron en WebKit.
+   Chromium; v1.3 y v1.4 no se probaron en WebKit. En el iPhone, revisar sobre todo que la música suene y se repita
+   (desde la v1.4 se sirve por partes con la Pages Function).
 4. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
    Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
 
@@ -176,7 +198,10 @@ archivos de prueba (punto 18 de la auditoría).
 - Cloudflare Pages está **conectado al repo**: cada `push` a `main` publica en producción en 1–2 minutos
   (lo confirma el check "Cloudflare Pages" del commit en GitHub). Una rama distinta de `main` genera una
   vista previa en `https://<rama>.mis-xv-de-oriana-sofia.pages.dev` sin tocar producción.
-- Sin paso de compilación: Cloudflare sirve la raíz del repo tal cual.
+- Sin paso de compilación: Cloudflare sirve la raíz del repo tal cual. **Única excepción (v1.4)**: la carpeta
+  `functions/` (Pages Functions): Cloudflare la detecta y la publica sola en cada `push`; hoy solo tiene
+  `functions/musica/[[ruta]].js` (música con soporte de `Range` para iPhone). Para probarla en local:
+  `npx wrangler pages dev . --port 8790` en una copia del repo fuera de la carpeta (crea `.wrangler/`).
 - Push desde este PC: si la cuenta activa de `gh` no es `jxenterprise` (solo tiene lectura), subir con
   `GH_TOKEN="$(gh auth token --user jxenterprise)" git push`.
 - `evento-xv-oriana-sofia.ics` va con saltos de línea CRLF (estándar de calendarios) y el repo local usa
@@ -442,6 +467,13 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
   `data-mapa-enlace` (Google Maps); si faltan, vuelve a la búsqueda por texto de `data-direccion-mapa`.
 - **css/styles.css**: `.encuentro__ref`.
 - **evento-xv-oriana-sofia.ics**: `LOCATION`, `GEO`, `X-APPLE-STRUCTURED-LOCATION`, `URL`, `DESCRIPTION`, `SEQUENCE:1`.
+- **functions/musica/[[ruta]].js** (13/10/2026): Pages Function `onRequest({ request, env })` → `env.ASSETS.fetch(request)`; si
+  hay `Range` de un solo trozo responde 206 (`Content-Range`, `Content-Length`, `Accept-Ranges: bytes`), 416 si el
+  rango no existe y el archivo completo si no hay `Range`, si son varios rangos o si `If-Range` no coincide con el ETag.
+- **Rendimiento/compatibilidad** (13/10/2026): `<script src="js/script.js" defer fetchpriority="high">`; en `iniciarFotos()`,
+  `mostrar()` llama a `programar()` al aparecer la foto y `verEnVisor()` precarga con `new Image()` antes de cambiar el
+  `src` (descarta la respuesta si ya pasaron a otra foto: variable `pedida`); CSS `.visor:not([open])`,
+  `.mapa__boton:active` y `.visor__foto.cargando` a .35.
 - **Arreglos de la revisión** (13/10/2026): `css/styles.css` → `color-scheme: only light`, `.mensaje__intro` y `.guardar__titulo`
   con más contraste, `.formulario__estado a` de 44 px, `.portada__nombre:focus` sin contorno (destino de foco), en
   `@media (max-width: 380px)` `.cierre` con espacio para el botón de música y `.gen__item` en una columna, y nuevos
@@ -475,7 +507,7 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 19. ✅ Cero errores y cero advertencias en consola (v1: Chromium en 360, 390 y 1440 px; v1.1 y v1.2: Playwright con
     WebKit y Chromium en 12 perfiles de celular, de 280 a 430 px y en horizontal, más pruebas del carrusel y el visor;
     v1.3 y v1.4: Chromium en los mismos 12 perfiles con las 8 fotos y la música nueva, más la revisión completa).
-20. ✅ JS propio mínimo, CSS puro para animaciones, imágenes WebP, foto con `fetchpriority="high"`, resto `lazy`, scripts con `defer`, fuentes con `font-display: swap`.
+20. ✅ JS propio mínimo, CSS puro para animaciones, imágenes WebP, foto con `fetchpriority="high"`, resto `lazy`, scripts con `defer` (`script.js` además con `fetchpriority="high"`), fuentes con `font-display: swap`, música servida por partes (`Range`) con una Pages Function.
 21. ➖ Páginas legales y banner de cookies — no aplica: versión invitación aprobada por JX (sin analítica ni formularios que guarden datos; el mapa solo carga si el invitado lo pide).
 22. ➖ GA4 — no se instala (decisión de la versión invitación).
 23. ✅ Panel: opción (c) sin panel + zonas editables (TEXTOS, HORARIOS, CONTACTO) + README/CLAUDE.md + código comentado.

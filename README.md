@@ -66,6 +66,7 @@ invitacion-xv-oriana-sofia/
 ├── js/generador.js             ← lógica del generador de enlaces
 ├── img/                        ← 8 fotos del carrusel, acuarelas, textura e imagen de vista previa (WebP) + íconos
 ├── fonts/                      ← Pinyon Script y Cormorant Garamond (licencia OFL incluida)
+├── functions/musica/[[ruta]].js ← sirve la música por partes (Range) para que suene bien en iPhone
 └── musica/cancion-xv-oriana-sofia.mp3
 ```
 
@@ -76,6 +77,7 @@ invitacion-xv-oriana-sofia/
 - **Dirección**: `https://mis-xv-de-oriana-sofia.pages.dev/` (Cloudflare Pages gratis, proyecto `mis-xv-de-oriana-sofia`).
 - **Código**: `https://github.com/jxenterprise/XV_oriana` (rama `main`).
 - Cloudflare Pages está conectado al repositorio: **cada cambio que se sube a `main` se publica solo** en 1–2 minutos.
+  La carpeta `functions/` (una función de Cloudflare para la música) también se publica sola; no hay que configurar nada.
   No hay que subir ZIP ni carpetas a Cloudflare.
 - Para probar algo sin tocar la invitación real: súbelo a otra rama (por ejemplo `pruebas`) y Cloudflare
   crea una copia de prueba en `https://pruebas.mis-xv-de-oriana-sofia.pages.dev`.
