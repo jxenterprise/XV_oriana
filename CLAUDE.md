@@ -102,19 +102,23 @@ Google Maps que mandó la familia), más una revisión completa de la web. Lo qu
       descripción con la dirección, la referencia y el enlace del mapa. El `.ics` ganó `GEO`, `X-APPLE-STRUCTURED-LOCATION`
       (pin en el calendario de iPhone), `URL`, `SEQUENCE:1` y `DTSTAMP` nuevo; mismo `UID`, CRLF y líneas ≤75 octetos.
 12. **Repo de GitHub: queda PÚBLICO por decisión de JX** (12/10/2026: "no lo quiero poner privado"). Ya no es pendiente.
-13. **Revisión completa de la web**: en curso (6 revisores + verificadores); los resultados y arreglos van en el siguiente commit.
+13. **Vista previa de WhatsApp: funciona** (captura de JX del 12/10/2026: sale la tarjeta con imagen, título y fecha,
+    en WebP; no hizo falta pasarla a JPG). A las 11:21 p. m. JX pidió cambiar la foto de esa tarjeta por la del **vestido
+    beige**: `img/og-xv-oriana-sofia-vestido-beige.webp` (1200×630, 69 KB) reemplaza a `og-xv-oriana-sofia.webp` (borrada).
+    Nombre nuevo a propósito: WhatsApp guarda en caché la imagen por dirección. Se rearmó con los mismos estilos de la
+    portada (`.arco`, `.arco__marco`, `.arco__ramo`, `.portada__corona`, `.sello-xv`, `.portada__nombre`) y los ramos de
+    esquina en la posición exacta de la imagen anterior (ajustada por comparación de píxeles); textos a la misma altura.
+    Foto con acercamiento leve (`scale(1.15)`, origen 30% 66%) para que se reconozca en la miniatura.
+    Si WhatsApp sigue mostrando la foto vieja: pegar el enlace con `?v=3` al final, o esperar a que renueve su caché.
+14. **Revisión completa de la web**: en curso (6 revisores + verificadores); los resultados y arreglos van en el siguiente commit.
 
 ### Pendiente (en este orden)
 1. **Que JX escuche la canción en el celular** (volumen y que se repita bien). No se puede escuchar desde aquí.
 2. **Confirmar el punto de encuentro**: ¿es la casa (Barrio España, TR 44 calle 26D12) o la tienda Brisas del Sur?
    Si es la tienda, cambiar el texto visible (zona CONTACTO) y la descripción del calendario y del `.ics`.
    La tarjeta cuadrada (se entrega aparte) tiene la dirección vieja sin la referencia: revisarla si la van a reenviar.
-3. **Vista previa de WhatsApp**: ya con el dominio correcto, el WhatsApp de JX guardó en caché la tarjeta vacía de
-   la dirección raíz. Probar pegando `https://mis-xv-de-oriana-sofia.pages.dev/?v=2` y esperar 5–10 s. Si aun así
-   no sale la imagen, hacer una excepción técnica documentada (como el favicon): `og:image` en JPG.
-   `img/og-xv-oriana-sofia.webp` sigue con la selfie de las 12:04: preguntar si la quieren con otra foto.
-4. Probar en un iPhone real (o WebKit): la sesión en la nube solo tiene Chromium; v1.3 y v1.4 no se probaron en WebKit.
-5. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
+3. Probar en un iPhone real (o WebKit): la sesión en la nube solo tiene Chromium; v1.3 y v1.4 no se probaron en WebKit.
+4. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
    Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
 
 ### Cómo probar "en celular" desde el PC
@@ -200,7 +204,7 @@ archivos de prueba (punto 18 de la auditoría).
 ## Dónde editar cada cosa
 - Textos del mensaje → `index.html`, zona TEXTOS.
 - Fecha/hora/plan → `index.html`, zona HORARIOS (+ `data-fecha-evento` y `data-fecha-texto` en `#reloj`,
-  enlace de Google Calendar, `evento-xv-oriana-sofia.ics`, `<head>`, `img/og-xv-oriana-sofia.webp`, tarjeta).
+  enlace de Google Calendar, `evento-xv-oriana-sofia.ics`, `<head>`, `img/og-xv-oriana-sofia-vestido-beige.webp`, tarjeta).
 - Dirección / mapa / WhatsApp → `index.html`, zona CONTACTO (`#datos-evento`: `data-whatsapp`, `data-direccion-mapa`,
   `data-mapa-coordenadas` = "lat,lng" del pin y `data-mapa-enlace` = enlace de Google Maps de la familia).
 - Mensajes de WhatsApp (confirmación) → `js/script.js`, función `iniciarConfirmacion()`.
@@ -251,7 +255,7 @@ Cualquier sección, componente, botón o página que se agregue a futuro debe us
 - `ZONA EDITABLE · TEXTOS` (index.html, sección `#mensaje`): intro, mensaje de Oriana, remate y firma. No se repite.
 - `ZONA EDITABLE · HORARIOS` (index.html, sección `#detalles`): fecha, hora y plan. ⚠ Se repite en portada,
   `#reloj` (`data-fecha-evento`, `data-fecha-texto`), botón de Google Calendar, `evento-xv-oriana-sofia.ics`,
-  description/og:description del `<head>`, `img/og-xv-oriana-sofia.webp` y la tarjeta cuadrada.
+  description/og:description del `<head>`, `img/og-xv-oriana-sofia-vestido-beige.webp` y la tarjeta cuadrada.
 - `ZONA EDITABLE · CONTACTO` (index.html, `.encuentro`): dirección visible (+ `.encuentro__ref`), `data-direccion-mapa`,
   `data-mapa-coordenadas`, `data-mapa-enlace` y `data-whatsapp` de `#datos-evento`. ⚠ Se repite en Google Calendar,
   `.ics` y la tarjeta. El iframe y los enlaces de Google Maps/Waze se reconstruyen solos desde esos atributos
@@ -294,7 +298,7 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
   `animation-timeline: view()` (solo se mueve, nunca queda transparente); todo se apaga con
   `prefers-reduced-motion`. Breakpoints: ≤380, ≤480, ≥600, ≥768, ≥901, ≥1440 y pantallas bajas (≤560 px de alto).
 - **img/**: ilustraciones en acuarela generadas por código para el proyecto (ramos, mancha, textura de papel),
-  foto de portada, `og-xv-oriana-sofia.webp` (1200×630) para la vista previa de WhatsApp, `favicon.svg` y
+  foto de portada, `og-xv-oriana-sofia-vestido-beige.webp` (1200×630; antes `og-xv-oriana-sofia.webp`) para la vista previa de WhatsApp, `favicon.svg` y
   `apple-touch-icon.png` (excepción técnica).
 - **musica/vals-xv-oriana-sofia.mp3**: vals original en Sol mayor, 3/4, 104 bpm, timbre de cajita musical,
   ~116 s en bucle, 112 kbps (~1,6 MB). *Reemplazado en la v1.3 por la canción de la familia.*
@@ -406,7 +410,7 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 4. ✅ `<title>` real: "Mis XV años · Oriana Sofía".
 5. ✅ Títulos distintos en index, generador y 404.
 6. ✅ Meta description propia (~145 caracteres).
-7. ✅ Open Graph completo + Twitter Card, `og:image` absoluta 1200×630 en WebP (63 KB).
+7. ✅ Open Graph completo + Twitter Card, `og:image` absoluta 1200×630 en WebP (69 KB, foto del vestido beige desde la v1.4; WhatsApp la muestra bien).
 8. ➖ JSON-LD — no aplica a propósito: es una invitación privada (no se publican datos estructurados de una menor).
 9. ✅ Un solo `<h1>` (nombre de la quinceañera).
 10. ✅ El `<h1>` existe y describe la página ("Mis XV años · Oriana Sofía").
