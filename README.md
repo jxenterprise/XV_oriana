@@ -14,7 +14,7 @@ Encargo de Moisés Escalante. Diseño y desarrollo: **JX Company**.
 |---|---|---|---|
 | `ZONA EDITABLE · TEXTOS` | Mensaje de Oriana y su firma | `index.html` | No |
 | `ZONA EDITABLE · HORARIOS` | Fecha, hora de llegada y plan del día | `index.html` | **Sí**: portada, cuenta regresiva, Google Calendar, `evento-xv-oriana-sofia.ics`, `<head>`, imagen de vista previa y tarjeta |
-| `ZONA EDITABLE · CONTACTO` | Dirección del punto de encuentro, búsqueda del mapa y WhatsApp que recibe las confirmaciones | `index.html` | **Sí**: Google Calendar, `.ics` y tarjeta |
+| `ZONA EDITABLE · CONTACTO` | Dirección del punto de encuentro, punto exacto del mapa (coordenadas y enlace de Google Maps) y WhatsApp que recibe las confirmaciones | `index.html` | **Sí**: Google Calendar, `.ics` y tarjeta |
 
 Cómo llegar a una zona:
 1. Abre `index.html` y busca `ZONA EDITABLE` con Ctrl+F.
@@ -36,12 +36,13 @@ Cómo llegar a una zona:
 - **Mensaje de Oriana** con su firma.
 - **Cuenta regresiva** (días, horas, minutos y segundos) hasta las 7:00 a. m. del 1 de noviembre.
 - **Guarda la fecha**: botón de Google Calendar y archivo para iPhone u otro calendario (con recordatorio la noche anterior).
-- **El gran día**: fecha, hora, plan (pasadía con piscina) y punto de encuentro con mapa, Google Maps y Waze.
+- **El gran día**: fecha, hora, plan (pasadía con piscina) y punto de encuentro con mapa, Google Maps y Waze, que caen
+  en el punto exacto que mandó la familia (referencia: Tienda Brisas del Sur).
 - **Código de vestuario**: semiformal, morado y lila reservados para la quinceañera y recordatorio del traje de baño.
 - **Lluvia de sobres** explicada con cariño.
 - **Confirmación por WhatsApp**: nombre, si asiste, cuántas personas y un mensajito para Oriana; abre WhatsApp con el mensaje listo.
-- **Música**: la canción que eligió la familia (el audio del video que enviaron, unos 31 s que se repiten con
-  entrada y salida suaves) con botón para pausar.
+- **Música**: *Lavender's Blue* (de *La Cenicienta*) en piano, versión de Riyandi Kusuma, que eligió la familia: suena
+  completa (2:32) y al terminar vuelve a empezar. Botón para pausar.
 - **Privada**: no aparece en Google ni en buscadores (noindex + robots.txt), pero al pegar el enlace en WhatsApp sí sale la vista previa con imagen.
 - Hecha primero para celular; probada de 360 px a pantallas grandes.
 
@@ -124,9 +125,13 @@ Para ver el sobre personalizado: `http://localhost:8000/?para=Familia%20P%C3%A9r
   `<img class="carrusel__foto">` por foto, en el orden en que pasan. Para agregar una: guardarla en `img/` en WebP
   (JX la convierte) y copiar una línea con `data-src="img/NOMBRE.webp"`, su ancho, alto y una descripción en `alt`.
   Solo la primera lleva `src`. Si el arco corta la cara, se ajusta con `style="--enfoque: 50% 15%"`.
+  Orden actual: de bebé a niña y al final las de ya grande (la del vestido gris cierra).
 - **Música**: reemplaza `musica/cancion-xv-oriana-sofia.mp3` por otro MP3 con el mismo nombre (que la familia tenga derecho a usarlo).
 - **Textos**: zona `TEXTOS` en `index.html`.
 - **Fecha, hora, dirección o WhatsApp**: zonas `HORARIOS` y `CONTACTO` + los lugares que indica `⚠ SE REPITE EN`.
+- **Punto del mapa**: en la zona `CONTACTO`, `data-mapa-coordenadas` ("latitud,longitud") y `data-mapa-enlace`
+  (el enlace de Google Maps que manda la familia). Con eso se arman solos el mapa, Google Maps y Waze; cambiar también
+  el botón de Google Calendar y `evento-xv-oriana-sofia.ics`.
 - **Colores**: variables al inicio de `css/styles.css` (`:root`).
 
 **Vista previa de WhatsApp desactualizada**: WhatsApp guarda en caché la imagen. Prueba el enlace con `?v=2` al final o
@@ -148,8 +153,8 @@ La invitación lleva fotos de Oriana (también de bebé), su nombre y la direcci
 
 - Diseño, ilustraciones en acuarela, corona y sello: creados para este proyecto por JX Company.
 - Fotos de Oriana: enviadas por la familia.
-- Música: canción elegida por la familia (tomada del audio de un video que enviaron). El derecho de uso corre por
-  cuenta de la familia.
+- Música: *Lavender's Blue* (canción de *La Cenicienta*), versión en piano de Riyandi Kusuma, elegida por la familia.
+  El derecho de uso corre por cuenta de la familia.
 - Tipografías: Pinyon Script y Cormorant Garamond, licencia SIL Open Font License (archivos en `fonts/`).
 
 ---

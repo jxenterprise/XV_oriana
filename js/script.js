@@ -299,8 +299,10 @@
      carga cuando el invitado toca "Ver mapa aquí".
      =========================================================== */
   /**
-   * Prepara el mapa y los enlaces de Google Maps y Waze a partir de
-   * data-direccion-mapa (así la dirección se cambia en un solo lugar).
+   * Prepara el mapa y los enlaces de Google Maps y Waze a partir de #datos-evento
+   * (así el punto se cambia en un solo lugar): data-mapa-coordenadas para el pin
+   * exacto (mapa y Waze), data-mapa-enlace para "Abrir en Google Maps" y, si
+   * faltan, la búsqueda por texto de data-direccion-mapa.
    */
   function iniciarMapa() {
     var datos = $('#datos-evento');
@@ -308,15 +310,18 @@
     var boton = $('#boton-mapa');
     if (!datos || !mapa || !boton) return;
     var consulta = datos.getAttribute('data-direccion-mapa');
+    var coordenadas = datos.getAttribute('data-mapa-coordenadas');   // "lat,lng": el pin exacto que mandó la familia
+    var enlace = datos.getAttribute('data-mapa-enlace');             // su enlace de Google Maps (abre el lugar con nombre)
+    var punto = coordenadas || consulta;
     var enlaceMaps = $('#enlace-maps');
     var enlaceWaze = $('#enlace-waze');
-    enlaceMaps.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(consulta);
-    enlaceWaze.href = 'https://waze.com/ul?q=' + encodeURIComponent(consulta) + '&navigate=yes';
+    enlaceMaps.href = enlace || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(punto);
+    enlaceWaze.href = 'https://waze.com/ul?' + (coordenadas ? 'll=' + coordenadas : 'q=' + encodeURIComponent(consulta)) + '&navigate=yes';
 
     boton.addEventListener('click', function () {
       if (VISTA_PREVIA) { abrirEnlace(enlaceMaps.href); return; } // la vista previa no permite mapas incrustados
       var iframe = document.createElement('iframe');
-      iframe.src = 'https://www.google.com/maps?q=' + encodeURIComponent(consulta) + '&z=16&output=embed';
+      iframe.src = 'https://www.google.com/maps?q=' + encodeURIComponent(punto) + '&z=17&output=embed';
       iframe.title = 'Mapa del punto de encuentro: ' + consulta;
       iframe.loading = 'lazy';
       iframe.referrerPolicy = 'no-referrer-when-downgrade';

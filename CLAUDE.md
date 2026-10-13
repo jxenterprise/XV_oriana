@@ -6,8 +6,9 @@ Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). S
 enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
 `https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (12/10/2026, noche): versión 1.3 publicada: **carrusel con las 8 fotos** (la del vestido gris primero) y
-**música nueva** (solo el audio del video que mandó la familia). Lo que queda está en "Pendiente", abajo.
+Estado (12/10/2026, 11:03 p. m., hora de Colombia): versión 1.4 publicada: **canción nueva completa** (*Lavender's Blue*
+en piano, 2:32, en bucle), **fotos en orden de bebé a grande** y **pin exacto del punto de encuentro** (el enlace de
+Google Maps que mandó la familia), más una revisión completa de la web. Lo que queda está en "Pendiente", abajo.
 
 ## 🚦 ESTADO ACTUAL Y QUÉ SIGUE (leer primero en cada sesión)
 ### Hecho el 11/10/2026
@@ -40,7 +41,7 @@ Estado (12/10/2026, noche): versión 1.3 publicada: **carrusel con las 8 fotos**
 ### Hecho el 12/10/2026 (noche) — versión 1.3: las fotos y la música
 5. JX mandó el material en un ZIP (`Fotos y musica.zip`: 8 JPG de WhatsApp + 1 MP4) a la sesión en la nube de
    Claude Code. Los originales se trabajaron en una carpeta temporal y **no están en el repo** (regla).
-6. **Las 8 fotos en el carrusel**, en este orden (JX pidió el vestido gris de primera; después, de bebé a hoy):
+6. **Las 8 fotos en el carrusel** (orden de la v1.3; **en la v1.4 cambió**, ver punto 10):
    | # | Archivo en `img/` | Tamaño | Arreglo |
    |---|---|---|---|
    | 1 | `oriana-sofia-vestido-gris.webp` | 1200×1600 | ninguno (es la imagen principal: `src` + `fetchpriority="high"`) |
@@ -70,23 +71,50 @@ Estado (12/10/2026, noche): versión 1.3 publicada: **carrusel con las 8 fotos**
    revisado foto por foto. **WebKit (≈ iPhone) no se pudo probar**: la sesión en la nube solo trae Chromium; el
    JS y el CSS del carrusel no cambiaron desde la v1.2, que sí se probó en WebKit.
 
+### Hecho el 12/10/2026 (11:03 p. m., hora de Colombia) — versión 1.4: canción completa, orden de fotos y mapa
+9. **Canción nueva** (la clienta prefirió otra): *Cinderella – Lavender's Blue (Piano Cover by Riyandi Kusuma)*, que JX
+   mandó en M4A (AAC 128 kbps, 2:33). Pidieron que suene **completa** y que al terminar vuelva a empezar normal.
+   - Mismo archivo `musica/cancion-xv-oriana-sofia.mp3` (Cloudflare sirve con `max-age=0, must-revalidate`: nadie se
+     queda con la versión vieja). 2:32 (151,95 s), MP3 128 kbps estéreo 44,1 kHz, 2,4 MB.
+   - Solo se quitó el 1,5 s de silencio digital del inicio, para que suene apenas se abre el sobre. **Nada más se
+     cortó**: la pausa de ~2 s cerca del final (137–139,6 s) y los 14 s suaves que siguen son el final del arreglo (mismo
+     piano y tonalidad, comprobado por análisis de notas) y termina desvaneciéndose solo. Sin fundidos agregados.
+   - Volumen: venía en −21,5 LUFS (muy bajo). Ganancia fija +6 dB y limitador suave de picos (`alimiter`), **sin
+     comprimir**: quedó en −16 LUFS, pico −2,3 dBFS, sin recortes, conservando la dinámica del piano (LRA 10,8 LU).
+     Se descartó `loudnorm` dinámico porque aplastaba la dinámica (LRA 8,5).
+   - El `<audio>` ya tenía `loop`: al terminar vuelve a empezar solo.
+10. **Orden de las fotos** (pedido de JX: de bebé hasta grandecita y al final las mejores de ya grande). La primera es
+    la que se ve al abrir y la única que baja antes del sobre (`src` + `fetchpriority="high"`):
+    1) `bebe-vestido-verde` · 2) `bebe-sombrero-2012` · 3) `nina-galletas` · 4) `grado-preescolar` · 5) `selfie-rizos`
+    · 6) `selfie-xv` · 7) `vestido-beige` · 8) `vestido-gris` (cierra). Los `--enfoque` de cada foto no cambiaron.
+    Tiempos (JX preguntó si pasan cada ~2 s): cada foto se queda **5,5 s** y el fundido entre una y otra dura **1,8 s**;
+    a JX le parece bien así, no se cambió.
+11. **Punto de encuentro exacto**: la familia mandó `https://maps.app.goo.gl/hCto2jpUpXJwgqsP7`, que es el lugar de
+    Google **"Tienda Brisas Del Sur", Cra. 46, Las Lomas, Cartagena** (coordenadas **10.4020598, −75.5113218**, sacadas
+    de la búsqueda de Google Maps). La búsqueda vieja por texto ("Transversal 44 #26D-12, España") caía ~425 m más allá.
+    - `#datos-evento` (zona CONTACTO) tiene ahora `data-mapa-coordenadas` y `data-mapa-enlace`; `iniciarMapa()` arma con
+      ellos el iframe (`q=lat,lng&z=17`), Waze (`ll=lat,lng`) y "Abrir en Google Maps" (el enlace de la familia, que abre
+      la ficha del lugar con su nombre). Los `href` del HTML (respaldo sin JS) también apuntan al punto exacto.
+    - Texto visible: se dejó la dirección de la invitación ("Barrio España, TR 44 calle 26D12, Cartagena") y se agregó
+      debajo "Referencia: Tienda Brisas del Sur" (`.encuentro__ref`: cursiva 500, `--tinta-suave`, como las demás notas).
+      **Falta confirmar con JX** si el encuentro es en la casa o en la tienda (ver {POR CONFIRMAR} 1).
+    - Google Calendar y `evento-xv-oriana-sofia.ics`: `location` = la tienda (para que el mapa del calendario caiga bien),
+      descripción con la dirección, la referencia y el enlace del mapa. El `.ics` ganó `GEO`, `X-APPLE-STRUCTURED-LOCATION`
+      (pin en el calendario de iPhone), `URL`, `SEQUENCE:1` y `DTSTAMP` nuevo; mismo `UID`, CRLF y líneas ≤75 octetos.
+12. **Repo de GitHub: queda PÚBLICO por decisión de JX** (12/10/2026: "no lo quiero poner privado"). Ya no es pendiente.
+13. **Revisión completa de la web**: en curso (6 revisores + verificadores); los resultados y arreglos van en el siguiente commit.
+
 ### Pendiente (en este orden)
-1. **Volver privado el repo de GitHub** (URGENTE): está PÚBLICO y desde la v1.3 tiene 8 fotos de una menor, varias
-   de bebé. JX dio permiso general el 12/10/2026, pero desde la sesión en la nube no hay forma de cambiarlo.
-   Lo hace JX en GitHub → `jxenterprise/XV_oriana` → Settings → General → Danger Zone → Change visibility →
-   Make private. Cloudflare sigue publicando con el repo privado. Desde el PC también sirve:
-   `GH_TOKEN="$(gh auth token --user jxenterprise)" gh repo edit jxenterprise/XV_oriana --visibility private --accept-visibility-change-consequences`
-2. **Que JX escuche la música** en el celular y confirme (corte, volumen y cómo se repite cada 31 s).
+1. **Que JX escuche la canción en el celular** (volumen y que se repita bien). No se puede escuchar desde aquí.
+2. **Confirmar el punto de encuentro**: ¿es la casa (Barrio España, TR 44 calle 26D12) o la tienda Brisas del Sur?
+   Si es la tienda, cambiar el texto visible (zona CONTACTO) y la descripción del calendario y del `.ics`.
+   La tarjeta cuadrada (se entrega aparte) tiene la dirección vieja sin la referencia: revisarla si la van a reenviar.
 3. **Vista previa de WhatsApp**: ya con el dominio correcto, el WhatsApp de JX guardó en caché la tarjeta vacía de
    la dirección raíz. Probar pegando `https://mis-xv-de-oriana-sofia.pages.dev/?v=2` y esperar 5–10 s. Si aun así
    no sale la imagen, hacer una excepción técnica documentada (como el favicon): `og:image` en JPG.
-   `img/og-xv-oriana-sofia.webp` sigue con la selfie: preguntar si la quieren con la foto del vestido gris.
-4. Auditoría móvil a fondo: el workflow de 6 revisores del 11/10/2026 **se cortó por el límite de sesión** antes de
-   entregar resultados. Lo urgente ya se había corregido en v1.1. Quedan por revisar: modo oscuro forzado (Samsung
-   Internet o navegadores internos: probar `color-scheme: only light`), enlace de respaldo de WhatsApp en la misma
-   pestaña (navegadores internos), rendimiento en 3G, foco/lectores de pantalla y el carrusel con 8 fotos en WebKit.
-5. Pin exacto del punto de encuentro (ver {POR CONFIRMAR} 1).
-6. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
+   `img/og-xv-oriana-sofia.webp` sigue con la selfie de las 12:04: preguntar si la quieren con otra foto.
+4. Probar en un iPhone real (o WebKit): la sesión en la nube solo tiene Chromium; v1.3 y v1.4 no se probaron en WebKit.
+5. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
    Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
 
 ### Cómo probar "en celular" desde el PC
@@ -105,7 +133,7 @@ archivos de prueba (punto 18 de la auditoría).
   ffmpeg sí está instalado.
 
 ## Repositorio y publicación
-- GitHub: `https://github.com/jxenterprise/XV_oriana` (hoy **público**; ver pendiente 1), rama `main`. Commits como `JX Code <jxenterpriseshop@gmail.com>`.
+- GitHub: `https://github.com/jxenterprise/XV_oriana` (**público por decisión de JX**, 12/10/2026), rama `main`. Commits como `JX Code <jxenterpriseshop@gmail.com>`.
 - Cloudflare Pages está **conectado al repo**: cada `push` a `main` publica en producción en 1–2 minutos
   (lo confirma el check "Cloudflare Pages" del commit en GitHub). Una rama distinta de `main` genera una
   vista previa en `https://<rama>.mis-xv-de-oriana-sofia.pages.dev` sin tocar producción.
@@ -125,6 +153,8 @@ archivos de prueba (punto 18 de la auditoría).
   ⚠ **Cambio 11/10/2026**: no les gustó; mandaron otra canción dentro de un MP4.
   ✅ **12/10/2026 (v1.3)**: suena solo el audio de ese video ("solo el audio, más nada", pidió JX). Si es una
   canción comercial, el derecho de uso corre por cuenta de la familia (lo dice el README).
+  ⚠ **Cambio 12/10/2026 (v1.4)**: la clienta prefirió *Lavender's Blue* en piano (Riyandi Kusuma), **completa** y en
+  bucle normal. Es una versión de terceros: el derecho de uso corre por cuenta de la familia.
 - Fotos: **una foto en la portada** (la selfie de las 12:04; recortada 678×904, sin retoques).
   Mandaron 8 fotos (varias de bebé/niña): no se usaron porque escogió solo una; se puede ofrecer
   una sección "Así he crecido" si la quieren.
@@ -132,6 +162,8 @@ archivos de prueba (punto 18 de la auditoría).
   pantalla completa.
   ✅ **12/10/2026 (v1.3)**: las 8 fotos en el carrusel; JX pidió la del vestido gris de primera y luego van de
   bebé a hoy (orden en "ESTADO ACTUAL" → 6). La selfie de las 12:04 quedó de última, completa (900×1600).
+  ⚠ **Cambio 12/10/2026 (v1.4)**: orden de bebé a grande y las mejores de ya grande al final (ver "ESTADO ACTUAL" → 10).
+- Repositorio de GitHub: **público** (JX, 12/10/2026, no quiere volverlo privado).
 - Secciones extra elegidas: **agregar al calendario** y **mensajito para Oriana**. No eligieron itinerario,
   padres/padrinos, hashtag ni "qué llevar" (el recordatorio del traje de baño se mantiene en el vestuario,
   porque venía en la invitación original).
@@ -144,9 +176,9 @@ archivos de prueba (punto 18 de la auditoría).
   "Semi- formal" → "semiformal", "7am" → "7:00 a. m.".
 
 ## {POR CONFIRMAR} pendientes
-1. **Pin exacto del punto de encuentro**: el mapa busca "Transversal 44 #26D-12, España, Cartagena".
-   Verificar que Google Maps/Waze caigan en la casa correcta; si no, pedir a la familia el enlace de
-   Google Maps y ponerlo en `data-direccion-mapa` (zona CONTACTO).
+1. ~~Pin exacto del punto de encuentro~~ ✅ 12/10/2026 (v1.4): la familia mandó el enlace de Google Maps (Tienda Brisas
+   del Sur, 10.4020598, −75.5113218). **Queda por confirmar el texto**: ¿el encuentro es en la casa de la dirección de
+   la invitación o en la tienda? (ver "Pendiente" 2).
 2. ~~Dirección final del sitio~~ ✅ resuelto el 11/10/2026: `https://mis-xv-de-oriana-sofia.pages.dev/`, ya puesta en
    `canonical`, `og:url`, `og:image` y `twitter:image` del `<head>` de `index.html`. El `UID` del `.ics` conserva
    el dominio viejo a propósito: es solo un identificador y cambiarlo duplicaría el evento a quien ya lo guardó.
@@ -169,7 +201,8 @@ archivos de prueba (punto 18 de la auditoría).
 - Textos del mensaje → `index.html`, zona TEXTOS.
 - Fecha/hora/plan → `index.html`, zona HORARIOS (+ `data-fecha-evento` y `data-fecha-texto` en `#reloj`,
   enlace de Google Calendar, `evento-xv-oriana-sofia.ics`, `<head>`, `img/og-xv-oriana-sofia.webp`, tarjeta).
-- Dirección / mapa / WhatsApp → `index.html`, zona CONTACTO (`#datos-evento`: `data-whatsapp`, `data-direccion-mapa`).
+- Dirección / mapa / WhatsApp → `index.html`, zona CONTACTO (`#datos-evento`: `data-whatsapp`, `data-direccion-mapa`,
+  `data-mapa-coordenadas` = "lat,lng" del pin y `data-mapa-enlace` = enlace de Google Maps de la familia).
 - Mensajes de WhatsApp (confirmación) → `js/script.js`, función `iniciarConfirmacion()`.
 - Mensaje que envía el generador → `js/generador.js`, función `mensajeSugerido()`.
 - Colores, tipografías, tamaños → `css/styles.css`, bloque `:root`.
@@ -177,6 +210,7 @@ archivos de prueba (punto 18 de la auditoría).
   `<img class="carrusel__foto">` por foto, en orden. El JS no se toca.
 - Fotos, acuarelas, imagen de vista previa → `img/` (siempre WebP).
 - Música → `musica/cancion-xv-oriana-sofia.mp3` (`src` del `<audio id="audio-musica">` al final de `index.html`).
+  Hoy: *Lavender's Blue* en piano, completa (2:32), `loop`.
 
 ## 🖼️ REGLA DE IMÁGENES — SIEMPRE WebP
 Todas las imágenes de este proyecto van en **WebP**, sin excepción. Cualquier foto nueva que JX entregue (JPG, PNG, HEIC, capturas, lo que sea) se **convierte a WebP de inmediato** antes de meterla al proyecto, conservando resolución y calidad originales, y se guarda en `img/`. Nunca dejar JPG/PNG en el proyecto ni entregar copias de respaldo en otros formatos.
@@ -218,9 +252,10 @@ Cualquier sección, componente, botón o página que se agregue a futuro debe us
 - `ZONA EDITABLE · HORARIOS` (index.html, sección `#detalles`): fecha, hora y plan. ⚠ Se repite en portada,
   `#reloj` (`data-fecha-evento`, `data-fecha-texto`), botón de Google Calendar, `evento-xv-oriana-sofia.ics`,
   description/og:description del `<head>`, `img/og-xv-oriana-sofia.webp` y la tarjeta cuadrada.
-- `ZONA EDITABLE · CONTACTO` (index.html, `.encuentro`): dirección visible, `data-direccion-mapa` y
-  `data-whatsapp` de `#datos-evento`. ⚠ Se repite en Google Calendar, `.ics` y la tarjeta. Los enlaces de
-  Google Maps/Waze se reconstruyen solos desde `data-direccion-mapa` (los `href` del HTML son respaldo sin JS).
+- `ZONA EDITABLE · CONTACTO` (index.html, `.encuentro`): dirección visible (+ `.encuentro__ref`), `data-direccion-mapa`,
+  `data-mapa-coordenadas`, `data-mapa-enlace` y `data-whatsapp` de `#datos-evento`. ⚠ Se repite en Google Calendar,
+  `.ics` y la tarjeta. El iframe y los enlaces de Google Maps/Waze se reconstruyen solos desde esos atributos
+  (los `href` del HTML son respaldo sin JS).
 Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevos ni duplicar una zona.
 
 ## 🧭 MAPA DEL CÓDIGO
@@ -353,6 +388,17 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
      -map_metadata -1 -ar 44100 -ac 2 -c:a libmp3lame -b:a 128k`.
 - **CSS**: sin cambios.
 
+### 12/10/2026 — versión 1.4 (canción completa, orden de fotos, mapa exacto y revisión completa)
+- **musica/cancion-xv-oriana-sofia.mp3**: *Lavender's Blue* (piano, Riyandi Kusuma), 2:32. Comando:
+  `ffmpeg -ss 1.5 -i ORIGINAL.m4a -map 0:a:0 -vn -map_metadata -1 -af "volume=6dB,alimiter=limit=0.79:attack=5:release=80:level=false" -ar 44100 -ac 2 -c:a libmp3lame -b:a 128k musica/cancion-xv-oriana-sofia.mp3`
+  (medir antes con `ebur128`: el objetivo es ≈ −16 LUFS sin recortes).
+- **index.html**: nuevo orden de las 8 `img.carrusel__foto` (la primera con `src`/`fetchpriority`, ahora la bebé de
+  verde); `#datos-evento` con `data-mapa-coordenadas` y `data-mapa-enlace`; `.encuentro__ref` en la dirección; enlaces
+  de respaldo de Maps (enlace de la familia) y Waze (`ll=`); botón de Google Calendar con el lugar exacto.
+- **js/script.js** → `iniciarMapa()`: usa `data-mapa-coordenadas` (iframe `q=lat,lng&z=17`, Waze `ll=`) y
+  `data-mapa-enlace` (Google Maps); si faltan, vuelve a la búsqueda por texto de `data-direccion-mapa`.
+- **css/styles.css**: `.encuentro__ref`.
+- **evento-xv-oriana-sofia.ics**: `LOCATION`, `GEO`, `X-APPLE-STRUCTURED-LOCATION`, `URL`, `DESCRIPTION`, `SEQUENCE:1`.
 ## Auditoría de 24 puntos (versión invitación)
 1. ❌ Dominio propio — no aplica: JX eligió `pages.dev` gratis; canonical/og apuntan a `mis-xv-de-oriana-sofia.pages.dev` (confirmado).
 2. ✅ HTML real en el view-source (todo el contenido está en `index.html`).

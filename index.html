@@ -240,9 +240,7 @@
            completa usa estas mismas fotos: no hay que repetirlas en otro lado. -->
       <figure class="arco">
         <div class="arco__foto carrusel" id="carrusel" role="group" aria-roledescription="carrusel" aria-label="Fotos de Oriana Sofía">
-          <img class="carrusel__foto es-actual" src="img/oriana-sofia-vestido-gris.webp" width="1200" height="1600" fetchpriority="high"
-               alt="Oriana Sofía de cuerpo entero con vestido gris de lentejuelas, sandalias plateadas y bolso de mano">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-bebe-vestido-verde.webp" width="1080" height="1443" decoding="async"
+          <img class="carrusel__foto es-actual" src="img/oriana-sofia-bebe-vestido-verde.webp" width="1080" height="1443" fetchpriority="high"
                alt="Oriana Sofía de bebé, de pocos meses, con vestido verde y balaca rosada">
           <img class="carrusel__foto" data-src="img/oriana-sofia-bebe-sombrero-2012.webp" width="1080" height="722" decoding="async"
                alt="Oriana Sofía de bebé con sombrero blanco con flores, sonriendo, en octubre de 2012">
@@ -252,10 +250,12 @@
                alt="Oriana Sofía en su grado de preescolar, con toga y birrete azules">
           <img class="carrusel__foto" data-src="img/oriana-sofia-selfie-rizos.webp" width="1502" height="1073" decoding="async"
                style="--enfoque: 10% 50%" alt="Oriana Sofía en una selfie muy cercana, sonriendo, con su cabello rizado">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-vestido-beige.webp" width="960" height="1280" decoding="async"
-               alt="Oriana Sofía con vestido beige en una selfie frente al espejo">
           <img class="carrusel__foto" data-src="img/oriana-sofia-selfie-xv.webp" width="900" height="1600" decoding="async"
                style="--enfoque: 50% 5%" alt="Oriana Sofía, la quinceañera, sonriendo con su cabello rizado suelto">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-vestido-beige.webp" width="960" height="1280" decoding="async"
+               alt="Oriana Sofía con vestido beige en una selfie frente al espejo">
+          <img class="carrusel__foto" data-src="img/oriana-sofia-vestido-gris.webp" width="1200" height="1600" decoding="async"
+               alt="Oriana Sofía de cuerpo entero con vestido gris de lentejuelas, sandalias plateadas y bolso de mano">
           <button class="carrusel__ver" id="carrusel-ver" type="button" aria-label="Ver las fotos en pantalla completa"></button>
         </div>
         <svg class="arco__marco" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
@@ -341,7 +341,7 @@
         <p class="guardar__titulo">Guarda la fecha</p>
         <div class="guardar__botones">
           <a class="boton boton--linea" target="_blank" rel="noopener"
-             href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=XV%20a%C3%B1os%20de%20Oriana%20Sof%C3%ADa&amp;dates=20261101/20261102&amp;ctz=America/Bogota&amp;details=Punto%20de%20encuentro%20antes%20de%20las%207%3A00%20a.%20m.%20en%20Barrio%20Espa%C3%B1a%2C%20TR%2044%20calle%2026D12%20%28Cartagena%29.%20Pasad%C3%ADa%20con%20piscina.%20C%C3%B3digo%20de%20vestuario%3A%20semiformal%3B%20el%20morado%20y%20el%20lila%20est%C3%A1n%20reservados%20para%20la%20quincea%C3%B1era.%20No%20olvides%20tu%20traje%20de%20ba%C3%B1o.&amp;location=Barrio%20Espa%C3%B1a%2C%20TR%2044%20calle%2026D12%2C%20Cartagena">
+             href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=XV%20a%C3%B1os%20de%20Oriana%20Sof%C3%ADa&amp;dates=20261101/20261102&amp;ctz=America/Bogota&amp;details=Punto%20de%20encuentro%20antes%20de%20las%207%3A00%20a.%20m.%20en%20Barrio%20Espa%C3%B1a%2C%20TR%2044%20calle%2026D12%20%28Cartagena%29%2C%20referencia%3A%20Tienda%20Brisas%20del%20Sur.%20Mapa%3A%20https%3A%2F%2Fmaps.app.goo.gl%2FhCto2jpUpXJwgqsP7.%20Pasad%C3%ADa%20con%20piscina.%20C%C3%B3digo%20de%20vestuario%3A%20semiformal%3B%20el%20morado%20y%20el%20lila%20est%C3%A1n%20reservados%20para%20la%20quincea%C3%B1era.%20No%20olvides%20tu%20traje%20de%20ba%C3%B1o.&amp;location=Tienda%20Brisas%20del%20Sur%2C%20Cra.%2046%2C%20Las%20Lomas%2C%20Cartagena">
             <svg aria-hidden="true"><use href="#i-calendario"/></svg> Google Calendar
           </a>
           <a class="boton boton--linea" href="evento-xv-oriana-sofia.ics" type="text/calendar">
@@ -392,8 +392,10 @@
 
       <div class="encuentro">
         <!-- ▼▼▼ ZONA EDITABLE · CONTACTO ▼▼▼
-             QUÉ CAMBIAR: la dirección del punto de encuentro, lo que se busca en el mapa
-               (data-direccion-mapa) y el WhatsApp que recibe las confirmaciones (data-whatsapp).
+             QUÉ CAMBIAR: la dirección del punto de encuentro, el punto exacto del mapa
+               (data-mapa-coordenadas = "latitud,longitud" y data-mapa-enlace = el enlace de Google Maps
+               que mandó la familia), el nombre del lugar (data-direccion-mapa) y el WhatsApp que
+               recibe las confirmaciones (data-whatsapp).
              CÓMO: cambia el texto entre > y < y, si cambia la dirección o el número, el valor
                entre comillas de data-direccion-mapa / data-whatsapp.
              EJEMPLO: data-whatsapp="573157800663"  →  data-whatsapp="573001234567"
@@ -405,9 +407,12 @@
         -->
         <div class="datos-evento" id="datos-evento" hidden
              data-whatsapp="573157800663"
-             data-direccion-mapa="Transversal 44 #26D-12, España, Cartagena, Bolívar, Colombia"></div>
+             data-direccion-mapa="Tienda Brisas del Sur, Cra. 46, Las Lomas, Cartagena de Indias, Bolívar"
+             data-mapa-coordenadas="10.4020598,-75.5113218"
+             data-mapa-enlace="https://maps.app.goo.gl/hCto2jpUpXJwgqsP7"></div>
         <h3 class="encuentro__titulo"><svg aria-hidden="true"><use href="#i-pin"/></svg> Punto de encuentro</h3>
-        <p class="encuentro__dir">Barrio España, TR 44 calle 26D12<br>Cartagena</p>
+        <p class="encuentro__dir">Barrio España, TR 44 calle 26D12<br>Cartagena
+          <span class="encuentro__ref">Referencia: Tienda Brisas del Sur</span></p>
         <!-- ▲▲▲ FIN ZONA EDITABLE · CONTACTO ▲▲▲ -->
 
         <div class="mapa" id="mapa">
@@ -439,11 +444,11 @@
 
         <div class="encuentro__botones">
           <a class="boton boton--linea" id="enlace-maps" target="_blank" rel="noopener"
-             href="https://www.google.com/maps/search/?api=1&amp;query=Transversal%2044%20%2326D-12%2C%20Espa%C3%B1a%2C%20Cartagena%2C%20Bol%C3%ADvar%2C%20Colombia">
+             href="https://maps.app.goo.gl/hCto2jpUpXJwgqsP7">
             <svg aria-hidden="true"><use href="#i-pin"/></svg> Abrir en Google Maps
           </a>
           <a class="boton boton--linea" id="enlace-waze" target="_blank" rel="noopener"
-             href="https://waze.com/ul?q=Transversal%2044%20%2326D-12%2C%20Espa%C3%B1a%2C%20Cartagena&amp;navigate=yes">
+             href="https://waze.com/ul?ll=10.4020598,-75.5113218&amp;navigate=yes">
             <svg aria-hidden="true"><use href="#i-ruta"/></svg> Abrir en Waze
           </a>
         </div>

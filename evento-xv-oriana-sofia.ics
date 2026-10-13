@@ -5,15 +5,22 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
 UID:xv-oriana-sofia-20261101@xv-oriana-sofia.pages.dev
-DTSTAMP:20261011T050000Z
+DTSTAMP:20261013T040000Z
+SEQUENCE:1
 DTSTART;VALUE=DATE:20261101
 DTEND;VALUE=DATE:20261102
 SUMMARY:XV años de Oriana Sofía
-LOCATION:Barrio España\, TR 44 calle 26D12\, Cartagena
+LOCATION:Tienda Brisas del Sur\, Cra. 46\, Las Lomas\, Cartagena
+GEO:10.4020598;-75.5113218
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="Cra. 46, Las Lomas, Cartag
+ ena de Indias, Bolívar";X-APPLE-RADIUS=70;X-TITLE="Tienda Brisas del Sur"
+ :geo:10.4020598,-75.5113218
+URL:https://maps.app.goo.gl/hCto2jpUpXJwgqsP7
 DESCRIPTION:Punto de encuentro antes de las 7:00 a. m. en Barrio España\, 
- TR 44 calle 26D12 (Cartagena). Pasadía con piscina. Código de vestuario:
-  semiformal\; el morado y el lila están reservados para la quinceañera. 
- No olvides tu traje de baño.
+ TR 44 calle 26D12 (Cartagena)\, referencia: Tienda Brisas del Sur. Mapa: h
+ ttps://maps.app.goo.gl/hCto2jpUpXJwgqsP7. Pasadía con piscina. Código de
+  vestuario: semiformal\; el morado y el lila están reservados para la qui
+ nceañera. No olvides tu traje de baño.
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Mañana son los XV de Oriana Sofía: punto de encuentro antes d
