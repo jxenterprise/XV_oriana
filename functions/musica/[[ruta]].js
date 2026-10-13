@@ -10,7 +10,7 @@
      cabecera Range, responde 206 con solo el trozo pedido.
    Solo corre en /musica/* (Cloudflare arma las rutas solo); el resto del
    sitio sigue siendo estático. No necesita paso de compilación.
-   Diseño y desarrollo: JX Company.
+   Diseño y desarrollo: JX Enterprise.
    =========================================================== */
 
 export async function onRequest({ request, env }) {

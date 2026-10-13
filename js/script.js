@@ -17,7 +17,7 @@
      · #reloj         → data-fecha-evento y data-fecha-texto
      · #carrusel      → las fotos (img.carrusel__foto, en orden)
    Sin dependencias externas. Cargado con defer: el DOM ya existe.
-   Diseño y desarrollo: JX Company.
+   Diseño y desarrollo: JX Enterprise.
    =========================================================== */
 (function () {
   'use strict';

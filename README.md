@@ -4,7 +4,7 @@ Invitación digital para los XV años de **Oriana Sofía** (domingo 1 de noviemb
 Se envía por WhatsApp como un enlace: el invitado abre un sobre lila con sello de cera, suena la canción que eligió la familia,
 ve la información del día, el punto de encuentro con mapa y confirma su asistencia por WhatsApp.
 
-Encargo de Moisés Escalante. Diseño y desarrollo: **JX Company**.
+Encargo de Moisés Escalante. Diseño y desarrollo: **JX Enterprise**.
 
 ---
 
@@ -153,7 +153,7 @@ La invitación lleva fotos de Oriana (también de bebé), su nombre y la direcci
 
 ## Créditos y licencias
 
-- Diseño, ilustraciones en acuarela, corona y sello: creados para este proyecto por JX Company.
+- Diseño, ilustraciones en acuarela, corona y sello: creados para este proyecto por JX Enterprise.
 - Fotos de Oriana: enviadas por la familia.
 - Música: *Lavender's Blue* (canción de *La Cenicienta*), versión en piano de Riyandi Kusuma, elegida por la familia.
   El derecho de uso corre por cuenta de la familia.
@@ -171,4 +171,4 @@ La invitación lleva fotos de Oriana (también de bebé), su nombre y la direcci
 
 ---
 
-Diseño y desarrollo: **JX Company**
+Diseño y desarrollo: **JX Enterprise**

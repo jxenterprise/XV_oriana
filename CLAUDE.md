@@ -2,11 +2,12 @@
 
 ## Qué es
 Invitación digital (una sola página) para los XV años de **Oriana Sofía**, domingo 1 de noviembre de 2026,
-Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). Se comparte por WhatsApp con
+Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). La empresa de JX ahora se llama
+**JX Enterprise** (antes JX Company; cambio del 13/10/2026). Se comparte por WhatsApp con
 enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
 `https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (13/10/2026, 4:44 a. m., hora de Colombia): versión 1.4 publicada: **canción nueva completa** (*Lavender's Blue*
+Estado (13/10/2026, 4:57 a. m., hora de Colombia): versión 1.4 publicada: **canción nueva completa** (*Lavender's Blue*
 en piano, 2:32, en bucle), **fotos en orden de bebé a grande** y **pin exacto del punto de encuentro** (el enlace de
 Google Maps que mandó la familia), más una revisión completa de la web. Lo que queda está en "Pendiente", abajo.
 
@@ -139,8 +140,8 @@ Google Maps que mandó la familia), más una revisión completa de la web. Lo qu
       (pasa al otro botón y al título `#titulo-portada`); `<meta charset>` después del byte 1024 (el comentario de
       cabecera ahora va dentro del `<head>`, la meta queda en el byte 56); las fotos 2–8 llevan `aria-hidden` desde el
       HTML (sin JS los lectores leían 8 fotos y solo se veía 1); comentarios y listas de "SE REPITE EN" desactualizados.
-    - **No se cambió** (decisión de JX): el crédito dorado "JX Company" tiene contraste 1,5–2,2:1, pero es el formato
-      exacto del estándar de JX (`.footer-dev-*`). Tampoco se puso un `src` de relleno a las fotos 2–8 (el validador lo
+    - El crédito dorado (1,5–2,2:1) se dejó en ese momento por ser el estándar de JX; luego JX pidió oscurecerlo (punto 16).
+      Tampoco se puso un `src` de relleno a las fotos 2–8 (el validador lo
       pide, pero obligaría a cambiar la carga diferida del carrusel).
     - Sin regresiones: los 12 perfiles de celular siguen OK (8 fotos, visor, música 151,9 s, desborde 0, consola limpia).
 15. **Rendimiento y compatibilidad (iPhone/Samsung)** (13/10/2026, 4:44 a. m.): 6 hallazgos, todos reproducidos por Claude contra la
@@ -165,6 +166,13 @@ Google Maps que mandó la familia), más una revisión completa de la web. Lo qu
       (`.visor__foto.cargando` a opacidad .35) hasta que baja la nueva (precarga con `new Image()`), y se deja pedida la
       siguiente.
     - Sin regresiones: los 12 perfiles de celular OK.
+
+16. **Crédito "JX Enterprise"** (13/10/2026, 4:57 a. m.): JX pidió que el crédito se vea más y que diga **JX Enterprise** (así se
+    llama ahora la empresa; antes "JX Company"). En `index.html`, `generador.html` y `404.html` el texto pasa a
+    "Diseño y desarrollo: JX Enterprise" (mismas clases `.footer-dev-*`); el degradado dorado pasa de `#E8C86A → #C9A84C`
+    (1,5–2,2:1) a `var(--oro-oscuro) → #6E531F` (4,8–6,8:1). Cabe en una línea de 280 a 1440 px, no lo tapa el botón de
+    música y no hay desborde. También se cambió el nombre en los comentarios de cabecera, el `PRODID` del `.ics` y el
+    README.
 
 ### Pendiente (en este orden)
 1. **Que JX escuche la canción en el celular** (volumen y que se repita bien). No se puede escuchar desde aquí.
@@ -257,7 +265,7 @@ archivos de prueba (punto 18 de la auditoría).
 6. Código de vestuario (`#vestuario`).
 7. Lluvia de sobres (`#regalo`).
 8. Confirmación por WhatsApp (`#confirmar`).
-9. Cierre + crédito JX Company (`footer.cierre`).
+9. Cierre + crédito JX Enterprise (`footer.cierre`).
 10. Visor de fotos a pantalla completa (`<dialog id="visor">`), cerrado hasta que tocan una foto.
 11. Botón flotante de música (`#boton-musica`) y `<audio id="audio-musica">`.
 

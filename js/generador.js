@@ -11,7 +11,7 @@
      3. Guarda en este navegador la lista de invitaciones creadas.
    La dirección del sitio se calcula sola (sirve en pages.dev, en un
    dominio propio o en la vista previa), no hay que configurarla.
-   Diseño y desarrollo: JX Company.
+   Diseño y desarrollo: JX Enterprise.
    =========================================================== */
 (function () {
   'use strict';

@@ -12,7 +12,7 @@
                                   generador, 404 y responsive
    Regla: los colores salen SIEMPRE de las variables :root;
    no meter hex sueltos en los componentes nuevos.
-   Diseño y desarrollo: JX Company.
+   Diseño y desarrollo: JX Enterprise.
    =========================================================== */
 
 
@@ -735,8 +735,9 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 
 /* ===========================================================
    10. CIERRE Y CRÉDITO DE JX COMPANY
-   El crédito usa el formato EXACTO del estándar de JX Company
-   (no cambiar clases, textos, tamaños ni colores).
+   El crédito usa el formato EXACTO del estándar de JX Enterprise
+   (no cambiar clases, textos ni tamaños). El dorado se oscureció el
+   13/10/2026 a pedido de JX para que se lea: 4,8–6,8:1 (antes 1,5–2,2:1).
    =========================================================== */
 .cierre {
   position: relative; isolation: isolate; overflow: hidden;
@@ -763,7 +764,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 }
 .footer-dev-jx,
 .footer-dev-co {
-  background: linear-gradient(180deg, #E8C86A, #C9A84C);
+  background: linear-gradient(180deg, var(--oro-oscuro), #6E531F);   /* dorado oscuro de la paleta → un tono más hondo */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
