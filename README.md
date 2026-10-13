@@ -134,7 +134,7 @@ Para ver el sobre personalizado: `http://localhost:8000/?para=Familia%20P%C3%A9r
   el botón de Google Calendar y `evento-xv-oriana-sofia.ics`.
 - **Colores**: variables al inicio de `css/styles.css` (`:root`).
 
-**Vista previa de WhatsApp desactualizada**: WhatsApp guarda en caché la imagen. Prueba el enlace con `?v=2` al final o
+**Vista previa de WhatsApp desactualizada**: WhatsApp guarda en caché la imagen. Prueba el enlace con `?v=3` al final (o un número nuevo cada vez) o
 revísalo en el *Sharing Debugger* de Facebook.
 
 ---

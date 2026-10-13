@@ -104,7 +104,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
-  color-scheme: light;
+  color-scheme: only light;   /* "only": que Chrome/Samsung no oscurezcan la página a la fuerza (el texto quedaba claro sobre el papel claro) */
   touch-action: manipulation;   /* sin zoom por doble toque (al tocar rápido + / −); el zoom con dos dedos sigue */
 }
 
@@ -153,7 +153,7 @@ a, button, label, input, textarea { -webkit-tap-highlight-color: transparent; }
 
 /* Foco visible y elegante para teclado */
 :focus-visible { outline: 2px solid var(--oro); outline-offset: 3px; }
-main:focus { outline: none; }
+main:focus, .portada__nombre:focus { outline: none; }   /* destinos de foco programado (tabindex="-1") */
 
 /* Secciones: columna centrada tipo tarjeta impresa */
 section {
@@ -336,7 +336,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 @media (hover: hover) { .sello:hover { transform: translate(-50%, -50%) scale(1.05); } }
 .sello:active { transform: translate(-50%, -50%) scale(.95); }
 
-/* Pasos de la apertura (clases puestas por abrirSobre() en script.js) */
+/* Pasos de la apertura (clases puestas por iniciarSobre() en script.js) */
 .portal--abriendo .sello { transform: translate(-50%, -50%) scale(.25) rotate(-30deg); opacity: 0; pointer-events: none; }
 .portal--abriendo .sobre__solapa { transform: rotateX(180deg); }
 .portal--carta .sobre__solapa { z-index: 0; }
@@ -488,7 +488,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 
 /* Mensaje de Oriana */
 .mensaje { padding-top: calc(var(--aire) * .7); }
-.mensaje__intro { font-style: italic; font-size: var(--t-medio); color: var(--lila-medio); margin-bottom: 1.1rem; }
+.mensaje__intro { font-style: italic; font-size: var(--t-medio); color: var(--lila-profundo); margin-bottom: 1.1rem; }   /* --lila-medio no llegaba a 4,5:1 */
 .mensaje__texto {
   max-width: 30rem; margin: 0 auto 1.1rem;
   font-size: clamp(1.26rem, 4.6vw, 1.48rem); line-height: 1.6; text-wrap: pretty;
@@ -533,7 +533,7 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 .guardar { margin-top: 2.2rem; }
 .guardar__titulo {
   margin-bottom: .8rem; font-size: var(--t-etiqueta); font-weight: 600; letter-spacing: .26em; text-transform: uppercase;
-  color: var(--oro-oscuro);
+  color: var(--tinta-suave);   /* sobre la mancha, el dorado oscuro quedaba en 4,3:1 */
 }
 .guardar__botones { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; }
 
@@ -726,7 +726,10 @@ body.con-portal { overflow: hidden; overscroll-behavior: none; }
 
 .formulario__estado { font-style: italic; color: var(--tinta-suave); text-align: center; }
 .formulario__estado:empty { margin-top: -1.15rem; }   /* sin mensaje no deja hueco (anula el gap del grid) */
-.formulario__estado a { font-style: normal; font-weight: 600; }
+.formulario__estado a {   /* enlace de respaldo de WhatsApp: área de toque de 44 px, sin partirse en dos renglones */
+  display: inline-flex; align-items: center; min-height: 44px; padding-inline: .2rem;
+  font-style: normal; font-weight: 600;
+}
 
 
 /* ===========================================================
@@ -956,6 +959,22 @@ body.con-visor { overflow: hidden; }
   .opcion span { font-size: 1rem; }
   .reservado__muestras { gap: 1.3rem; }
   .boton { padding-inline: 1rem; }
+  .cierre { padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px)); }   /* el botón de música no tapa el crédito */
+  .gen__item { grid-template-columns: minmax(0, 1fr); }   /* generador: Copiar/Quitar debajo del nombre */
+}
+
+/* ≤300px: Galaxy Fold cerrado — "SEGUNDOS" cabe en su casilla */
+@media (max-width: 300px) {
+  .reloj__lab { font-size: .58rem; letter-spacing: .05em; }
+}
+
+/* ≤260px: zoom grande (150–200 %) en un celular — que nada se corte */
+@media (max-width: 260px) {
+  .titulo-script { font-size: 2rem; }
+  .reloj { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .reloj__lab { font-size: .62rem; letter-spacing: .1em; }
+  .vestuario__tipo { font-size: 1.1rem; letter-spacing: .12em; }
+  .mapa__boton { white-space: normal; max-width: calc(100% - 24px); }
 }
 
 /* ≤480px: teléfonos muy pequeños — botones a lo ancho para el pulgar */

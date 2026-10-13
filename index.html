@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<!-- ===========================================================
-     PROYECTO: Invitación web · Mis XV años de Oriana Sofía
-     Archivo: index.html — la invitación completa (una sola página).
-     Relación con los demás archivos:
-       · css/styles.css  → todo el diseño (colores, tipografías, animaciones)
-       · js/script.js    → sobre animado, música, nombre del invitado,
-                           cuenta regresiva, mapa y confirmación por WhatsApp
-       · img/            → fotos de Oriana (carrusel) y acuarelas (todo en WebP)
-       · fonts/          → tipografías propias (Pinyon Script y Cormorant Garamond)
-       · musica/         → canción que eligió la familia (solo el audio de su video)
-     Versión "invitación privada": no se indexa en Google (noindex),
-     sin páginas legales ni banner de cookies (aprobado por JX, 10/10/2026).
-     Diseño y desarrollo: JX Company.
-     =========================================================== -->
 <html lang="es" class="no-js">
 <head>
   <meta charset="UTF-8">
+  <!-- ===========================================================
+       PROYECTO: Invitación web · Mis XV años de Oriana Sofía
+       Archivo: index.html — la invitación completa (una sola página).
+       Relación con los demás archivos:
+         · css/styles.css  → todo el diseño (colores, tipografías, animaciones)
+         · js/script.js    → sobre animado, música, nombre del invitado,
+                             cuenta regresiva, mapa y confirmación por WhatsApp
+         · img/            → fotos de Oriana (carrusel) y acuarelas (todo en WebP)
+         · fonts/          → tipografías propias (Pinyon Script y Cormorant Garamond)
+         · musica/         → canción que eligió la familia (Lavender's Blue en piano)
+       Versión "invitación privada": no se indexa en Google (noindex),
+       sin páginas legales ni banner de cookies (aprobado por JX, 10/10/2026).
+       Diseño y desarrollo: JX Company.
+       =========================================================== -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mis XV años · Oriana Sofía</title>
   <meta name="description" content="Oriana Sofía te invita a celebrar sus XV años el domingo 1 de noviembre de 2026. Abre tu invitación, confirma tu asistencia y guarda la fecha.">
@@ -46,9 +46,9 @@
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#EFE5F8">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="only light">
 
-  <!-- Tipografías propias: se precarga solo la de títulos (la que más se ve al abrir) -->
+  <!-- Tipografías propias: se precargan la de títulos y la de texto 500 (las que más se ven al abrir) -->
   <link rel="preload" href="fonts/pinyon-script-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/cormorant-garamond-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
@@ -179,7 +179,7 @@
                sale la tarjeta, caen pétalos y arranca la música.
        Función: primera impresión + el toque es lo que permite que la
                 música suene (los celulares bloquean el audio automático).
-       Depende de: .portal y .sobre en styles.css; abrirSobre() en script.js.
+       Depende de: .portal y .sobre en styles.css; iniciarSobre() en script.js.
        Sin JavaScript no se muestra (clase .no-js) y la invitación se ve completa.
        =========================================================== -->
   <div class="portal" id="portal" role="dialog" aria-modal="true" aria-labelledby="portal-titulo">
@@ -242,19 +242,19 @@
         <div class="arco__foto carrusel" id="carrusel" role="group" aria-roledescription="carrusel" aria-label="Fotos de Oriana Sofía">
           <img class="carrusel__foto es-actual" src="img/oriana-sofia-bebe-vestido-verde.webp" width="1080" height="1443" fetchpriority="high"
                alt="Oriana Sofía de bebé, de pocos meses, con vestido verde y balaca rosada">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-bebe-sombrero-2012.webp" width="1080" height="722" decoding="async"
+          <img class="carrusel__foto" aria-hidden="true" data-src="img/oriana-sofia-bebe-sombrero-2012.webp" width="1080" height="722" decoding="async"
                alt="Oriana Sofía de bebé con sombrero blanco con flores, sonriendo, en octubre de 2012">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-nina-galletas.webp" width="552" height="738" decoding="async"
+          <img class="carrusel__foto" aria-hidden="true" data-src="img/oriana-sofia-nina-galletas.webp" width="552" height="738" decoding="async"
                alt="Oriana Sofía de niña pequeña, sentada en el piso con un paquete de galletas">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-grado-preescolar.webp" width="738" height="984" decoding="async"
+          <img class="carrusel__foto" aria-hidden="true" data-src="img/oriana-sofia-grado-preescolar.webp" width="738" height="984" decoding="async"
                alt="Oriana Sofía en su grado de preescolar, con toga y birrete azules">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-selfie-rizos.webp" width="1502" height="1073" decoding="async"
+          <img class="carrusel__foto" aria-hidden="true" data-src="img/oriana-sofia-selfie-rizos.webp" width="1502" height="1073" decoding="async"
                style="--enfoque: 10% 50%" alt="Oriana Sofía en una selfie muy cercana, sonriendo, con su cabello rizado">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-selfie-xv.webp" width="900" height="1600" decoding="async"
+          <img class="carrusel__foto" aria-hidden="true" data-src="img/oriana-sofia-selfie-xv.webp" width="900" height="1600" decoding="async"
                style="--enfoque: 50% 5%" alt="Oriana Sofía, la quinceañera, sonriendo con su cabello rizado suelto">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-vestido-beige.webp" width="960" height="1280" decoding="async"
+          <img class="carrusel__foto" aria-hidden="true" data-src="img/oriana-sofia-vestido-beige.webp" width="960" height="1280" decoding="async"
                alt="Oriana Sofía con vestido beige en una selfie frente al espejo">
-          <img class="carrusel__foto" data-src="img/oriana-sofia-vestido-gris.webp" width="1200" height="1600" decoding="async"
+          <img class="carrusel__foto" aria-hidden="true" data-src="img/oriana-sofia-vestido-gris.webp" width="1200" height="1600" decoding="async"
                alt="Oriana Sofía de cuerpo entero con vestido gris de lentejuelas, sandalias plateadas y bolso de mano">
           <button class="carrusel__ver" id="carrusel-ver" type="button" aria-label="Ver las fotos en pantalla completa"></button>
         </div>
@@ -273,7 +273,7 @@
         <p class="carrusel__ayuda" id="carrusel-ayuda">Toca la foto para verla en grande</p>
       </div>
 
-      <h1 class="portada__nombre"><span class="solo-lectores">Mis XV años · </span>Oriana Sofía</h1>
+      <h1 class="portada__nombre" id="titulo-portada" tabindex="-1"><span class="solo-lectores">Mis XV años · </span>Oriana Sofía</h1>
 
       <p class="fecha-portada">
         <time datetime="2026-11-01">
@@ -368,20 +368,22 @@
            CÓMO: cambia solo el texto que está entre > y < sin borrar las etiquetas.
            EJEMPLO: <p>Antes de las 7:00 a. m. …</p>  →  <p>Antes de las 6:30 a. m. …</p>
            LÍMITE: cada dato máx. 70 caracteres.
-           ⚠ SE REPITE EN: portada (fecha), data-fecha-evento de la cuenta regresiva,
-             botón de Google Calendar, archivo evento-xv-oriana-sofia.ics, la descripción
-             y og:description del <head>, la imagen og-xv-oriana-sofia-vestido-beige.webp y la tarjeta
-             cuadrada. SI CAMBIA, HAY QUE CAMBIARLO EN TODOS (lo cambia JX).
+           ⚠ SE REPITE EN: portada (fecha), data-fecha-evento y data-fecha-texto de la cuenta
+             regresiva, botón de Google Calendar, archivo evento-xv-oriana-sofia.ics, en el <head>
+             la description, og:description, twitter:description y og:image:alt, la imagen
+             og-xv-oriana-sofia-vestido-beige.webp, site.webmanifest (description), el mensaje que
+             manda el generador (mensajeSugerido() en js/generador.js) y la tarjeta cuadrada.
+             SI CAMBIA, HAY QUE CAMBIARLO EN TODOS (lo cambia JX).
            NO TOCAR: class, li, svg, use, ni nada fuera de esta zona.
       -->
       <ul class="detalles__lista">
         <li class="dato">
           <span class="dato__icono"><svg aria-hidden="true"><use href="#i-calendario"/></svg></span>
-          <div class="dato__texto"><h3>Fecha</h3><p>Domingo 1 de noviembre de 2026</p></div>
+          <div class="dato__texto"><h3>Fecha</h3><p>Domingo 1 de noviembre de&nbsp;2026</p></div>
         </li>
         <li class="dato">
           <span class="dato__icono"><svg aria-hidden="true"><use href="#i-reloj"/></svg></span>
-          <div class="dato__texto"><h3>Hora</h3><p>Estar en el punto de encuentro antes de las 7:00 a. m.</p></div>
+          <div class="dato__texto"><h3>Hora</h3><p>Estar en el punto de encuentro antes de las 7:00&nbsp;a.&nbsp;m.</p></div>
         </li>
         <li class="dato">
           <span class="dato__icono"><svg aria-hidden="true"><use href="#i-piscina"/></svg></span>
@@ -411,7 +413,7 @@
              data-mapa-coordenadas="10.4020598,-75.5113218"
              data-mapa-enlace="https://maps.app.goo.gl/hCto2jpUpXJwgqsP7"></div>
         <h3 class="encuentro__titulo"><svg aria-hidden="true"><use href="#i-pin"/></svg> Punto de encuentro</h3>
-        <p class="encuentro__dir">Barrio España, TR 44 calle 26D12<br>Cartagena
+        <p class="encuentro__dir">Barrio España, TR&nbsp;44 calle&nbsp;26D12<br>Cartagena
           <span class="encuentro__ref">Referencia: Tienda Brisas del Sur</span></p>
         <!-- ▲▲▲ FIN ZONA EDITABLE · CONTACTO ▲▲▲ -->
 
@@ -519,7 +521,7 @@
         <form class="formulario" id="form-confirmar" novalidate>
           <div class="campo">
             <label for="nombre">Tu nombre</label>
-            <input id="nombre" name="nombre" type="text" autocomplete="name" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" maxlength="60" required placeholder="Ej.: Familia Pérez">
+            <input id="nombre" name="nombre" aria-describedby="error-nombre" type="text" autocomplete="name" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" maxlength="60" required placeholder="Ej.: Familia Pérez">
             <p class="campo__error" id="error-nombre" hidden>Escribe tu nombre para que Oriana sepa quién confirma.</p>
           </div>
 
@@ -599,7 +601,7 @@
        Depende de: iniciarMusica() en script.js; .musica en styles.css.
        El MP3 se empieza a descargar cuando la página termina de cargar.
        =========================================================== -->
-  <button class="musica" id="boton-musica" type="button" aria-pressed="true" aria-label="Pausar la música" hidden>
+  <button class="musica" id="boton-musica" type="button" aria-pressed="false" aria-label="Música de fondo" hidden>
     <svg class="musica__icono musica__icono--nota" aria-hidden="true"><use href="#i-nota"/></svg>
     <svg class="musica__icono musica__icono--silencio" aria-hidden="true"><use href="#i-silencio"/></svg>
   </button>

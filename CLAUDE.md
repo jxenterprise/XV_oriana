@@ -6,7 +6,7 @@ Cartagena. Encargo de **Moisés Escalante** (cliente de JX, tienda Presencia). S
 enlaces personalizados por invitado. Hosting: Cloudflare Pages (cuenta de JX), dirección **confirmada**
 `https://mis-xv-de-oriana-sofia.pages.dev/` (proyecto de Cloudflare `mis-xv-de-oriana-sofia`).
 
-Estado (12/10/2026, 11:03 p. m., hora de Colombia): versión 1.4 publicada: **canción nueva completa** (*Lavender's Blue*
+Estado (13/10/2026, 4:06 a. m., hora de Colombia): versión 1.4 publicada: **canción nueva completa** (*Lavender's Blue*
 en piano, 2:32, en bucle), **fotos en orden de bebé a grande** y **pin exacto del punto de encuentro** (el enlace de
 Google Maps que mandó la familia), más una revisión completa de la web. Lo que queda está en "Pendiente", abajo.
 
@@ -110,13 +110,47 @@ Google Maps que mandó la familia), más una revisión completa de la web. Lo qu
     esquina en la posición exacta de la imagen anterior (ajustada por comparación de píxeles); textos a la misma altura.
     Foto con acercamiento leve (`scale(1.15)`, origen 30% 66%) para que se reconozca en la miniatura.
     Si WhatsApp sigue mostrando la foto vieja: pegar el enlace con `?v=3` al final, o esperar a que renueve su caché.
-14. **Revisión completa de la web**: en curso (6 revisores + verificadores); los resultados y arreglos van en el siguiente commit.
+14. **Revisión completa de la web** (workflow de 6 revisores, 12–13/10/2026). Terminaron diseño responsive (15 tamaños),
+    funcionamiento (JS de punta a punta), textos y datos, y HTML/accesibilidad: **23 hallazgos, 1 alto, 2 medios y el
+    resto bajos**. Los verificadores automáticos se cortaron por el límite de uso, así que **Claude verificó cada hallazgo
+    reproduciéndolo en Chromium contra la versión anterior** (todos fallaban antes y pasan después) y los corrigió
+    (13/10/2026, 4:06 a. m.). Rendimiento y compatibilidad (iPhone/Samsung) se relanzaron aparte (ver punto 15).
+    - **Alto — modo oscuro forzado** (Chrome Android "oscurecer sitios" / tema oscuro automático): el texto pasaba a lila
+      claro sobre el papel claro (mensaje de Oriana en 1,25:1, ilegible). Arreglo: `color-scheme: only light` en `html`
+      y `<meta name="color-scheme" content="only light">` en las 3 páginas → 12,2:1, se ve igual que en claro.
+      Ojo al probar: la bandera `--blink-settings=forceDarkModeEnabled=true` se salta la exclusión (da 1,25:1 aunque esté
+      bien); hay que usar la emulación oficial `Emulation.setAutoDarkModeOverride({enabled:true})` por CDP.
+      Samsung Internet tiene su propio modo oscuro: comprobarlo en un Samsung real (pendiente 3).
+    - **Medio — contraste**: `.mensaje__intro` pasa de `--lila-medio` (3,9:1) a `--lila-profundo` (7,6:1) y
+      `.guardar__titulo` de `--oro-oscuro` (4,3:1 sobre la mancha) a `--tinta-suave` (5,2:1), colores de la paleta.
+    - **Medio — zoom grande** (≤260 px, p. ej. zoom 200 %): `@media (max-width: 260px)` con títulos script de 2rem,
+      reloj en 2×2, "SEMIFORMAL" más pequeño y el botón "Ver mapa aquí" que puede partirse. De 280 px en adelante no cambia nada.
+    - Bajos: botón de música que tapaba "Company" en ≤320 px (`.cierre` con más espacio abajo en ≤380 px); "SEGUNDOS"
+      fuera de su casilla en 280 px (`@media (max-width: 300px)`); lista del generador que partía los nombres letra por
+      letra en ≤380 px (Copiar/Quitar debajo); enlace de respaldo "¿No se abrió? Toca aquí." de 22 px y partido en dos
+      (ahora 44 px, una línea); "7:00&nbsp;a.&nbsp;m.", "TR&nbsp;44 calle&nbsp;26D12" y "de&nbsp;2026" sin cortes; el día del
+      evento la cuenta decía "Faltan 00 días" junto a "Gracias…" (ahora cambia el título y se ocultan reloj, nota y
+      calendario); Enter sobre "¿Asistirás?" enviaba el formulario; un emoji partido en el carácter 60 de `?para=` rompía
+      el botón de confirmar (`limpiar()` recorta por caracteres completos, también en el generador); el botón de música
+      se veía "sonando" tras "Saltar al contenido" y tenía aria-pressed con un nombre que cambiaba (ahora nombre fijo
+      "Música de fondo" + aria-pressed real); el carrusel no se podía pausar (se detiene con el mouse encima, solo en
+      equipos con mouse, o con foco de teclado en la foto); errores del nombre sin `aria-describedby` (y sin
+      `aria-invalid` en el generador); foco perdido al desactivarse "una persona menos/más" y al desaparecer el sello
+      (pasa al otro botón y al título `#titulo-portada`); `<meta charset>` después del byte 1024 (el comentario de
+      cabecera ahora va dentro del `<head>`, la meta queda en el byte 56); las fotos 2–8 llevan `aria-hidden` desde el
+      HTML (sin JS los lectores leían 8 fotos y solo se veía 1); comentarios y listas de "SE REPITE EN" desactualizados.
+    - **No se cambió** (decisión de JX): el crédito dorado "JX Company" tiene contraste 1,5–2,2:1, pero es el formato
+      exacto del estándar de JX (`.footer-dev-*`). Tampoco se puso un `src` de relleno a las fotos 2–8 (el validador lo
+      pide, pero obligaría a cambiar la carga diferida del carrusel).
+    - Sin regresiones: los 12 perfiles de celular siguen OK (8 fotos, visor, música 151,9 s, desborde 0, consola limpia).
+15. **Rendimiento y compatibilidad (iPhone/Samsung)**: revisión en curso; sus resultados van en el siguiente commit.
 
 ### Pendiente (en este orden)
 1. **Que JX escuche la canción en el celular** (volumen y que se repita bien). No se puede escuchar desde aquí.
 2. La tarjeta cuadrada (se entrega aparte) tiene la dirección sin la referencia de la tienda: revisarla si la van a
    reenviar.
-3. Probar en un iPhone real (o WebKit): la sesión en la nube solo tiene Chromium; v1.3 y v1.4 no se probaron en WebKit.
+3. Probar en un iPhone real (o WebKit) y en un Samsung con el modo oscuro activado: la sesión en la nube solo tiene
+   Chromium; v1.3 y v1.4 no se probaron en WebKit.
 4. `/CLAUDE.md` y `/README.md` se ven públicamente en el sitio (Cloudflare sirve la raíz del repo tal cual).
    Decidir con JX si se ocultan (por ejemplo con reglas en `_redirects`).
 
@@ -127,6 +161,8 @@ de iPhone y Chromium ≈ Android. Perfiles usados: iPhone SE 320×568, SE (3.ª 
 Pixel 7 412×839, Fold 280×653 y Android horizontal 740×360. Revisar: sobre sin cortes, desborde lateral 0, toques
 ≥44 px, consola limpia, Enter no envía, `wa.me` correcto. El banco de pruebas vive **fuera** del repo: no subir
 archivos de prueba (punto 18 de la auditoría).
+- Modo oscuro forzado: probar con `Emulation.setAutoDarkModeOverride({enabled:true})` (CDP), no con
+  `--blink-settings=forceDarkModeEnabled=true` (esa bandera ignora `color-scheme: only light`).
 - Ojo con `page.tap('#carrusel-ver')` (o cualquier `tap`/`click` por selector en la portada): si el elemento se está
   moviendo por la animación de scroll, Playwright reintenta con un `scrollIntoView` forzado que desplaza
   `header.portada` (tiene `overflow-x: hidden` por los ramos) y la portada queda corrida ~50 px. **No es un error
@@ -203,7 +239,9 @@ archivos de prueba (punto 18 de la auditoría).
 ## Dónde editar cada cosa
 - Textos del mensaje → `index.html`, zona TEXTOS.
 - Fecha/hora/plan → `index.html`, zona HORARIOS (+ `data-fecha-evento` y `data-fecha-texto` en `#reloj`,
-  enlace de Google Calendar, `evento-xv-oriana-sofia.ics`, `<head>`, `img/og-xv-oriana-sofia-vestido-beige.webp`, tarjeta).
+  enlace de Google Calendar, `evento-xv-oriana-sofia.ics`, `<head>` (description, og:description, twitter:description,
+  og:image:alt), `img/og-xv-oriana-sofia-vestido-beige.webp`, `site.webmanifest`, `mensajeSugerido()` de
+  `js/generador.js` y la tarjeta).
 - Dirección / mapa / WhatsApp → `index.html`, zona CONTACTO (`#datos-evento`: `data-whatsapp`, `data-direccion-mapa`,
   `data-mapa-coordenadas` = "lat,lng" del pin y `data-mapa-enlace` = enlace de Google Maps de la familia).
 - Mensajes de WhatsApp (confirmación) → `js/script.js`, función `iniciarConfirmacion()`.
@@ -254,7 +292,8 @@ Cualquier sección, componente, botón o página que se agregue a futuro debe us
 - `ZONA EDITABLE · TEXTOS` (index.html, sección `#mensaje`): intro, mensaje de Oriana, remate y firma. No se repite.
 - `ZONA EDITABLE · HORARIOS` (index.html, sección `#detalles`): fecha, hora y plan. ⚠ Se repite en portada,
   `#reloj` (`data-fecha-evento`, `data-fecha-texto`), botón de Google Calendar, `evento-xv-oriana-sofia.ics`,
-  description/og:description del `<head>`, `img/og-xv-oriana-sofia-vestido-beige.webp` y la tarjeta cuadrada.
+  description/og:description/twitter:description/og:image:alt del `<head>`, `img/og-xv-oriana-sofia-vestido-beige.webp`,
+  `site.webmanifest`, `mensajeSugerido()` de `js/generador.js` y la tarjeta cuadrada.
 - `ZONA EDITABLE · CONTACTO` (index.html, `.encuentro`): dirección visible (+ `.encuentro__ref`), `data-direccion-mapa`,
   `data-mapa-coordenadas`, `data-mapa-enlace` y `data-whatsapp` de `#datos-evento`. ⚠ Se repite en Google Calendar,
   `.ics` y la tarjeta. El iframe y los enlaces de Google Maps/Waze se reconstruyen solos desde esos atributos
@@ -280,8 +319,9 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
     (2150 ms) → `terminar()` (2800 ms). Mientras el sobre está abierto, portada/main/cierre quedan `inert`.
     "Saltar al contenido" abre sin animación ni música.
   - `lanzarPetalos()`: 26 `<span class="petalo">` con variables `--dx`/`--r`; se borran al terminar.
-  - `iniciarCuenta()`: cuenta hasta `data-fecha-evento` (`2026-11-01T07:00:00-05:00`); el día del evento
-    muestra "¡Llegó el gran día!" y después "Gracias por acompañarme en mis XV."
+  - `iniciarCuenta()`: cuenta hasta `data-fecha-evento` (`2026-11-01T07:00:00-05:00`); desde la v1.4, al llegar a cero
+    el título `#t-cuenta` pasa a "¡Llegó el gran día!" (ese día) o "Gracias por acompañarme en mis XV" (después) y se
+    ocultan reloj, nota y "Guarda la fecha"
   - `iniciarMapa()`: arma los enlaces de Google Maps/Waze; el iframe de Google solo se crea al tocar
     "Ver mapa aquí" (pone cookies de terceros). En vista previa abre Google Maps en otra pestaña.
   - `iniciarConfirmacion()`: valida nombre, contador limitado a los pases, oculta personas si "No podré ir",
@@ -402,6 +442,17 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
   `data-mapa-enlace` (Google Maps); si faltan, vuelve a la búsqueda por texto de `data-direccion-mapa`.
 - **css/styles.css**: `.encuentro__ref`.
 - **evento-xv-oriana-sofia.ics**: `LOCATION`, `GEO`, `X-APPLE-STRUCTURED-LOCATION`, `URL`, `DESCRIPTION`, `SEQUENCE:1`.
+- **Arreglos de la revisión** (13/10/2026): `css/styles.css` → `color-scheme: only light`, `.mensaje__intro` y `.guardar__titulo`
+  con más contraste, `.formulario__estado a` de 44 px, `.portada__nombre:focus` sin contorno (destino de foco), en
+  `@media (max-width: 380px)` `.cierre` con espacio para el botón de música y `.gen__item` en una columna, y nuevos
+  `@media (max-width: 300px)` y `(max-width: 260px)`. `js/script.js` → `limpiar()` con `Array.from`, `actualizarBoton()`
+  solo cambia `aria-pressed`, `mostrarBoton()` sincroniza el estado, `terminar()` lleva el foco a `#titulo-portada` si
+  estaba en el sobre, `ajustarPersonas()` pasa el foco al otro botón, Enter en los radios de "¿Asistirás?", pausa del
+  carrusel con mouse encima (`(hover: hover) and (pointer: fine)`) o foco de teclado (`:focus-visible`), y la cuenta al
+  llegar a cero. `js/generador.js` → `limpiar()` igual y `aria-invalid`. `index.html` → comentario de cabecera dentro
+  del `<head>` tras `<meta charset>`, `#titulo-portada` con `tabindex="-1"`, `aria-describedby` en `#nombre`,
+  `aria-hidden` en las fotos 2–8, `&nbsp;` en hora/dirección/año, botón de música "Música de fondo" con
+  `aria-pressed="false"` inicial. `generador.html`/`404.html` → meta `only light`; `#g-nombre` con `aria-describedby`.
 ## Auditoría de 24 puntos (versión invitación)
 1. ❌ Dominio propio — no aplica: JX eligió `pages.dev` gratis; canonical/og apuntan a `mis-xv-de-oriana-sofia.pages.dev` (confirmado).
 2. ✅ HTML real en el view-source (todo el contenido está en `index.html`).
@@ -423,7 +474,7 @@ Al ampliar la página se respetan estos nombres: nunca inventar marcadores nuevo
 18. ✅ Sin sourcemaps, `.git`, `node_modules`, `.env` ni archivos de prueba.
 19. ✅ Cero errores y cero advertencias en consola (v1: Chromium en 360, 390 y 1440 px; v1.1 y v1.2: Playwright con
     WebKit y Chromium en 12 perfiles de celular, de 280 a 430 px y en horizontal, más pruebas del carrusel y el visor;
-    v1.3: Chromium en los mismos 12 perfiles con las 8 fotos y la música nueva).
+    v1.3 y v1.4: Chromium en los mismos 12 perfiles con las 8 fotos y la música nueva, más la revisión completa).
 20. ✅ JS propio mínimo, CSS puro para animaciones, imágenes WebP, foto con `fetchpriority="high"`, resto `lazy`, scripts con `defer`, fuentes con `font-display: swap`.
 21. ➖ Páginas legales y banner de cookies — no aplica: versión invitación aprobada por JX (sin analítica ni formularios que guarden datos; el mapa solo carga si el invitado lo pide).
 22. ➖ GA4 — no se instala (decisión de la versión invitación).

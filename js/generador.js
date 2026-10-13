@@ -36,7 +36,8 @@
 
   /** Quita caracteres de control y < >, une espacios y recorta. */
   function limpiar(t, max) {
-    return String(t || '').replace(/[\u0000-\u001F\u007F<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max || 60);
+    var limpio = String(t || '').replace(/[\u0000-\u001F\u007F<>]/g, ' ').replace(/\s+/g, ' ').trim();
+    return Array.from(limpio).slice(0, max || 60).join('');   // por caracteres completos (no parte emojis)
   }
 
   /** Lee/guarda la lista sin romper si el navegador bloquea el almacenamiento. */
@@ -61,6 +62,7 @@
   }
 
   /** Texto sugerido para WhatsApp (el usuario lo puede editar antes de enviar). */
+  // ⚠ La fecha está escrita aquí a mano: si cambia, cambiarla también (zona HORARIOS de index.html).
   function mensajeSugerido(quien, url) {
     return '¡Hola, ' + quien + '! 💜 Con mucho cariño te invitamos a celebrar los XV años de Oriana Sofía, el domingo 1 de noviembre.\n\nAbre tu invitación aquí: ' + url;
   }
@@ -163,7 +165,7 @@
     });
   });
   pases.addEventListener('change', function () { ajustarPases(pases.value); });
-  nombre.addEventListener('input', function () { if (nombre.value.trim()) error.hidden = true; });
+  nombre.addEventListener('input', function () { if (nombre.value.trim()) { error.hidden = true; nombre.removeAttribute('aria-invalid'); } });
 
   /* --- Enter / "Siguiente" del teclado: nombre → pases → WhatsApp; desde el WhatsApp crea el enlace.
      Así no se crea un enlace con los pases sin revisar (quedaría repetido en la lista). --- */
@@ -183,7 +185,7 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var quien = limpiar(nombre.value, 60);
-    if (!quien) { error.hidden = false; nombre.focus(); return; }
+    if (!quien) { error.hidden = false; nombre.setAttribute('aria-invalid', 'true'); nombre.focus(); return; }
     var n = ajustarPases(pases.value);
     var url = crearEnlace(quien, n);
     actual = { nombre: quien, pases: n, url: url, tel: numeroWhatsApp(telefono.value) };

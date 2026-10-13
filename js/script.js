@@ -12,7 +12,8 @@
      6. Confirmación: arma un mensaje bonito y abre WhatsApp.
      7. Fotos: carrusel lento dentro del arco y visor a pantalla completa.
    Datos que lee del HTML (para no repetirlos aquí):
-     · #datos-evento  → data-whatsapp y data-direccion-mapa (zona CONTACTO)
+     · #datos-evento  → data-whatsapp, data-direccion-mapa, data-mapa-coordenadas y
+                         data-mapa-enlace (zona CONTACTO)
      · #reloj         → data-fecha-evento y data-fecha-texto
      · #carrusel      → las fotos (img.carrusel__foto, en orden)
    Sin dependencias externas. Cargado con defer: el DOM ya existe.
@@ -32,11 +33,13 @@
    * Recibe: texto y largo máximo. Devuelve: texto limpio.
    */
   function limpiar(texto, maximo) {
-    return String(texto || '')
+    var limpio = String(texto || '')
       .replace(/[\u0000-\u001F\u007F<>]/g, ' ')
       .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, maximo || 60);
+      .trim();
+    // Recorta por caracteres completos: con slice() un emoji podía quedar partido y
+    // encodeURIComponent() fallaba al armar el mensaje de WhatsApp.
+    return Array.from(limpio).slice(0, maximo || 60).join('');
   }
 
   /** Lee y guarda en localStorage sin romper si el navegador lo bloquea. */
@@ -114,9 +117,8 @@
     var quiereSonar = false;   // lo que eligió el invitado (para retomar al volver a la pestaña)
     var fundido = null;
 
-    function actualizarBoton(sonando) {
+    function actualizarBoton(sonando) {   // nombre fijo "Música de fondo" + aria-pressed = sonando
       boton.setAttribute('aria-pressed', sonando ? 'true' : 'false');
-      boton.setAttribute('aria-label', sonando ? 'Pausar la música' : 'Reproducir la música');
     }
 
     function fundirVolumen(destino, ms) {   // en iPhone el volumen es fijo: simplemente suena
@@ -172,7 +174,7 @@
 
     return {
       reproducir: reproducir,
-      mostrarBoton: function () { boton.hidden = false; }
+      mostrarBoton: function () { actualizarBoton(!audio.paused); boton.hidden = false; }   // con "Saltar" no suena
     };
   }
 
@@ -223,11 +225,14 @@
     bloquear(true);
 
     function terminar() {
+      var focoEnSobre = portal.contains(document.activeElement);
       portal.hidden = true;
       bloquear(false);
       document.body.classList.remove('con-portal');
       document.body.classList.add('invitacion-abierta');
       musica.mostrarBoton();
+      // El sello desaparece con el foco encima: se lleva al título para que los lectores de pantalla no se pierdan.
+      if (focoEnSobre) $('#titulo-portada').focus({ preventScroll: true });
       document.dispatchEvent(new CustomEvent('invitacion:abierta'));   // el carrusel empieza a pasar fotos
     }
 
@@ -269,6 +274,8 @@
     var objetivo = Date.parse(reloj.getAttribute('data-fecha-evento'));
     var finDelDia = objetivo + (17 * 3600 * 1000);   // 7:00 a. m. + 17 h = medianoche del mismo día
     var nota = $('#cuenta-nota');
+    var titulo = $('#t-cuenta');
+    var guardar = $('#cuenta .guardar');
     var celdas = {};
     ['dias', 'horas', 'minutos', 'segundos'].forEach(function (u) {
       celdas[u] = reloj.querySelector('[data-unidad="' + u + '"]');
@@ -285,7 +292,11 @@
       celdas.minutos.textContent = dos(Math.floor((s % 3600) / 60));
       celdas.segundos.textContent = dos(s % 60);
       if (dif === 0) {
-        nota.textContent = ahora < finDelDia ? '¡Llegó el gran día!' : 'Gracias por acompañarme en mis XV.';
+        // Ya no hay nada que contar ni que guardar: el título cambia y se ocultan reloj, nota y calendario.
+        titulo.textContent = ahora < finDelDia ? '¡Llegó el gran día!' : 'Gracias por acompañarme en mis XV';
+        reloj.hidden = true;
+        nota.hidden = true;
+        if (guardar) guardar.hidden = true;
         clearInterval(intervalo);
       }
     }
@@ -361,8 +372,14 @@
       if (isNaN(n)) n = 1;
       n = Math.min(maximo, Math.max(1, n));
       personas.value = String(n);
+      var foco = document.activeElement;
       menos.disabled = n <= 1;
       mas.disabled = n >= maximo;
+      // Con teclado: si el botón con el foco se desactiva, el foco pasa al otro (no al campo: abriría el teclado del celular).
+      if (foco && foco.disabled && (foco === menos || foco === mas)) {
+        var otro = foco === menos ? mas : menos;
+        if (!otro.disabled) otro.focus();
+      }
       if (inv.pases && n >= maximo) {
         ayudaPersonas.textContent = maximo === 1 ? 'Tu invitación es para 1 persona.' : 'Tu invitación es para ' + maximo + ' personas.';
         ayudaPersonas.hidden = false;
@@ -402,6 +419,10 @@
     }
     alPulsarEnter(nombre, function () { form.querySelector('input[name="asiste"]:checked').focus(); });
     alPulsarEnter(personas, function () { ajustarPersonas(personas.value); mensajito.focus(); });
+    // Enter sobre "¿Asistirás?" también enviaba el formulario (envío implícito del navegador).
+    Array.prototype.forEach.call(form.querySelectorAll('input[name="asiste"]'), function (opcion) {
+      alPulsarEnter(opcion, function () { (campoPersonas.hidden ? mensajito : personas).focus(); });
+    });
 
     // Recordatorio amable si ya confirmó desde este mismo celular.
     if (leerLocal('xv-oriana-confirmacion')) {
@@ -552,9 +573,14 @@
       });
     }
 
+    // Pausa mientras el invitado mira la foto: puntero encima (solo con mouse; en el celular el :hover
+    // queda "pegado" tras un toque) o foco de teclado en la foto (WCAG 2.2.2).
+    var conMouse = !!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+    var punteroEncima = false, focoTeclado = false;
     function programar() {
       clearTimeout(temporizador);
       if (fotos.length < 2 || reducirMovimiento || !abierta || !aLaVista || document.hidden || visor.open) return;
+      if (punteroEncima || focoTeclado) return;
       temporizador = setTimeout(function () { mostrar(actual + 1); programar(); }, PASO_MS);
     }
 
@@ -580,6 +606,15 @@
       }).observe(carrusel);
     }
     document.addEventListener('visibilitychange', programar);
+    if (conMouse) {
+      carrusel.addEventListener('mouseenter', function () { punteroEncima = true; programar(); });
+      carrusel.addEventListener('mouseleave', function () { punteroEncima = false; programar(); });
+    }
+    botonVer.addEventListener('focus', function () {
+      try { focoTeclado = botonVer.matches(':focus-visible'); } catch (e) { focoTeclado = false; }
+      programar();
+    });
+    botonVer.addEventListener('blur', function () { focoTeclado = false; programar(); });
 
     alDeslizar(carrusel, function (paso) {
       deslizo = true;

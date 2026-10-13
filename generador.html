@@ -17,7 +17,7 @@
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <meta name="theme-color" content="#EFE5F8">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="only light">
   <link rel="preload" href="fonts/pinyon-script-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/generador.js" defer></script>
@@ -58,7 +58,7 @@
       <form class="formulario" id="form-generador" novalidate>
         <div class="campo">
           <label for="g-nombre">Nombre del invitado</label>
-          <input id="g-nombre" type="text" maxlength="60" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" required placeholder="Ej.: Familia Pérez">
+          <input id="g-nombre" aria-describedby="g-error" type="text" maxlength="60" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" required placeholder="Ej.: Familia Pérez">
           <p class="campo__error" id="g-error" hidden>Escribe el nombre del invitado.</p>
         </div>
         <div class="campo">
